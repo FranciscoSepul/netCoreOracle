@@ -31,5 +31,15 @@ namespace BackSecurity.Services.Services
 
         }
 
+        public bool Create(User user)
+        {
+            if (user != null)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
     }
 }

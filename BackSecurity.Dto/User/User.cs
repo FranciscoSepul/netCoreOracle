@@ -8,27 +8,19 @@ namespace BackSecurity.Dto.User
 {
     public class User
     {
+        public int Id { get; set; }
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
-        public string Ciudad { get; set; }
-        public string Correo { get; set; }
         public string Direccion { get; set; }
-        public string DvRut { get; set; }
-        public string TipoContrato { get; set; }
-        public DateTime TrabajadorDesde { get; set; }
-        public string NomSindicato { get; set; }
-        public int CodSindicato { get; set; }
-        public int WorkerId { get; set; }
-        public string Rut { get; set; }
+        public string Ciudad { get; set; }
         public string Region { get; set; }
-        public DateTime FechaNacimiento { get; set; }
-        public string NombrecontactoEmergencia { get; set; }
-        public string FonoContactoEmergencia { get; set; }
-        public string RutCompleto { get; set; }
-        public string Sexo { get; set; }
-        public string CodEstadoCivil { get; set; }
-        public string Telefono { get; set; }
-        public string Sucursal { get; set; }
+        public string Correo { get; set; }
+        public string DvRut { get; set; }
+        public int funcion { get; set; }
+        public string Rut { get; set; }
+        public string numeroContacto { get; set; }
+        public string Nacionalidad { get; set; }
+        public int companias { get; set; }
     }
 }

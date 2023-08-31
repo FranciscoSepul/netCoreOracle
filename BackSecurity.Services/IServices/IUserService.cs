@@ -10,5 +10,6 @@ namespace BackSecurity.Services.IServices
     public interface IUserService
     {
         bool Login(string user, string pass);
+        bool Create(User user);
     }
 }
