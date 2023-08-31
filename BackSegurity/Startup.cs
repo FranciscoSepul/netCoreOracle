@@ -29,7 +29,6 @@ namespace BackSecurity
         private readonly ILogger _logger;
         public IContainer ApplicationContainer { get; private set; }
 
-        readonly string MyAllowSpecificOrigins = "AllowOrigin";
 
         public Startup(IConfiguration configuration,
             ILogger<Startup> logger)
@@ -42,15 +41,6 @@ namespace BackSecurity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddCors(c =>
-            {
-                c.AddPolicy(MyAllowSpecificOrigins, options =>
-                {
-                    options.AllowAnyOrigin();
-                    options.AllowAnyMethod();
-                    options.AllowAnyHeader();
-                });
-            });
             services.AddRazorPages();
 
             services.Configure<IISServerOptions>(options => { });
@@ -80,28 +70,6 @@ namespace BackSecurity
             services.AddSwaggerGen(options =>
             {
                 var groupName = "v1";
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-                {
-                    Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer token')",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                        {
-                            new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = "Bearer"
-                                }
-                            },
-                            Array.Empty<string>()
-                        }
-                });
                 options.SwaggerDoc(groupName, new OpenApiInfo
                 {
                     Title = $"Security {groupName}",
@@ -147,14 +115,10 @@ namespace BackSecurity
             app.UseMiddleware<AuthenticationMiddleware>();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            app.UseAuthentication();
             app.UseRouting();
-            app.UseAuthorization();
-            app.UseCors(MyAllowSpecificOrigins);
-
             app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
+           // app.UseAuthentication();
+           // app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -168,7 +132,7 @@ namespace BackSecurity
         public void ConfigurarServicios(IServiceCollection services)
         {
             services.AddTransient<IHttpService, HttpService>();
-            services.AddTransient<IDireccionService ,DireccionService>();
+            services.AddTransient<IUserService ,UserService>();
         }
 
     }

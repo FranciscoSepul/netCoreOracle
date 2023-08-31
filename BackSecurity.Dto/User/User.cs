@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BackSecurity.Dto.Dto
+namespace BackSecurity.Dto.User
 {
-    public class WorkerDto
+    public class User
     {
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
@@ -30,9 +30,5 @@ namespace BackSecurity.Dto.Dto
         public string CodEstadoCivil { get; set; }
         public string Telefono { get; set; }
         public string Sucursal { get; set; }
-        public List<CertificationDto> TrabajadorCertificaciones { get; set; }
-        public ContractTypeDto Contrato { get; set; }
-        public List<OperationalFunctionDto> Funciones { get; set; }
-        public List<BranchOfficeDto> BranchOffices { get; set; }
     }
 }
