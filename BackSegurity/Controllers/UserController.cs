@@ -14,7 +14,6 @@ using BackSecurity.Constants.Constants;
 
 namespace BackSecurity.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
 
@@ -28,6 +27,7 @@ namespace BackSecurity.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string user,string pass)
         {
             bool response =  _userService.Login(user,pass);
