@@ -28,10 +28,9 @@ namespace BackSecurity.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string user, string pass)
+        public async Task<IActionResult> Login(string user,string pass)
         {
-            
-            bool response = _userService.Login(user, pass);
+            bool response =  _userService.Login(user,pass);
             if (response != false)
             {
                 return Ok();

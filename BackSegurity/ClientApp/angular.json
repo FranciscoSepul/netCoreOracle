@@ -1,0 +1,234 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "cba33728-b277-490f-ac62-2aea8a0d9047"
+  },
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "california": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+            "options": {
+                "allowedCommonJsDependencies": [
+                    "primeng/primeng",
+                    "primeng/accordion",
+                    "primeng/autocomplete",
+                    "primeng/breadcrumb",
+                    "primeng/button",
+                    "primeng/calendar",
+                    "primeng/card",
+                    "primeng/carousel",
+                    "primeng/chart",
+                    "primeng/checkbox",
+                    "primeng/chips",
+                    "primeng/codehighlighter",
+                    "primeng/confirmdialog",
+                    "primeng/colorpicker",
+                    "primeng/contextmenu",
+                    "primeng/dataview",
+                    "primeng/dialog",
+                    "primeng/dropdown",
+                    "primeng/editor",
+                    "primeng/fieldset",
+                    "primeng/fileupload",
+                    "primeng/galleria",                    
+                    "primeng/inplace",
+                    "primeng/inputmask",
+                    "primeng/inputswitch",
+                    "primeng/inputtext",
+                    "primeng/inputtextarea",
+                    "primeng/lightbox",
+                    "primeng/listbox",
+                    "primeng/megamenu",
+                    "primeng/menu",
+                    "primeng/menubar",
+                    "primeng/messages",
+                    "primeng/message",
+                    "primeng/multiselect",
+                    "primeng/orderlist",
+                    "primeng/organizationchart",
+                    "primeng/overlaypanel",
+                    "primeng/paginator",
+                    "primeng/panel",
+                    "primeng/panelmenu",
+                    "primeng/password",
+                    "primeng/picklist",
+                    "primeng/progressbar",
+                    "primeng/radiobutton",
+                    "primeng/rating",
+                    "primeng/scrollpanel",
+                    "primeng/selectbutton",
+                    "primeng/slidemenu",
+                    "primeng/slider",
+                    "primeng/spinner",
+                    "primeng/splitbutton",
+                    "primeng/steps",
+                    "primeng/tabmenu",
+                    "primeng/table",
+                    "primeng/tabview",
+                    "primeng/terminal",
+                    "primeng/tieredmenu",
+                    "primeng/toast",
+                    "primeng/togglebutton",
+                    "primeng/toolbar",
+                    "primeng/api",
+                    "primeng/virtualscroller",
+                    "primeng/treetable",
+                    "primeng/tree",
+                    "primeng/tooltip",
+                    "rxjs/Rx",
+                    "rxjs/add/observable/of",
+                    "rxjs/add/operator/map"
+                ],
+                "outputPath": "dist",
+                "index": "src/index.html",
+                "main": "src/main.ts",
+                "polyfills": "src/polyfills.ts",
+                "tsConfig": "src/tsconfig.app.json",
+                "assets": [
+                    "src/favicon.ico",
+                    "src/assets"
+                ],
+                "styles": [
+                    "src/styles.css",
+                    "node_modules/primeng/resources/themes/saga-blue/theme.css",
+                    "node_modules/primeng/resources/primeng.min.css",
+                    "node_modules/primeicons/primeicons.css",
+                    "node_modules/primeflex/primeflex.css"
+                ],
+                "scripts": [
+                    "node_modules/chart.js/dist/Chart.js",
+                    "node_modules/prismjs/prism.js",
+                    "node_modules/quill/dist/quill.js"
+                ],
+            "aot": false,
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
+            },
+            "configurations": {
+                "production": {
+                    "fileReplacements": [
+                        {
+                            "replace": "src/environments/environment.ts",
+                            "with": "src/environments/environment.prod.ts"
+                        }
+                    ],
+                    "optimization": false,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "extractCss": true,
+                    "namedChunks": false,
+                    "aot": true,
+                    "extractLicenses": true,
+                    "vendorChunk": false
+                },
+                "qa": {
+                    "fileReplacements": [
+                        {
+                            "replace": "src/environments/environment.ts",
+                            "with": "src/environments/environment.qa.ts"
+                        }
+                    ],
+                    "optimization": false,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "extractCss": true,
+                    "namedChunks": false,
+                    "extractLicenses": true,
+                    "vendorChunk": false
+                }
+            },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+            "options": {
+                "browserTarget": "california:build",
+                "disableHostCheck": true
+            },
+          "configurations": {
+            "production": {
+              "browserTarget": "california:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "california:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
+            "styles": [
+              "node_modules/primeng/resources/themes/saga-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeicons/primeicons.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "california-e2e": {
+      "root": "e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "california:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "california:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "california"
+}
