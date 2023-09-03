@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using BackSecurity.Controllers.Common;
+using BackSecurity.Dto.Authentication;
 using BackSecurity.Constants.Constants;
 
 namespace BackSecurity.Controllers
@@ -28,12 +29,15 @@ namespace BackSecurity.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string user,string pass)
+        public async Task<IActionResult> Login(string user, string pass)
         {
-            bool response =  _userService.Login(user,pass);
-            if (response != false)
+            Console.WriteLine("here 1 " + user + " " + pass);
+            string response = _userService.Login(user, pass);
+            if (response != "")
             {
-                return Ok();
+                TokenDto token = new TokenDto();
+                token.Token = response;
+                return Ok(token);
             }
             return Unauthorized();
 

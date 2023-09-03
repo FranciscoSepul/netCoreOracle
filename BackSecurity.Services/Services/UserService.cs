@@ -9,6 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BackSecurity.Services.Common.ICommon;
+using BackSecurity.Dto.Authentication;
+using AppTrabajadores.Dto.Authentication;
+using BackSecurity.Services.Common;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace BackSecurity.Services.Services
 {
@@ -21,25 +27,42 @@ namespace BackSecurity.Services.Services
             _config = configuration;
         }
 
-        public bool Login(string user, string pass)
+        public string Login(string user, string pass)
         {
-            if (user == "manuel" && pass == "1234")
+            Console.WriteLine("here "+user+" "+pass);
+            if (user == "admin" && pass == "admin")
             {
-                return true;
+                Console.WriteLine("generar ");
+                return GenerarToken(user, pass,1);;
             }
-            return false;
+            return null;
 
         }
 
-        public bool Create(User user)
+       
+        public string GenerarToken(string user, string pass, int account)
         {
-            if (user != null)
-            {
-                return true;
-            }
-            return false;
-
+            JwtSecurityToken jwtToken = new 
+                        (null,
+                        null,
+                        CreateClaims(user, account),
+                        null,
+                        expires: DateTime.Now.AddDays(1).ToLocalTime());
+            string token = new JwtSecurityTokenHandler()
+                        .WriteToken(jwtToken);
+            return token;
         }
-
+        private List<Claim> CreateClaims(string user, int account)
+        {
+            List<Claim> claims = new()
+            {
+                new Claim("usuario", user),
+                new Claim("account", account.ToString())
+            };
+            return claims;
+        }
+        public bool  Create(User user){
+            return false;
+        }
     }
 }
