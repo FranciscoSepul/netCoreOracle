@@ -43,5 +43,34 @@ namespace BackSecurity.Controllers
 
         }
 
+        [HttpGet("List")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ListUsers()
+        {
+            Console.WriteLine("here 1 ");
+            List<User> users = new List<User>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                User user = new User();
+                user.Id = i;
+                user.Nombre = "Usuario numero " + i;
+                user.ApellidoPaterno ="a";
+                user.ApellidoMaterno ="a";
+                user.Direccion ="falsa "+i;
+                user.Ciudad ="sant";
+                user.Region ="metropolitana";
+                user.Correo ="correoFalso123";
+                user.DvRut ="3";
+                user.funcion =1;
+                user.Rut ="111111111";
+                user.numeroContacto ="999999999";
+                user.Nacionalidad ="chile";
+                user.companias =1;
+                users.add(user);
+            }
+            return Ok(users);
+       }
+
     }
 }

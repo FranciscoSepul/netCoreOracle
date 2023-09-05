@@ -59,7 +59,7 @@ namespace BackSecurity
             services.AddSession();
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                configuration.RootPath = "BackSecurity/dist";
             });
 
             AddSwagger(services);

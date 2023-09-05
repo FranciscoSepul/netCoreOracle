@@ -52,7 +52,7 @@ namespace BackSecurity.Services.Services
                         .WriteToken(jwtToken);
             return token;
         }
-        private List<Claim> CreateClaims(string user, int account)
+        private static List<Claim> CreateClaims(string user, int account)
         {
             List<Claim> claims = new()
             {
@@ -63,6 +63,12 @@ namespace BackSecurity.Services.Services
         }
         public bool  Create(User user){
             return false;
+        }
+
+        public List<User> Users (){
+List<User> users= new();
+
+return users;
         }
     }
 }
