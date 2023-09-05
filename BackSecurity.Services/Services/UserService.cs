@@ -15,34 +15,39 @@ using BackSecurity.Services.Common;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 
 namespace BackSecurity.Services.Services
 {
     public class UserService : IUserService
     {
         private readonly IConfiguration _config;
+        private readonly IHttpService _httpService;
+        public string getAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario";
 
-        public UserService(IConfiguration configuration)
+        public UserService(IConfiguration configuration, IHttpService httpService)
         {
             _config = configuration;
+            _httpService = httpService;
         }
 
         public string Login(string user, string pass)
         {
-            Console.WriteLine("here "+user+" "+pass);
+            Console.WriteLine("here " + user + " " + pass);
+
             if (user == "admin" && pass == "admin")
             {
                 Console.WriteLine("generar ");
-                return GenerarToken(user, pass,1);;
+                return GenerarToken(user, pass, 1); ;
             }
             return null;
 
         }
 
-       
+
         public string GenerarToken(string user, string pass, int account)
         {
-            JwtSecurityToken jwtToken = new 
+            JwtSecurityToken jwtToken = new
                         (null,
                         null,
                         CreateClaims(user, account),
@@ -61,14 +66,24 @@ namespace BackSecurity.Services.Services
             };
             return claims;
         }
-        public bool  Create(User user){
+        public bool Create(User user)
+        {
             return false;
         }
 
-        public List<User> Users (){
-List<User> users= new();
+        public Root Users()
+        {
+            try
+            {
+                Root userItem = _httpService.RequestJson<Root>(getAllUsers, HttpMethod.Get);
+                return userItem;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
 
-return users;
         }
     }
 }

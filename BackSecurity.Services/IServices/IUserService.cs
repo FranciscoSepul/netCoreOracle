@@ -11,6 +11,6 @@ namespace BackSecurity.Services.IServices
     {
         string Login(string user, string pass);
         bool Create(User user);
-        List<User> Users ();
+        Root Users ();
     }
 }

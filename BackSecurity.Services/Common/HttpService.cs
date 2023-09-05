@@ -10,11 +10,9 @@ namespace BackSecurity.Services.Common
     public class HttpService : IHttpService
     {
         private static readonly HttpClient _client = new();
-        private readonly ILogService _logService;
 
-        public HttpService( ILogService logService)
+        public HttpService()
         {
-            _logService = logService;
         }
 
         public T RequestJson<T>(string url)
@@ -55,7 +53,6 @@ namespace BackSecurity.Services.Common
             {
                 return default;
             }
-            _logService.GenerateLogAsync("RequestJson", "", $"Content :{JsonConvert.DeserializeObject<T>(content)}","WebTrabajadores");
             return JsonConvert.DeserializeObject<T>(content);
         }
     }
