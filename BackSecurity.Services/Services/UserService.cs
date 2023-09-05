@@ -50,8 +50,6 @@ namespace BackSecurity.Services.Services
 
 
         }
-
-
         public string GenerarToken(Item item)
         {
             JwtSecurityToken jwtToken = new
@@ -97,5 +95,6 @@ namespace BackSecurity.Services.Services
             }
 
         }
+        
     }
 }
