@@ -1,2 +1,2 @@
-# Arquetipo
+# Arquetipo no mas accidentes
 
