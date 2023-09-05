@@ -33,36 +33,48 @@ namespace BackSecurity.Services.Services
 
         public string Login(string user, string pass)
         {
-            Console.WriteLine("here " + user + " " + pass);
-
-            if (user == "admin" && pass == "admin")
+            try
             {
-                Console.WriteLine("generar ");
-                return GenerarToken(user, pass, 1); ;
+                Root userItem = _httpService.RequestJson<Root>(getAllUsers, HttpMethod.Get);
+                Item item = userItem.items.Where(x => x.nom_usuario == user && x.clave == pass).FirstOrDefault();
+                if (item != null && item.nom_usuario==user)
+                {
+                    return GenerarToken(item); ;
+                }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                return null;
+            }
+
 
         }
 
 
-        public string GenerarToken(string user, string pass, int account)
+        public string GenerarToken(Item item)
         {
             JwtSecurityToken jwtToken = new
                         (null,
                         null,
-                        CreateClaims(user, account),
+                        CreateClaims(item),
                         null,
                         expires: DateTime.Now.AddDays(1).ToLocalTime());
             string token = new JwtSecurityTokenHandler()
                         .WriteToken(jwtToken);
             return token;
         }
-        private static List<Claim> CreateClaims(string user, int account)
+        private static List<Claim> CreateClaims(Item item)
         {
             List<Claim> claims = new()
             {
-                new Claim("usuario", user),
-                new Claim("account", account.ToString())
+                new Claim("id_usuario", item.id_usuario.ToString()),
+                new Claim("run_usuario", item.run_usuario),
+                new Claim("nom_usuario", item.nom_usuario.ToString()),
+                new Claim("cuenta", item.cuenta.ToString()),
+                new Claim("tipo_contrato", item.tipo_contrato.ToString()),
+                new Claim("fono_usuario", item.fono_usuario.ToString()),
+                new Claim("nacionalidad", item.nacionalidad.ToString())
             };
             return claims;
         }

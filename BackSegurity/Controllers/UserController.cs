@@ -31,9 +31,8 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string user, string pass)
         {
-            Console.WriteLine("here 1 " + user + " " + pass);
             string response = _userService.Login(user, pass);
-            if (response != "")
+            if (response != " " && response != null)
             {
                 TokenDto token = new TokenDto();
                 token.Token = response;

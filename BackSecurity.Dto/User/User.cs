@@ -32,7 +32,8 @@ namespace BackSecurity.Dto.User
         public string cuenta { get; set; }
         public string tipo_contrato { get; set; }
         public int fono_usuario { get; set; }
-        public string nacionalidad { get; set; }
+        public string nacionalidad { get; set;} 
+        public string clave {get; set; }
         public List<Link> links { get; set; }
     }
 
