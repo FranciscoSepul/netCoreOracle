@@ -49,5 +49,21 @@ namespace BackSecurity.Controllers
             Root user = _userService.Users();
             return Ok(user);
         }
+
+        [HttpPost("Create")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ListUsers()
+        {
+            Root user = _userService.Users();
+            return Ok(user);
+        }
+        
+        [HttpPut("Update")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ListUsers()
+        {
+            Root user = _userService.Users();
+            return Ok(user);
+        }
     }
 }
