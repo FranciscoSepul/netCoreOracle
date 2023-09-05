@@ -88,16 +88,14 @@ namespace BackSecurity
         public void Configure(IApplicationBuilder app,
             IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
+            app.UseDeveloperExceptionPage();
 
-                DeveloperExceptionPageOptions developerExceptionPageOptions = new()
-                {
-                    SourceCodeLineCount = 5
-                };
-                app.UseDeveloperExceptionPage(developerExceptionPageOptions);
-            }
+            DeveloperExceptionPageOptions developerExceptionPageOptions = new()
+            {
+                SourceCodeLineCount = 5
+            };
+            app.UseDeveloperExceptionPage(developerExceptionPageOptions);
+
 
             app.UseCors(options =>
             {
@@ -130,7 +128,7 @@ namespace BackSecurity
         public void ConfigurarServicios(IServiceCollection services)
         {
             services.AddTransient<IHttpService, HttpService>();
-            services.AddTransient<IUserService ,UserService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
     }
