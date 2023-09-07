@@ -23,7 +23,17 @@ namespace BackSecurity.Dto.User
         public string Nacionalidad { get; set; }
         public int companias { get; set; }
     }
-
+    public class UserInsert
+    {
+        public string clave { get; set; }
+        public string cuenta { get; set; }
+        public int fono_usuario { get; set; }
+        public int id_usuario { get; set; }
+        public string nacionalidad { get; set; }
+        public string nom_usuario { get; set; }
+        public string run_usuario { get; set; }
+        public string tipo_contrato { get; set; }
+    }
     public class Item
     {
         public int id_usuario { get; set; }
@@ -32,8 +42,8 @@ namespace BackSecurity.Dto.User
         public string cuenta { get; set; }
         public string tipo_contrato { get; set; }
         public int fono_usuario { get; set; }
-        public string nacionalidad { get; set;} 
-        public string clave {get; set; }
+        public string nacionalidad { get; set; }
+        public string clave { get; set; }
         public List<Link> links { get; set; }
     }
 

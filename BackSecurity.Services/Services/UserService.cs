@@ -16,6 +16,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace BackSecurity.Services.Services
 {
@@ -23,7 +24,8 @@ namespace BackSecurity.Services.Services
     {
         private readonly IConfiguration _config;
         private readonly IHttpService _httpService;
-        public string getAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario";
+        public string GetAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario";
+        public string InsertUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
 
         public UserService(IConfiguration configuration, IHttpService httpService)
         {
@@ -35,9 +37,9 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                Root userItem = _httpService.RequestJson<Root>(getAllUsers, HttpMethod.Get);
+                Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
                 Item item = userItem.items.Where(x => x.nom_usuario == user && x.clave == pass).FirstOrDefault();
-                if (item != null && item.nom_usuario==user)
+                if (item != null && item.nom_usuario == user)
                 {
                     return GenerarToken(item); ;
                 }
@@ -76,16 +78,28 @@ namespace BackSecurity.Services.Services
             };
             return claims;
         }
-        public bool Create(User user)
+        public bool Create(UserInsert user)
         {
-            return false;
-        }
+            try
+            {
+                user.clave ="12345";
+                user.id_usuario = Users().count+100;
+                Console.WriteLine("en insert 2");
+                Item item = _httpService.RequestJson<Item>(InsertUsers, HttpMethod.Post,JsonConvert.SerializeObject(user));
+                return true;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("en error");
+                return false;
+            }
 
+        }
         public Root Users()
         {
             try
             {
-                Root userItem = _httpService.RequestJson<Root>(getAllUsers, HttpMethod.Get);
+                Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
                 return userItem;
             }
             catch (Exception ex)
@@ -95,6 +109,21 @@ namespace BackSecurity.Services.Services
             }
 
         }
-        
+         public Item GetWorker (string UserName)
+        {
+            try
+            {
+                Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
+                Item user = userItem.items.Where(x => x.nom_usuario == UserName).FirstOrDefault();
+                return user;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+
+        }
+
     }
 }
