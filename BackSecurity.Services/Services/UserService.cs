@@ -82,15 +82,12 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                user.clave ="12345";
                 user.id_usuario = Users().count+100;
-                Console.WriteLine("en insert 2");
                 Item item = _httpService.RequestJson<Item>(InsertUsers, HttpMethod.Post,JsonConvert.SerializeObject(user));
                 return true;
             }
             catch (Exception)
             {
-                Console.WriteLine("en error");
                 return false;
             }
 
@@ -102,9 +99,8 @@ namespace BackSecurity.Services.Services
                 Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
                 return userItem;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
                 return null;
             }
 
@@ -117,9 +113,8 @@ namespace BackSecurity.Services.Services
                 Item user = userItem.items.Where(x => x.nom_usuario == UserName).FirstOrDefault();
                 return user;
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                Console.WriteLine(ex.Message);
                 return null;
             }
 

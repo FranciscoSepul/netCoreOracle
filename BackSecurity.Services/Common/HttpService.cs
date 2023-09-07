@@ -50,10 +50,6 @@ namespace BackSecurity.Services.Common
             Stream receiveStream = responseMessage.Content.ReadAsStream();
             StreamReader readStream = new(receiveStream, Encoding.UTF8);
             string content = readStream.ReadToEnd();
-            Console.WriteLine("rr "+responseMessage.StatusCode);
-            if(((int)responseMessage.StatusCode)  >= 400){
-                Console.WriteLine("body "+payload);
-            }
             if(((int)responseMessage.StatusCode)  >= 400 && ((int)responseMessage.StatusCode) < 500)
             {
                 return default;
