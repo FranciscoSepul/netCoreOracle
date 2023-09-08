@@ -46,7 +46,7 @@ namespace BackSecurity.Services.Services
             try
             {
                 Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
-                BackSecurity.Dto.User.Item item = userItem.items.Where(x => int.Parse(x.run_usuario.Trim()) == int.Parse(user.Trim()) && x.clave.Trim() == pass.Trim()).FirstOrDefault();
+                BackSecurity.Dto.User.Item item = userItem.items.Where(x => int.Parse(x.run_usuario.Trim()) == int.Parse(user.Trim()) && x.clave.Trim() == pass.Trim() && x.isdelete==0).FirstOrDefault();
                 if (item != null && item.run_usuario == user)
                 {
                     return GenerarToken(item); ;
@@ -113,8 +113,13 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                Console.WriteLine("upd " + UpdateUsers + user.id_usuario);
+                if(user.idempresa==0 && user.idtipocuenta==0){
+                BackSecurity.Dto.User.Item useritem =GetWorker(user.run_usuario);
+                useritem.isdelete=(user.isdelete!=useritem.isdelete)?user.isdelete:0;
+                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(UpdateUsers + user.id_usuario, HttpMethod.Put, JsonConvert.SerializeObject(useritem));
+                }else{
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(UpdateUsers + user.id_usuario, HttpMethod.Put, JsonConvert.SerializeObject(user));
+                }
                 return true;
             }
             catch (Exception)
