@@ -1,4 +1,5 @@
-﻿using BackSecurity.Dto.User;
+﻿using System.Diagnostics.Contracts;
+using BackSecurity.Dto.User;
 using BackSecurity.Services.IServices;
 using Dapper;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using Newtonsoft.Json;
+using BackSecurity.Dto.Funcion;
+
 
 namespace BackSecurity.Services.Services
 {
@@ -24,13 +27,18 @@ namespace BackSecurity.Services.Services
     {
         private readonly IConfiguration _config;
         private readonly IHttpService _httpService;
+        private readonly ICompanyService _company;
         public string GetAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario";
         public string InsertUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
+        public string UpdateUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
+        public string GetTypeById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/funcion/";
+        public string GetListType = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/funcion/";
 
-        public UserService(IConfiguration configuration, IHttpService httpService)
+        public UserService(IConfiguration configuration, IHttpService httpService, ICompanyService company)
         {
             _config = configuration;
             _httpService = httpService;
+            _company = company;
         }
 
         public string Login(string user, string pass)
@@ -38,8 +46,8 @@ namespace BackSecurity.Services.Services
             try
             {
                 Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
-                Item item = userItem.items.Where(x => x.nom_usuario == user && x.clave == pass).FirstOrDefault();
-                if (item != null && item.nom_usuario == user)
+                BackSecurity.Dto.User.Item item = userItem.items.Where(x => int.Parse(x.run_usuario.Trim()) == int.Parse(user.Trim()) && x.clave.Trim() == pass.Trim()).FirstOrDefault();
+                if (item != null && item.run_usuario == user)
                 {
                     return GenerarToken(item); ;
                 }
@@ -52,7 +60,7 @@ namespace BackSecurity.Services.Services
 
 
         }
-        public string GenerarToken(Item item)
+        public string GenerarToken(BackSecurity.Dto.User.Item item)
         {
             JwtSecurityToken jwtToken = new
                         (null,
@@ -64,14 +72,13 @@ namespace BackSecurity.Services.Services
                         .WriteToken(jwtToken);
             return token;
         }
-        private static List<Claim> CreateClaims(Item item)
+        private static List<Claim> CreateClaims(BackSecurity.Dto.User.Item item)
         {
             List<Claim> claims = new()
             {
                 new Claim("id_usuario", item.id_usuario.ToString()),
                 new Claim("run_usuario", item.run_usuario),
                 new Claim("nom_usuario", item.nom_usuario.ToString()),
-                new Claim("cuenta", item.cuenta.ToString()),
                 new Claim("tipo_contrato", item.tipo_contrato.ToString()),
                 new Claim("fono_usuario", item.fono_usuario.ToString()),
                 new Claim("nacionalidad", item.nacionalidad.ToString())
@@ -82,22 +89,84 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                user.id_usuario = Users().count+100;
-                Item item = _httpService.RequestJson<Item>(InsertUsers, HttpMethod.Post,JsonConvert.SerializeObject(user));
+                user.id_usuario = Users().Count + 1;
+                string[] strings = user.nom_usuario.Split(' ');
+                user.apellido = (strings.Count() > 1) ? strings[1] : "";
+                user.nom_usuario = strings[0];
+                user.clave = "12345";
+                string[] rut = user.run_usuario.Split('-');
+                user.run_usuario = rut[0];
+                user.dvrut = (rut.Count() > 1) ? rut[1] : " ";
+                user.funcion = user.idtipocuenta.ToString();
+                user.isdelete = 0;
+                user.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault();
+                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertUsers, HttpMethod.Post, JsonConvert.SerializeObject(user));
                 return true;
             }
             catch (Exception)
             {
                 return false;
             }
+        }
+
+        public bool Update(UserInsert user)
+        {
+            try
+            {
+                Console.WriteLine("upd " + UpdateUsers + user.id_usuario);
+                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(UpdateUsers + user.id_usuario, HttpMethod.Put, JsonConvert.SerializeObject(user));
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        public List<Users> Users()
+        {
+            try
+            {
+
+                Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
+                List<Users> users = new();
+                foreach (BackSecurity.Dto.User.Item item in userItem.items)
+                {
+                    Users user = new();
+                    user.id_usuario = item.id_usuario;
+                    user.run_usuario = item.run_usuario;
+                    user.nom_usuario = item.nom_usuario;
+                    user.tipo_contrato = item.tipo_contrato;
+                    user.fono_usuario = item.fono_usuario;
+                    user.nacionalidad = item.nacionalidad;
+                    user.clave = item.clave;
+                    user.tipocuenta =(item.idtipocuenta>0) ?GetFunctionById(item.idtipocuenta).nom_fun:"";
+                    user.empresa =(item.idempresa>0)? _company.GetCompanyById(item.idempresa).nom_empresa:"";
+                    user.fechacreacion = item.fechacreacion;
+                    user.isdelete = item.isdelete;
+                    user.Eliminado = (item.isdelete != 0) ? "Desactivado" : "Activo";
+                    user.funcion = item.funcion;
+                    user.correo = item.correo;
+                    user.apellido = item.apellido;
+                    user.dvrut = item.dvrut;
+                    user.haxColor = (item.isdelete != 0) ? "#FF0000" : "#00A653";
+                    users.Add(user);
+                }
+                return users;
+            }
+            catch (Exception Exception)
+            {
+                Console.WriteLine("ex " + Exception.Message + Exception.StackTrace);
+                return null;
+            }
 
         }
-        public Root Users()
+        public BackSecurity.Dto.User.Item GetWorker(string UserName)
         {
             try
             {
                 Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
-                return userItem;
+                BackSecurity.Dto.User.Item user = userItem.items.Where(x => x.run_usuario == UserName).FirstOrDefault();
+                return user;
             }
             catch (Exception)
             {
@@ -105,20 +174,16 @@ namespace BackSecurity.Services.Services
             }
 
         }
-         public Item GetWorker (string UserName)
+        public Function GetFunctionById(int id)
         {
-            try
-            {
-                Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
-                Item user = userItem.items.Where(x => x.nom_usuario == UserName).FirstOrDefault();
-                return user;
-            }
-            catch (Exception )
-            {
-                return null;
-            }
-
+            Function function = _httpService.RequestJson<Function>(GetTypeById + id, HttpMethod.Get);
+            return function;
         }
 
+        public List<BackSecurity.Dto.Funcion.Item> ListFunction()
+        {
+            RootFunction function = _httpService.RequestJson<RootFunction>(GetListType, HttpMethod.Get);
+            return function.items;
+        }
     }
 }

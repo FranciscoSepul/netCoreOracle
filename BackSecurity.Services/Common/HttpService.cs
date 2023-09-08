@@ -46,6 +46,7 @@ namespace BackSecurity.Services.Common
                     "application/json"
                 );
             }
+            Console.WriteLine(payload);
             HttpResponseMessage responseMessage = _client.Send(requestMessage);
             Stream receiveStream = responseMessage.Content.ReadAsStream();
             StreamReader readStream = new(receiveStream, Encoding.UTF8);

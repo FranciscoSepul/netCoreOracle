@@ -6,29 +6,20 @@ using System.Threading.Tasks;
 
 namespace BackSecurity.Dto.User
 {
-    public class User
-    {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string ApellidoPaterno { get; set; }
-        public string ApellidoMaterno { get; set; }
-        public string Direccion { get; set; }
-        public string Ciudad { get; set; }
-        public string Region { get; set; }
-        public string Correo { get; set; }
-        public string DvRut { get; set; }
-        public int funcion { get; set; }
-        public string Rut { get; set; }
-        public string numeroContacto { get; set; }
-        public string Nacionalidad { get; set; }
-        public int companias { get; set; }
-    }
+
     public class UserInsert
     {
+        public string apellido { get; set; }
         public string clave { get; set; }
-        public string cuenta { get; set; }
+        public string correo { get; set; }
+        public string dvrut { get; set; }
+        public string fechacreacion { get; set; }
         public int fono_usuario { get; set; }
+        public string funcion { get; set; }
         public int id_usuario { get; set; }
+        public int idempresa { get; set; }
+        public int idtipocuenta { get; set; }
+        public int isdelete { get; set; }
         public string nacionalidad { get; set; }
         public string nom_usuario { get; set; }
         public string run_usuario { get; set; }
@@ -39,12 +30,40 @@ namespace BackSecurity.Dto.User
         public int id_usuario { get; set; }
         public string run_usuario { get; set; }
         public string nom_usuario { get; set; }
-        public string cuenta { get; set; }
         public string tipo_contrato { get; set; }
         public int fono_usuario { get; set; }
         public string nacionalidad { get; set; }
         public string clave { get; set; }
+        public int idtipocuenta { get; set; }
+        public int idempresa { get; set; }
+        public string fechacreacion { get; set; }
+        public int isdelete { get; set; }
+        public string funcion { get; set; }
+        public string correo { get; set; }
+        public string apellido { get; set; }
+        public string dvrut { get; set; }
         public List<Link> links { get; set; }
+    }
+
+    public class Users
+    {
+        public int id_usuario { get; set; }
+        public string run_usuario { get; set; }
+        public string nom_usuario { get; set; }
+        public string tipo_contrato { get; set; }
+        public int fono_usuario { get; set; }
+        public string nacionalidad { get; set; }
+        public string clave { get; set; }
+        public string tipocuenta { get; set; }
+        public string empresa { get; set; }
+        public string fechacreacion { get; set; }
+        public int isdelete { get; set; }
+        public string Eliminado { get; set; }
+        public string funcion { get; set; }
+        public string correo { get; set; }
+        public string apellido { get; set; }
+        public string dvrut { get; set; }
+        public string haxColor { get; set; }
     }
 
     public class Link
@@ -61,6 +80,10 @@ namespace BackSecurity.Dto.User
         public int offset { get; set; }
         public int count { get; set; }
         public List<Link> links { get; set; }
+    }
+
+    public class ContractType {
+        public string contract { get; set; }
     }
 
 }

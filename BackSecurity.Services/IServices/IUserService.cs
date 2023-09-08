@@ -1,4 +1,5 @@
-﻿using BackSecurity.Dto.User;
+﻿using BackSecurity.Dto.Funcion;
+using BackSecurity.Dto.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,9 @@ namespace BackSecurity.Services.IServices
     {
         string Login(string user, string pass);
         bool Create(UserInsert user);
-        Root Users ();
-        Item GetWorker (string UserName);
+        List<Users> Users ();
+        bool Update(UserInsert user);
+        BackSecurity.Dto.User.Item GetWorker (string UserName);
+        List<BackSecurity.Dto.Funcion.Item> ListFunction();
     }
 }

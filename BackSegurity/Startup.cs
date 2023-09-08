@@ -129,6 +129,7 @@ namespace BackSecurity
         {
             services.AddTransient<IHttpService, HttpService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICompanyService, CompanyService>();
         }
 
     }

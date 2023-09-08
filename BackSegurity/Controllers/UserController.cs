@@ -1,4 +1,6 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics.Contracts;
+
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using BackSecurity.Dto.User;
 using BackSecurity.Services.IServices;
@@ -12,6 +14,7 @@ using System.Security.Claims;
 using BackSecurity.Controllers.Common;
 using BackSecurity.Dto.Authentication;
 using BackSecurity.Constants.Constants;
+using BackSecurity.Dto.Funcion;
 
 namespace BackSecurity.Controllers
 {
@@ -46,7 +49,15 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ListUsers()
         {
-            Root user = _userService.Users();
+            List<Users> user = _userService.Users();
+            return Ok(user);
+        }
+
+        [HttpGet("ListFunction")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ListFunction()
+        {
+            List<BackSecurity.Dto.Funcion.Item> user = _userService.ListFunction();
             return Ok(user);
         }
 
@@ -54,7 +65,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetWorkerInfo(string UserName)
         {
-            Item user = _userService.GetWorker(UserName);
+            BackSecurity.Dto.User.Item user = _userService.GetWorker(UserName);
             return Ok(user);
         }
 
@@ -62,8 +73,59 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetByIdUsers(int id)
         {
-            Root user = _userService.Users();
+            List<Users> user = _userService.Users();
             return Ok(user);
+        }
+
+        [HttpGet("GetTipoContrato")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetTipoContrato()
+        {
+            List<ContractType> contract =new();
+            ContractType contractType = new();
+            contractType.contract="Indefinido";
+            contract.Add(contractType);
+            ContractType contractTypeB = new();
+            contractTypeB.contract="Bono Turno";
+            contract.Add(contractTypeB);
+            ContractType contractTypeA = new();
+            contractTypeA.contract="Aprendizaje";
+            contract.Add(contractTypeA);
+            ContractType contractTypeT = new();
+            contractTypeT.contract="Temporal";
+            contract.Add(contractTypeT);
+            ContractType contractTypeO = new();
+            contractTypeO.contract="Ocasional";
+            contract.Add(contractTypeO);
+            ContractType contractTypeP = new();
+            contractTypeP.contract="Plazo Fijo";
+            contract.Add(contractTypeP);
+            return Ok(contract);
+        }
+        [HttpGet("GetPaises")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPaises()
+        {
+            List<ContractType> contract =new();
+            ContractType contractType = new();
+            contractType.contract="Chile";
+            contract.Add(contractType);
+            ContractType contractTypeB = new();
+            contractTypeB.contract="Colombia";
+            contract.Add(contractTypeB);
+            ContractType contractTypeA = new();
+            contractTypeA.contract="Peru";
+            contract.Add(contractTypeA);
+            ContractType contractTypeT = new();
+            contractTypeT.contract="Uruguai";
+            contract.Add(contractTypeT);
+            ContractType contractTypeO = new();
+            contractTypeO.contract="Bolivia";
+            contract.Add(contractTypeO);
+            ContractType contractTypeP = new();
+            contractTypeP.contract="Mexico";
+            contract.Add(contractTypeP);
+            return Ok(contract);
         }
 
         [HttpPost("Create")]
@@ -77,11 +139,12 @@ namespace BackSecurity.Controllers
         
         [HttpPut("Update")]
         [AllowAnonymous]
-        public async Task<IActionResult> Update()
+        public async Task<IActionResult> Update([FromBody] UserInsert userInsert)
         {
-            Root user = _userService.Users();
+            bool user = _userService.Update(userInsert);
             return Ok(user);
         }
+
         
     }
 }
