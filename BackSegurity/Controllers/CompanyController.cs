@@ -59,22 +59,6 @@ namespace BackSecurity.Controllers
             return Ok(company);
         }
 
-       // [HttpPost("Create")]
-        //[AllowAnonymous]
-       // public async Task<IActionResult> Create([FromBody] UserInsert userInsert)
-      //  {
-      //       Console.WriteLine("en insert ");
-      //      bool response = _userService.Create(userInsert);
-      //      return (response !=false)? Ok():BadRequest();
-      //  }
-        
-       // [HttpPut("Update")]
-       // [AllowAnonymous]
-       // public async Task<IActionResult> Update()
-       // {
-       //     List<Users> user = _userService.Users();
-       //     return Ok(user);
-       // }
         
     }
 }

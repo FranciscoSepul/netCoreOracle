@@ -51,13 +51,11 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                Console.WriteLine("index ");
                List<Dto.Company.Item> company = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
                return company;
             }
             catch (Exception Exception)
             {
-                Console.WriteLine("ex " + Exception.Message);
                 return null;
             }
 
