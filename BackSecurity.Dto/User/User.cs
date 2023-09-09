@@ -15,7 +15,7 @@ namespace BackSecurity.Dto.User
         public string dvrut { get; set; }
         public string fechacreacion { get; set; }
         public int fono_usuario { get; set; }
-        public string funcion { get; set; }
+        public int funcion { get; set; }
         public int id_usuario { get; set; }
         public int idempresa { get; set; }
         public int idtipocuenta { get; set; }

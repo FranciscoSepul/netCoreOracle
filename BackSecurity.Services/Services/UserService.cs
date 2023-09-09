@@ -89,6 +89,7 @@ namespace BackSecurity.Services.Services
         {
             try
             {
+                 Console.WriteLine("al inicio " );
                 user.id_usuario = Users().Count + 1;
                 string[] strings = user.nom_usuario.Split(' ');
                 user.apellido = (strings.Count() > 1) ? strings[1] : "";
@@ -97,14 +98,17 @@ namespace BackSecurity.Services.Services
                 string[] rut = user.run_usuario.Split('-');
                 user.run_usuario = rut[0];
                 user.dvrut = (rut.Count() > 1) ? rut[1] : " ";
-                user.funcion = user.idtipocuenta.ToString();
                 user.isdelete = 0;
+                Console.WriteLine("func "+user.funcion);
+                user.idtipocuenta=user.funcion;
                 user.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault();
+                Console.WriteLine("al final del body "+JsonConvert.SerializeObject(user));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertUsers, HttpMethod.Post, JsonConvert.SerializeObject(user));
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                 Console.WriteLine("en ca  "+ex.Message);
                 return false;
             }
         }
