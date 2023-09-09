@@ -46,7 +46,7 @@ namespace BackSecurity.Services.Services
             try
             {
                 Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
-                BackSecurity.Dto.User.Item item = userItem.items.Where(x => int.Parse(x.run_usuario.Trim()) == int.Parse(user.Trim()) && x.clave.Trim() == pass.Trim() && x.isdelete==0).FirstOrDefault();
+                BackSecurity.Dto.User.Item item = userItem.items.Where(x => int.Parse(x.run_usuario.Trim()) == int.Parse(user.Trim()) && x.clave.Trim() == pass.Trim() && x.isdelete == 0).FirstOrDefault();
                 if (item != null && item.run_usuario == user)
                 {
                     return GenerarToken(item); ;
@@ -89,7 +89,7 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                 Console.WriteLine("al inicio " );
+                Console.WriteLine("en create ");
                 user.id_usuario = Users().Count + 1;
                 string[] strings = user.nom_usuario.Split(' ');
                 user.apellido = (strings.Count() > 1) ? strings[1] : "";
@@ -99,30 +99,45 @@ namespace BackSecurity.Services.Services
                 user.run_usuario = rut[0];
                 user.dvrut = (rut.Count() > 1) ? rut[1] : " ";
                 user.isdelete = 0;
-                Console.WriteLine("func "+user.funcion);
-                user.idtipocuenta=user.funcion;
+                user.idtipocuenta =  user.funcion;
                 user.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault();
-                Console.WriteLine("al final del body "+JsonConvert.SerializeObject(user));
+                Console.WriteLine("al final del body " + JsonConvert.SerializeObject(user));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertUsers, HttpMethod.Post, JsonConvert.SerializeObject(user));
                 return true;
             }
             catch (Exception ex)
             {
-                 Console.WriteLine("en ca  "+ex.Message);
+                Console.WriteLine("en ca  " + ex.Message);
                 return false;
             }
         }
 
-        public bool Update(UserInsert user)
+        public bool Update(UserUpdate user)
         {
             try
             {
-                if(user.idempresa==0 && user.idtipocuenta==0){
-                BackSecurity.Dto.User.Item useritem =GetWorker(user.run_usuario);
-                useritem.isdelete=(user.isdelete!=useritem.isdelete)?user.isdelete:0;
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(UpdateUsers + user.id_usuario, HttpMethod.Put, JsonConvert.SerializeObject(useritem));
-                }else{
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(UpdateUsers + user.id_usuario, HttpMethod.Put, JsonConvert.SerializeObject(user));
+                Console.WriteLine("1");
+
+                BackSecurity.Dto.User.Item useritem = GetWorker(user.run_usuario);
+                if (user.idempresa == 0 && user.idtipocuenta == 0)
+                {
+                    Console.WriteLine("2");
+                    useritem.isdelete = (user.isdelete != useritem.isdelete) ? user.isdelete : 0;
+                    BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(UpdateUsers + user.id_usuario, HttpMethod.Put, JsonConvert.SerializeObject(useritem));
+                }
+                else
+                {
+                    Console.WriteLine("3");
+                    useritem.nom_usuario = user.nom_usuario;
+                    useritem.run_usuario = user.run_usuario;
+                    useritem.idempresa = user.idempresa;
+                    useritem.fono_usuario = user.fono_usuario;
+                    useritem.tipo_contrato = user.tipo_contrato;
+                    useritem.funcion = user.funcion.ToString();
+                    useritem.nacionalidad = user.nacionalidad;
+                    useritem.correo = user.correo;
+                    Console.WriteLine("al final del body " + JsonConvert.SerializeObject(user));
+                    BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(UpdateUsers + user.id_usuario, HttpMethod.Put, JsonConvert.SerializeObject(useritem));
                 }
                 return true;
             }
@@ -148,8 +163,8 @@ namespace BackSecurity.Services.Services
                     user.fono_usuario = item.fono_usuario;
                     user.nacionalidad = item.nacionalidad;
                     user.clave = item.clave;
-                    user.tipocuenta =(item.idtipocuenta>0) ?GetFunctionById(item.idtipocuenta).nom_fun:"";
-                    user.empresa =(item.idempresa>0)? _company.GetCompanyById(item.idempresa).nom_empresa:"";
+                    user.tipocuenta = (item.idtipocuenta > 0) ? GetFunctionById(item.idtipocuenta).nom_fun : "";
+                    user.empresa = (item.idempresa > 0) ? _company.GetCompanyById(item.idempresa).nom_empresa : "";
                     user.fechacreacion = item.fechacreacion;
                     user.isdelete = item.isdelete;
                     user.Eliminado = (item.isdelete != 0) ? "Desactivado" : "Activo";

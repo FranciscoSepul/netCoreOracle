@@ -13,7 +13,7 @@ namespace BackSecurity.Services.IServices
         string Login(string user, string pass);
         bool Create(UserInsert user);
         List<Users> Users ();
-        bool Update(UserInsert user);
+        bool Update(UserUpdate user);
         BackSecurity.Dto.User.Item GetWorker (string UserName);
         List<BackSecurity.Dto.Funcion.Item> ListFunction();
     }

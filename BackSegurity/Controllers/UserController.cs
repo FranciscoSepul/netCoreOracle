@@ -139,7 +139,7 @@ namespace BackSecurity.Controllers
         
         [HttpPut("Update")]
         [AllowAnonymous]
-        public async Task<IActionResult> Update([FromBody] UserInsert userInsert)
+        public async Task<IActionResult> Update([FromBody] UserUpdate userInsert)
         {
             bool user = _userService.Update(userInsert);
             return Ok(user);

@@ -13,5 +13,6 @@ namespace BackSecurity.Services.IServices
         bool Create(Company user);
         List<Dto.Company.Item> CompanyList ();
         Company GetCompanyById (int id);
+        Dto.Company.Item GetCompanyByName(string id);
     }
 }

@@ -25,6 +25,24 @@ namespace BackSecurity.Dto.User
         public string run_usuario { get; set; }
         public string tipo_contrato { get; set; }
     }
+    public class UserUpdate
+    {
+        public string apellido { get; set; }
+        public string clave { get; set; }
+        public string correo { get; set; }
+        public string dvrut { get; set; }
+        public string fechacreacion { get; set; }
+        public int fono_usuario { get; set; }
+        public string funcion { get; set; }
+        public int id_usuario { get; set; }
+        public int idempresa { get; set; }
+        public int idtipocuenta { get; set; }
+        public int isdelete { get; set; }
+        public string nacionalidad { get; set; }
+        public string nom_usuario { get; set; }
+        public string run_usuario { get; set; }
+        public string tipo_contrato { get; set; }
+    }
     public class Item
     {
         public int id_usuario { get; set; }

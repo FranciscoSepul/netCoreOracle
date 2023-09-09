@@ -76,5 +76,12 @@ namespace BackSecurity.Services.Services
             }
 
         }
+
+        public Dto.Company.Item GetCompanyByName(string id)
+        {
+            List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+            Dto.Company.Item company = companys.FirstOrDefault(x => x.nom_empresa == id);
+            return company;
+        }
     }
 }
