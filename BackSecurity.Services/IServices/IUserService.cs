@@ -14,6 +14,7 @@ namespace BackSecurity.Services.IServices
         bool Create(UserInsert user);
         List<Users> Users ();
         bool Update(UserUpdate user);
+        bool Disable(UserDisable user);
         BackSecurity.Dto.User.Item GetWorker (string UserName);
         List<BackSecurity.Dto.Funcion.Item> ListFunction();
     }

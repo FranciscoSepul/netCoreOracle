@@ -140,7 +140,16 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Update([FromBody] UserUpdate userInsert)
         {
+            Console.WriteLine("en update ");
             bool user = _userService.Update(userInsert);
+            return Ok(user);
+        }
+
+        [HttpPut("Disable")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Disable([FromBody] UserDisable userInsert)
+        {
+            bool user = _userService.Disable(userInsert);
             return Ok(user);
         }
 
