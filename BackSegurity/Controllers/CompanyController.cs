@@ -29,14 +29,6 @@ namespace BackSecurity.Controllers
             _companyService = companyService;
         }
 
-        //[HttpGet("List")]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> ListUsers()
-       // {
-        //    List<Users> user = _userService.Users();
-        //    return Ok(user);
-       // }
-
         [HttpGet("GetCompanyById")]
         [AllowAnonymous]
         public async Task<IActionResult> GetCompanyById(int id)
@@ -55,7 +47,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAllCompany()
         {
-            List<Dto.Company.Item> company = _companyService.CompanyList();
+            List<Dto.Company.Company> company = _companyService.CompanyList();
             return Ok(company);
         }
 

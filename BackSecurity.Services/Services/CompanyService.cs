@@ -34,12 +34,12 @@ namespace BackSecurity.Services.Services
             _config = configuration;
             _httpService = httpService;
         }
-        
+
         public bool Create(Company user)
         {
             try
             {
-               return false;
+                return false;
             }
             catch (Exception)
             {
@@ -47,25 +47,57 @@ namespace BackSecurity.Services.Services
             }
 
         }
-        public List<Dto.Company.Item> CompanyList()
+        public List<Dto.Company.Company> CompanyList()
         {
             try
             {
-               List<Dto.Company.Item> company = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
-               return company;
+                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+                List<Dto.Company.Company> companies = new();
+                foreach (Dto.Company.Item item in companys)
+                {
+                    Dto.Company.Company company = new()
+                    {
+                        nom_empresa = item.nom_empresa,
+                        Rut = item.Rut,
+                        DvRut = item.DvRut,
+                        ImageBase64 = item.ImageBase64,
+                        fechaFinContrato = item.fechaFinContrato,
+                        Correo = item.Correo,
+                        eliminado = stateCompany(item),
+                        fechaCreacion = item.fechaCreacion,
+                        haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653"
+                    };
+                    companies.Add(company);
+                }
+                return companies;
             }
-            catch (Exception Exception)
+            catch (Exception)
             {
                 return null;
             }
+        }
 
+        public string stateCompany(Dto.Company.Item item)
+        {
+
+            string estadoBooleanCompany = (item.IsDelete != 0) ? "Desactivado" : "Activo";
+            string estado = "";
+            if (estadoBooleanCompany == "Activo")
+            {
+                estado = (DateTime.Parse(item.fechaFinContrato) > DateTime.Now.Date) ? "Activo" : "Desactivado";
+            }
+            else
+            {
+                estado = estadoBooleanCompany;
+            }
+            return estado;
         }
         public Company GetCompanyById(int id)
         {
             try
             {
 
-                Company company = _httpService.RequestJson<Company>(_GetCompanyById+id, HttpMethod.Get);
+                Company company = _httpService.RequestJson<Company>(_GetCompanyById + id, HttpMethod.Get);
                 return company;
             }
             catch (Exception)

@@ -10,12 +10,28 @@ namespace BackSecurity.Dto.Company
     {
         public int id_empresa { get; set; }
         public string nom_empresa { get; set; }
+        public string Rut { get; set; }
+        public string DvRut { get; set; }
+        public string fechaCreacion { get; set; }
+        public string fechaFinContrato { get; set; }
+        public int IsDelete { get; set; }
+        public string ImageBase64 { get; set; }
+        public string Correo { get; set; }
+        public string haxColor {get;set;}
+        public string eliminado {get;set;}
     }
 
     public class Item
     {
         public int id_empresa { get; set; }
         public string nom_empresa { get; set; }
+        public string Rut { get; set; }
+        public string DvRut { get; set; }
+        public string fechaCreacion { get; set; }
+        public string fechaFinContrato { get; set; }
+        public int IsDelete { get; set; }
+        public string ImageBase64 { get; set; }
+        public string Correo { get; set; }
         public List<Link> links { get; set; }
     }
 

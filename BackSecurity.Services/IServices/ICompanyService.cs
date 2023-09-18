@@ -11,7 +11,7 @@ namespace BackSecurity.Services.IServices
     public interface ICompanyService
     {
         bool Create(Company user);
-        List<Dto.Company.Item> CompanyList ();
+        List<Dto.Company.Company> CompanyList ();
         Company GetCompanyById (int id);
         Dto.Company.Item GetCompanyByName(string id);
     }

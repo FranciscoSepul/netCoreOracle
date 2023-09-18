@@ -115,7 +115,8 @@ namespace BackSecurity.Services.Services
             {
                 BackSecurity.Dto.User.Item useritem = GetWorker(user.run_usuario);
                 useritem.nom_usuario = user.nom_usuario;
-                useritem.idempresa = user.idempresa;
+                Console.WriteLine("here upd"+user.compania);
+                useritem.idempresa = user.compania;
                 useritem.fono_usuario = user.fono_usuario;
                 useritem.tipo_contrato = user.tipo_contrato;
                 useritem.funcion = user.funcion.ToString();
