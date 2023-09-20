@@ -49,7 +49,7 @@ namespace BackSecurity.Dto.User
         public int fono_usuario { get; set; }
         public int funcion { get; set; }
         public int id_usuario { get; set; }
-        public int compania { get; set; }
+        public int id_empresa { get; set; }
         public int idtipocuenta { get; set; }
         public int isdelete { get; set; }
         public string nacionalidad { get; set; }
