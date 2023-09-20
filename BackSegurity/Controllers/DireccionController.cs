@@ -33,17 +33,26 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetComunaByRegion(int id)
         {
-            Dto.Company.Item company= _companyService.GetComunaById(id);
-            return Ok(company);
+            List<Dto.Comuna.Item> comuna = _DireccionService.GetComunaById(id);
+            return Ok(comuna);
         }
+
+        [HttpGet("GetDireccionById")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDireccionById(int id)
+        {
+            BackSecurity.Dto.Direccion.Item comuna = _DireccionService.GetDireccionById(id);
+            return Ok(comuna);
+        }
+
         [HttpGet("GetAllRegion")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllRegion()
         {
-            List<Dto.Region.Item> regions = _companyService.DireccionList();
+            List<Dto.Region.Item> regions = _DireccionService.DireccionList();
             return Ok(regions);
         }
 
-        
+
     }
 }

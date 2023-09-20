@@ -11,7 +11,7 @@ namespace BackSecurity.Services.IServices
     public interface IUserService
     {
         string Login(string user, string pass);
-        bool Create(UserInsert user);
+        bool Create(UserToInsert user);
         List<Users> Users ();
         bool Update(UserUpdate user);
         bool Disable(UserDisable user);

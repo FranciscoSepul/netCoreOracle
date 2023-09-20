@@ -25,6 +25,20 @@ namespace BackSecurity.Dto.User
         public string run_usuario { get; set; }
         public string tipo_contrato { get; set; }
     }
+
+    public class UserToInsert
+    {
+        public string nom_usuario { get; set; }
+        public string run_usuario { get; set; }
+        public int fono_usuario { get; set; }
+        public string tipo_contrato { get; set; }
+        public int id_empresa { get; set; }
+        public int funcion { get; set; }
+        public string nacionalidad { get; set; }
+        public string correo { get; set; }
+
+    }
+
     public class UserUpdate
     {
         public string apellido { get; set; }
@@ -44,7 +58,7 @@ namespace BackSecurity.Dto.User
         public string tipo_contrato { get; set; }
     }
 
-     public class UserDisable
+    public class UserDisable
     {
         public string apellido { get; set; }
         public string clave { get; set; }
@@ -119,7 +133,8 @@ namespace BackSecurity.Dto.User
         public List<Link> links { get; set; }
     }
 
-    public class ContractType {
+    public class ContractType
+    {
         public string contract { get; set; }
     }
 

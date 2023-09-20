@@ -28,7 +28,7 @@ namespace BackSecurity.Services.Services
         private readonly IConfiguration _config;
         private readonly IHttpService _httpService;
         private readonly ICompanyService _company;
-        public string GetAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario";
+        public string GetAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario?limit=10000";
         public string InsertUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
         public string UpdateUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
         public string GetTypeById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/funcion/";
@@ -85,26 +85,37 @@ namespace BackSecurity.Services.Services
             };
             return claims;
         }
-        public bool Create(UserInsert user)
+        public bool Create(UserToInsert userToInsert)
         {
             try
             {
-                user.id_usuario = Users().Count + 1;
-                string[] strings = user.nom_usuario.Split(' ');
-                user.apellido = (strings.Count() > 1) ? strings[1] : "";
+                UserInsert user = new();
+                Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
+                user.id_usuario = userItem.items.Count + 1;
+
+                string[] strings = userToInsert.nom_usuario.Split(' ');
+                user.apellido = (strings.Length > 1) ? strings[1] : "";
                 user.nom_usuario = strings[0];
                 user.clave = "12345";
-                string[] rut = user.run_usuario.Split('-');
+                user.idempresa=userToInsert.id_empresa;
+                string[] rut = userToInsert.run_usuario.Split('-');
                 user.run_usuario = rut[0];
                 user.dvrut = (rut.Count() > 1) ? rut[1] : " ";
                 user.isdelete = 0;
-                user.idtipocuenta = user.funcion;
+                user.idtipocuenta = userToInsert.funcion;
+                user.funcion= userToInsert.funcion;
+                user.correo=userToInsert.correo;
+                user.fono_usuario=userToInsert.fono_usuario;
+                user.nacionalidad=userToInsert.nacionalidad;
+                user.tipo_contrato=userToInsert.tipo_contrato;
                 user.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault();
+                Console.WriteLine(JsonConvert.SerializeObject(user));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertUsers, HttpMethod.Post, JsonConvert.SerializeObject(user));
                 return true;
             }
-            catch (Exception )
+            catch (Exception ex)
             {
+                Console.Write(ex.Message+ex.StackTrace);
                 return false;
             }
         }
@@ -115,7 +126,6 @@ namespace BackSecurity.Services.Services
             {
                 BackSecurity.Dto.User.Item useritem = GetWorker(user.run_usuario);
                 useritem.nom_usuario = user.nom_usuario;
-                Console.WriteLine("here upd"+user.compania);
                 useritem.idempresa = user.compania;
                 useritem.fono_usuario = user.fono_usuario;
                 useritem.tipo_contrato = user.tipo_contrato;
@@ -134,8 +144,8 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-
                 Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
+                Console.WriteLine("cantidad  "+userItem.items.Count);
                 List<Users> users = new();
                 foreach (BackSecurity.Dto.User.Item item in userItem.items)
                 {
@@ -161,8 +171,9 @@ namespace BackSecurity.Services.Services
                 }
                 return users;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("ex "+ex.Message+ex.StackTrace);
                 return null;
             }
 

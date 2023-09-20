@@ -17,8 +17,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using Newtonsoft.Json;
-using BackSecurity.Dto.Company;
+using BackSecurity.Dto.Comuna;
 using BackSecurity.Dto.Region;
+using BackSecurity.Dto.Direccion;
+
 
 namespace BackSecurity.Services.Services
 {
@@ -26,8 +28,9 @@ namespace BackSecurity.Services.Services
     {
         private readonly IConfiguration _config;
         private readonly IHttpService _httpService;
-        public string GetAllRegion = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/region/";
-        public string StrGetComunaById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
+        public string GetAllRegion = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/region?limit=10000";
+        public string StrGetComuna = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/comuna?limit=10000";
+        public string StrGetDireccionById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/direccion/";
         public DireccionService(IConfiguration configuration, IHttpService httpService)
         {
             _config = configuration;
@@ -47,13 +50,34 @@ namespace BackSecurity.Services.Services
             }
         }
 
-        public Company GetComunaById(int id)
+        public Dto.Direccion.Item GetDireccionById(int id)
         {
             try
             {
+                Console.WriteLine("en servicio " + id);
+                Dto.Direccion.Item direccion = _httpService.RequestJson<BackSecurity.Dto.Direccion.Item>(StrGetDireccionById + id + "?limit=10000", HttpMethod.Get);
+                return direccion;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
-                Company company = _httpService.RequestJson<Company>(StrGetComunaById + id, HttpMethod.Get);
-                return company;
+        public List<Dto.Comuna.Item> GetComunaById(int id)
+        {
+            try
+            {
+                List<Dto.Comuna.Item> comunas = _httpService.RequestJson<ComunaRoot>(StrGetComuna, HttpMethod.Get).items;
+                List<Dto.Comuna.Item> comunasByRegion = new();
+                foreach (Dto.Comuna.Item comuna in comunas)
+                {
+                    if (comuna.id_region == id)
+                    {
+                        comunasByRegion.Add(comuna);
+                    }
+                }
+                return comunasByRegion;
             }
             catch (Exception)
             {

@@ -19,6 +19,9 @@ namespace BackSecurity.Dto.Company
         public string Correo { get; set; }
         public string haxColor {get;set;}
         public string eliminado {get;set;}
+        public int Region {get;set;}
+        public int Comuna {get;set;}
+        public string Direccion {get;set;}
     }
 
     public class Item
@@ -32,6 +35,7 @@ namespace BackSecurity.Dto.Company
         public int IsDelete { get; set; }
         public string ImageBase64 { get; set; }
         public string Correo { get; set; }
+        public int IDDIRECCION { get; set; }
         public List<Link> links { get; set; }
     }
 

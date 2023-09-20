@@ -25,14 +25,16 @@ namespace BackSecurity.Services.Services
     {
         private readonly IConfiguration _config;
         private readonly IHttpService _httpService;
-        public string GetAllCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
+        private readonly IDireccionService _direccionService;
+        public string GetAllCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa?limit=10000";
         public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
         public string InsertCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
 
-        public CompanyService(IConfiguration configuration, IHttpService httpService)
+        public CompanyService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
         {
             _config = configuration;
             _httpService = httpService;
+            _direccionService = direccionService;
         }
 
         public bool Create(Company user)
@@ -55,8 +57,10 @@ namespace BackSecurity.Services.Services
                 List<Dto.Company.Company> companies = new();
                 foreach (Dto.Company.Item item in companys)
                 {
+                    Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.IDDIRECCION);
                     Dto.Company.Company company = new()
                     {
+                        id_empresa=item.id_empresa,
                         nom_empresa = item.nom_empresa,
                         Rut = item.Rut,
                         DvRut = item.DvRut,
@@ -65,7 +69,12 @@ namespace BackSecurity.Services.Services
                         Correo = item.Correo,
                         eliminado = stateCompany(item),
                         fechaCreacion = item.fechaCreacion,
-                        haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653"
+                        haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653",
+                        Region = direccion.id_region,
+                        Comuna = direccion.id_comuna,
+                        Direccion = $"{direccion.calle}  {direccion.numeracion}",
+
+
                     };
                     companies.Add(company);
                 }
@@ -96,7 +105,7 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-
+                Console.WriteLine("en company id "+id);
                 Company company = _httpService.RequestJson<Company>(_GetCompanyById + id, HttpMethod.Get);
                 return company;
             }

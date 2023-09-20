@@ -130,7 +130,7 @@ namespace BackSecurity.Controllers
 
         [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] UserInsert userInsert)
+        public async Task<IActionResult> Create([FromBody] UserToInsert userInsert)
         {
             bool response = _userService.Create(userInsert);
             return (response !=false)? Ok():BadRequest();
