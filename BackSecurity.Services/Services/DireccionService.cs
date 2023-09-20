@@ -54,7 +54,6 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                Console.WriteLine("en servicio " + id);
                 Dto.Direccion.Item direccion = _httpService.RequestJson<BackSecurity.Dto.Direccion.Item>(StrGetDireccionById + id + "?limit=10000", HttpMethod.Get);
                 return direccion;
             }

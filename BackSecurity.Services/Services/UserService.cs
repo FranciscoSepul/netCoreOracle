@@ -96,10 +96,10 @@ namespace BackSecurity.Services.Services
                 string[] strings = userToInsert.nom_usuario.Split(' ');
                 user.apellido = (strings.Length > 1) ? strings[1] : "";
                 user.nom_usuario = strings[0];
-                user.clave = "12345";
                 user.idempresa=userToInsert.id_empresa;
                 string[] rut = userToInsert.run_usuario.Split('-');
                 user.run_usuario = rut[0];
+                user.clave = rut[0];
                 user.dvrut = (rut.Count() > 1) ? rut[1] : " ";
                 user.isdelete = 0;
                 user.idtipocuenta = userToInsert.funcion;
@@ -109,13 +109,11 @@ namespace BackSecurity.Services.Services
                 user.nacionalidad=userToInsert.nacionalidad;
                 user.tipo_contrato=userToInsert.tipo_contrato;
                 user.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault();
-                Console.WriteLine(JsonConvert.SerializeObject(user));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertUsers, HttpMethod.Post, JsonConvert.SerializeObject(user));
                 return true;
             }
             catch (Exception ex)
             {
-                Console.Write(ex.Message+ex.StackTrace);
                 return false;
             }
         }
@@ -145,7 +143,6 @@ namespace BackSecurity.Services.Services
             try
             {
                 Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
-                Console.WriteLine("cantidad  "+userItem.items.Count);
                 List<Users> users = new();
                 foreach (BackSecurity.Dto.User.Item item in userItem.items)
                 {
@@ -173,7 +170,6 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ex "+ex.Message+ex.StackTrace);
                 return null;
             }
 

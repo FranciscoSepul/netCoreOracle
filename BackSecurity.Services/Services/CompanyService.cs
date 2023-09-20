@@ -105,7 +105,6 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                Console.WriteLine("en company id "+id);
                 Company company = _httpService.RequestJson<Company>(_GetCompanyById + id, HttpMethod.Get);
                 return company;
             }
