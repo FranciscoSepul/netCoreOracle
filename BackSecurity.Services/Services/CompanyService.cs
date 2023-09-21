@@ -181,16 +181,52 @@ namespace BackSecurity.Services.Services
 
         public bool Disable(CompanyUpdate company)
         {
-            Console.WriteLine("cc "+company.id_empresa);
             CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + company.id_empresa, HttpMethod.Get);
             #region Update company
-            Console.WriteLine("de "+company.isdelete);
-            Console.WriteLine("de "+companyById.isdelete);
-            companyById.isdelete = (company.isdelete != companyById.isdelete )? company.isdelete:0;
-            Console.WriteLine("2 de  "+companyById.isdelete);
+            companyById.isdelete = (company.isdelete != companyById.isdelete) ? company.isdelete : 0;
             BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
             #endregion
             return (item != null);
+        }
+
+        public List<Company> CompanyListNotDisable()
+        {
+            try
+            {
+                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+                List<Dto.Company.Company> companies = new();
+                foreach (Dto.Company.Item item in companys)
+                {
+                    Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.IDDIRECCION);
+                    Dto.Company.Company company = new();
+
+                    company.id_empresa = item.id_empresa;
+                    company.nom_empresa = item.nom_empresa;
+                    company.Rut = item.Rut;
+                    company.DvRut = item.DvRut;
+                    company.ImageBase64 = item.ImageBase64;
+                    company.fechaFinContrato = item.fechaFinContrato;
+                    company.Correo = item.Correo;
+                    company.eliminado = stateCompany(item);
+                    company.fechaCreacion = item.fechaCreacion;
+                    company.haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653";
+                    company.Region = direccion.id_region;
+                    company.Comuna = direccion.id_comuna;
+                    company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
+                    company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
+                    if (company.IsDelete == 0)
+                    {
+                        companies.Add(company);
+                    }
+
+                }
+                return companies.OrderBy(x => x.IsDelete).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + ex.StackTrace);
+                return null;
+            }
         }
     }
 }

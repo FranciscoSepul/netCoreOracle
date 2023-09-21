@@ -50,6 +50,13 @@ namespace BackSecurity.Controllers
             List<Dto.Company.Company> company = _companyService.CompanyList();
             return Ok(company);
         }
+        [HttpGet("GetAllCompanyNotDisable")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllCompanyNotDisable()
+        {
+            List<Dto.Company.Company> company = _companyService.CompanyListNotDisable();
+            return Ok(company);
+        }
         [HttpPost("Create")]
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] CompanyCreate companyInsert)
