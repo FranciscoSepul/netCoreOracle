@@ -31,6 +31,9 @@ namespace BackSecurity.Services.Services
         public string GetAllRegion = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/region?limit=10000";
         public string StrGetComuna = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/comuna?limit=10000";
         public string StrGetDireccionById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/direccion/";
+        public string StrGetDireccionAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/direccion?limit=10000";
+        public string InsertDireccionStr = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/direccion/";
+        
         public DireccionService(IConfiguration configuration, IHttpService httpService)
         {
             _config = configuration;
@@ -85,5 +88,43 @@ namespace BackSecurity.Services.Services
 
         }
 
+        public int Create(DireccionInsert direccion)
+        {
+             try
+            {
+                DirectionInsertOracle directionInsertOracle=new();
+                BackSecurity.Dto.Direccion.DireccionRoot direccions = _httpService.RequestJson<BackSecurity.Dto.Direccion.DireccionRoot>(StrGetDireccionAll, HttpMethod.Get);
+                directionInsertOracle.id_direccion=direccions.items.Count()+1;
+                directionInsertOracle.calle=direccion.calle;
+                directionInsertOracle.numeracion=direccion.numeracion;
+                directionInsertOracle.id_region=direccion.id_region;
+                directionInsertOracle.id_comuna=direccion.id_comuna;
+                BackSecurity.Dto.Direccion.Item item = _httpService.RequestJson< BackSecurity.Dto.Direccion.Item>(InsertDireccionStr, HttpMethod.Post, JsonConvert.SerializeObject(directionInsertOracle));
+                return item.id_direccion;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
+        public int Update(DireccionInsert direccion)
+        {
+              try
+            {
+                DirectionInsertOracle directionInsertOracle=new();
+                directionInsertOracle.id_direccion = direccion.id_direccion;
+                directionInsertOracle.calle=direccion.calle;
+                directionInsertOracle.numeracion=direccion.numeracion;
+                directionInsertOracle.id_region=direccion.id_region;
+                directionInsertOracle.id_comuna=direccion.id_comuna;
+                BackSecurity.Dto.Direccion.Item item = _httpService.RequestJson< BackSecurity.Dto.Direccion.Item>(InsertDireccionStr+direccion.id_direccion, HttpMethod.Put, JsonConvert.SerializeObject(directionInsertOracle));
+                return item.id_direccion;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
     }
 }

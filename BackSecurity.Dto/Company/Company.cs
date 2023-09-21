@@ -17,12 +17,55 @@ namespace BackSecurity.Dto.Company
         public int IsDelete { get; set; }
         public string ImageBase64 { get; set; }
         public string Correo { get; set; }
-        public string haxColor {get;set;}
-        public string eliminado {get;set;}
-        public int Region {get;set;}
-        public int Comuna {get;set;}
-        public string Direccion {get;set;}
+        public string haxColor { get; set; }
+        public string eliminado { get; set; }
+        public int Region { get; set; }
+        public int Comuna { get; set; }
+        public string Direccion { get; set; }
     }
+
+    public class CompanyCreate
+    {
+        public string nom_empresa { get; set; }
+        public string Rut { get; set; }
+        public string fechaCreacion { get; set; }
+        public string fechaFinContrato { get; set; }
+        public string Correo { get; set; }
+        public int Region { get; set; }
+        public int Comuna { get; set; }
+        public string Direccion { get; set; }
+        public int IdDireccion {get;set;}
+    }
+
+    public class CompanyUpdate
+    {
+        public int id_empresa {get;set;}
+        public string nom_empresa { get; set; }
+        public string Rut { get; set; }
+        public string fechaCreacion { get; set; }
+        public string fechaFinContrato { get; set; }
+        public string Correo { get; set; }
+        public int Region { get; set; }
+        public int Comuna { get; set; }
+        public string Direccion { get; set; }
+        public int IdDireccion {get;set;}
+        public int isdelete { get; set; }
+    }
+     public class CompanyInsert
+    {
+        public int id_empresa { get; set; }
+        public string nom_empresa { get; set; }
+        public string rut { get; set; }
+        public string dvrut { get; set; }
+        public string fechacreacion { get; set; }
+        public string fechafincontrato { get; set; }
+        public int isdelete { get; set; }
+        public string imageBase64 { get; set; }
+        public string correo { get; set; }
+        public int iddireccion { get; set; }
+    }
+
+
 
     public class Item
     {

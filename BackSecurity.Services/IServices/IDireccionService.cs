@@ -15,5 +15,7 @@ namespace BackSecurity.Services.IServices
         List<Dto.Region.Item> DireccionList ();
         List<Dto.Comuna.Item> GetComunaById (int id);
         Dto.Direccion.Item GetDireccionById(int id);
+        int Create(Dto.Direccion.DireccionInsert user);
+        int Update(Dto.Direccion.DireccionInsert user);
     }
 }

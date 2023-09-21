@@ -7,6 +7,14 @@ using System.Threading.Tasks;
 namespace BackSecurity.Dto.Direccion
 {
    
+   public class DireccionInsert
+    {
+        public int id_direccion { get; set; }
+        public int id_comuna { get; set; }
+        public int id_region { get; set; }
+        public string calle { get; set; }
+        public int numeracion { get; set; }
+    }
     public class Item
     {
         public int id_direccion { get; set; }
@@ -16,6 +24,16 @@ namespace BackSecurity.Dto.Direccion
         public int numeracion { get; set; }
         public List<Link> links { get; set; }
     }
+
+     public class DirectionInsertOracle
+    {
+        public int id_direccion { get; set; }
+        public int id_comuna { get; set; }
+        public int id_region { get; set; }
+        public string calle { get; set; }
+        public int numeracion { get; set; }
+    }
+
 
     public class Link
     {
