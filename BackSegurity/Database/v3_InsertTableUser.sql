@@ -6,7 +6,7 @@ INSERT INTO usuario (id_usuario, run_usuario, nom_usuario, IDTIPOCUENTA, tipo_co
 VALUES (2, '18647120', 'Manuel', 1 , 'Indefinido', 965487231, 'Colombia',16485,4,'01/10/2023',0,'Profesional','Manuel485@gmail.com','Montilla','6');
 
 INSERT INTO usuario (id_usuario, run_usuario, nom_usuario, IDTIPOCUENTA, tipo_contrato, fono_usuario,nacionalidad,CLAVE,IDEMPRESA,FECHACREACION,ISDELETE,FUNCION,CORREO,APELLIDO,DVRUT)
-VALUES (3, '25998225', 'Marcel', 2 , 'Indefinido', 978551203, 'Bolivia',45687,2,'02/07/2023',0,'Administrador Web','Marcel.s@gmail.com','Soto','K');
+VALUES (3, '25998225', 'Marcel', 2 , 'Indefinido', 978551203, 'Bolivia',12345,2,'02/07/2023',0,'Administrador Web','Marcel.s@gmail.com','Soto','K');
 
 INSERT INTO usuario (id_usuario, run_usuario, nom_usuario, IDTIPOCUENTA, tipo_contrato, fono_usuario,nacionalidad,CLAVE,IDEMPRESA,FECHACREACION,ISDELETE,FUNCION,CORREO,APELLIDO,DVRUT)
 VALUES (4, '14587999', 'Bastian', 1 , 'Plazo fijo', 998556478, 'Bolivia',14253,1,'01/05/2023',0,'Profesional','Bastian524@gmail.com','Muller','4');

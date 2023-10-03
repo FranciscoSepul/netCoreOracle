@@ -22,32 +22,32 @@ namespace BackSecurity.Controllers
 
     public class AccidentesController : BaseController
     {
-        private readonly ICompanyService _companyService;
+        private readonly IAccidentesService _AccidentesService;
 
-        public AccidentesController(ICompanyService companyService)
+        public AccidentesController(IAccidentesService AccidentesService)
         {
-            _companyService = companyService;
+            _AccidentesService = AccidentesService;
         }
 
         [HttpGet("GetAccidentsById")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAccidentsById(int id)
         {
-            Company company = _companyService.GetCompanyById(id);
+            Company company = _AccidentesService.GetCompanyById(id);
             return Ok(company);
         }
         [HttpGet("GetAllAccidents")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllAccidents()
         {
-            List<Dto.Company.Company> company = _companyService.CompanyList();
+            List<Dto.Company.Company> company = _AccidentesService.CompanyList();
             return Ok(company);
         }
         [HttpPost("Create")]
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] CompanyCreate companyInsert)
         {
-            bool response = _companyService.Create(companyInsert);
+            bool response = _AccidentesService.Create(companyInsert);
             return (response !=false)? Ok():BadRequest();
         }
         
@@ -55,7 +55,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Update([FromBody] CompanyUpdate companyInsert)
         {
-            bool user = _companyService.Update(companyInsert);
+            bool user = _AccidentesService.Update(companyInsert);
             return Ok(user);
         }
 
@@ -63,7 +63,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Disable([FromBody] CompanyUpdate companyCreate)
         {
-            bool user = _companyService.Disable(companyCreate);
+            bool user = _AccidentesService.Disable(companyCreate);
             return Ok(user);
         }
         
