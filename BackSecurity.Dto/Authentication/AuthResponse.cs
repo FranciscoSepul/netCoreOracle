@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace BackSecurity.Dto.Authentication
+namespace AppTrabajadores.Dto.Authentication
 {
     public class TokenResponse
     {

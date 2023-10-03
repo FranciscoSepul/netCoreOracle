@@ -1,4 +1,5 @@
-﻿using BackSecurity.Dto.User;
+﻿using BackSecurity.Dto.Funcion;
+using BackSecurity.Dto.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,12 @@ namespace BackSecurity.Services.IServices
 {
     public interface IUserService
     {
-        bool Login(string user, string pass);
-        bool Create(User user);
+        string Login(string user, string pass);
+        bool Create(UserToInsert user);
+        List<Users> Users ();
+        bool Update(UserUpdate user);
+        bool Disable(UserDisable user);
+        BackSecurity.Dto.User.Item GetWorker (string UserName);
+        List<BackSecurity.Dto.Funcion.Item> ListFunction();
     }
 }

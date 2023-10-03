@@ -3,17 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackSecurity", "BackSecurity\BackSecurity.csproj", "{58B0F517-B31A-4BD0-9699-88B06EF1B0B9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackSecurity.Services", "BackSecurity.Services\BackSecurity.Services.csproj", "{1F0FCAD3-37CA-4F94-B80D-649A2CB136A8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackSecurity.Dto", "BackSecurity.Dto\BackSecurity.Dto.csproj", "{4591273D-BD2A-4251-A7BD-D054DD11387F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackSecurity.Constants", "BackSecurity.Constants\BackSecurity.Constants.csproj", "{9B45C2E0-E48C-499F-9757-E2B0BD0B4D6C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackSecurity.Settings", "BackSecurity.Settings\BackSecurity.Settings.csproj", "{6067ACE5-41BF-471D-A49D-9C040A476D02}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackSecurityTest", "BackSecurityTest\BackSecurityTest.csproj", "{38627C43-2106-4239-A583-0FA7A8940609}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

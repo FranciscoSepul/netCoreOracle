@@ -1,18 +1,12 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v5.0",
+    "name": ".NETCoreApp,Version=v7.0",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETCoreApp,Version=v5.0": {
-      "BackSecurity.Settings/1.0.0": {
-        "dependencies": {
-          "DocumentFormat.OpenXml": "2.17.1",
-          "EPPlus": "4.5.3.3"
-        },
+    ".NETCoreApp,Version=v7.0": {
         "runtime": {
-          "BackSecurity.Settings.dll": {}
         }
       },
       "DocumentFormat.OpenXml/2.17.1": {
@@ -52,7 +46,7 @@
           "Microsoft.Extensions.Configuration.Abstractions": "3.1.0"
         },
         "runtime": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.dll": {
+          "lib/netcoreapp7.0/Microsoft.Extensions.Configuration.dll": {
             "assemblyVersion": "3.1.0.0",
             "fileVersion": "3.100.19.56504"
           }
@@ -63,7 +57,7 @@
           "Microsoft.Extensions.Primitives": "3.1.0"
         },
         "runtime": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.Abstractions.dll": {
+          "lib/netcoreapp7.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
             "assemblyVersion": "3.1.0.0",
             "fileVersion": "3.100.19.56504"
           }
@@ -75,7 +69,7 @@
           "Microsoft.Extensions.FileProviders.Physical": "3.1.0"
         },
         "runtime": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.FileExtensions.dll": {
+          "lib/netcoreapp7.0/Microsoft.Extensions.Configuration.FileExtensions.dll": {
             "assemblyVersion": "3.1.0.0",
             "fileVersion": "3.100.19.56504"
           }
@@ -87,7 +81,7 @@
           "Microsoft.Extensions.Configuration.FileExtensions": "3.1.0"
         },
         "runtime": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.Configuration.Json.dll": {
+          "lib/netcoreapp7.0/Microsoft.Extensions.Configuration.Json.dll": {
             "assemblyVersion": "3.1.0.0",
             "fileVersion": "3.100.19.56504"
           }
@@ -98,7 +92,7 @@
           "Microsoft.Extensions.Primitives": "3.1.0"
         },
         "runtime": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Abstractions.dll": {
+          "lib/netcoreapp7.0/Microsoft.Extensions.FileProviders.Abstractions.dll": {
             "assemblyVersion": "3.1.0.0",
             "fileVersion": "3.100.19.56504"
           }
@@ -110,7 +104,7 @@
           "Microsoft.Extensions.FileSystemGlobbing": "3.1.0"
         },
         "runtime": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Physical.dll": {
+          "lib/netcoreapp7.0/Microsoft.Extensions.FileProviders.Physical.dll": {
             "assemblyVersion": "3.1.0.0",
             "fileVersion": "3.100.19.56504"
           }
@@ -126,7 +120,7 @@
       },
       "Microsoft.Extensions.Primitives/3.1.0": {
         "runtime": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll": {
+          "lib/netcoreapp7.0/Microsoft.Extensions.Primitives.dll": {
             "assemblyVersion": "3.1.0.0",
             "fileVersion": "3.100.19.56504"
           }

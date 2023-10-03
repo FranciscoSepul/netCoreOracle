@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
-    <SpaRoot>ClientApp\</SpaRoot>
+    <SpaRoot>NetCoreOracle\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
 
     <!-- Set this to true if you enable server-side prerendering -->
@@ -39,16 +39,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\src\app\dto\AutServiceToken.dto.ts" />
-    <None Remove="ClientApp\src\app\dto\tablaInicialValues.ts" />
-    <None Remove="ClientApp\src\app\modules\base\base-routing.module.ts" />
-    <None Remove="ClientApp\src\app\modules\logo-setup\logo-setup-routing.module.ts" />
-    <None Remove="ClientApp\src\app\modules\services\refreshtoken.service.ts" />
-    <None Remove="ClientApp\src\app\modules\solicitud-contacto\solicitud-contacto-routing.module.ts" />
-    <None Remove="ClientApp\src\app\modules\solicitud-no-disponibilidad\solicitud-no-disponibilidad-routing.module.ts" />
-    <None Remove="ClientApp\src\app\shared\guards\logged.guard.ts" />
-    <None Remove="ClientApp\src\environments\environment.dev.ts" />
-    <None Remove="ClientApp\src\environments\environment.qa.ts" />
+    <None Remove="BackSecurity\src\app\dto\AutServiceToken.dto.ts" />
+    <None Remove="BackSecurity\src\app\dto\tablaInicialValues.ts" />
+    <None Remove="BackSecurity\src\app\modules\base\base-routing.module.ts" />
+    <None Remove="BackSecurity\src\app\modules\logo-setup\logo-setup-routing.module.ts" />
+    <None Remove="BackSecurity\src\app\modules\services\refreshtoken.service.ts" />
+    <None Remove="BackSecurity\src\app\modules\solicitud-contacto\solicitud-contacto-routing.module.ts" />
+    <None Remove="BackSecurity\src\app\modules\solicitud-no-disponibilidad\solicitud-no-disponibilidad-routing.module.ts" />
+    <None Remove="BackSecurity\src\app\shared\guards\logged.guard.ts" />
+    <None Remove="BackSecurity\src\environments\environment.dev.ts" />
+    <None Remove="BackSecurity\src\environments\environment.qa.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,16 +60,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\app\modules\dto\tablaInicialValues.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\dto\AutServiceToken.dto.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\base\base-routing.module.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\logo-setup\logo-setup-routing.module.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\services\refreshtoken.service.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\solicitud-contacto\solicitud-contacto-routing.module.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\modules\solicitud-no-disponibilidad\solicitud-no-disponibilidad-routing.module.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\shared\guards\logged.guard.ts" />
-    <TypeScriptCompile Include="ClientApp\src\environments\environment.dev.ts" />
-    <TypeScriptCompile Include="ClientApp\src\environments\environment.qa.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\app\modules\dto\tablaInicialValues.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\app\dto\AutServiceToken.dto.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\app\modules\base\base-routing.module.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\app\modules\logo-setup\logo-setup-routing.module.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\app\modules\services\refreshtoken.service.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\app\modules\solicitud-contacto\solicitud-contacto-routing.module.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\app\modules\solicitud-no-disponibilidad\solicitud-no-disponibilidad-routing.module.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\app\shared\guards\logged.guard.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\environments\environment.dev.ts" />
+    <TypeScriptCompile Include="BackSecurity\src\environments\environment.qa.ts" />
   </ItemGroup>
   
   <ItemGroup>
@@ -93,7 +93,6 @@
     </Exec>
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
   </Target>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
@@ -115,6 +114,6 @@
     </ItemGroup>
   </Target>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://appliedengdesign.github.io/cnccodes-json-schema/draft/2022-07/schema" appsettings_1json__JsonSchema="" clientapp_4angular_1json__JsonSchema="" clientapp_4package_1json__JsonSchema="https://docs.renovatebot.com/renovate-schema.json" clientapp_4tsconfig_1json__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://appliedengdesign.github.io/cnccodes-json-schema/draft/2022-07/schema" appsettings_1json__JsonSchema="" BackSecurity_4angular_1json__JsonSchema="" BackSecurity_4package_1json__JsonSchema="https://docs.renovatebot.com/renovate-schema.json" BackSecurity_4tsconfig_1json__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
