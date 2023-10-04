@@ -1,6 +1,5 @@
 ﻿using BackSecurity.Dto.User;
 using BackSecurity.Services.IServices;
-using Dapper;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;

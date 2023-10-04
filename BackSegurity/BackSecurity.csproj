@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
@@ -20,17 +20,21 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.8" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="UAParser" Version="3.1.47" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="BackSecurity\**" />
     <Compile Remove="Controllers\Security\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="BackSecurity\**" />
     <Content Remove="Controllers\Security\**" />
+    <EmbeddedResource Remove="BackSecurity\**" />
     <EmbeddedResource Remove="Controllers\Security\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="BackSecurity\**" />
     <None Remove="Controllers\Security\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     <None Remove="Controllers\Security\" />
@@ -39,47 +43,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="BackSecurity\src\app\dto\AutServiceToken.dto.ts" />
-    <None Remove="BackSecurity\src\app\dto\tablaInicialValues.ts" />
-    <None Remove="BackSecurity\src\app\modules\base\base-routing.module.ts" />
-    <None Remove="BackSecurity\src\app\modules\logo-setup\logo-setup-routing.module.ts" />
-    <None Remove="BackSecurity\src\app\modules\services\refreshtoken.service.ts" />
-    <None Remove="BackSecurity\src\app\modules\solicitud-contacto\solicitud-contacto-routing.module.ts" />
-    <None Remove="BackSecurity\src\app\modules\solicitud-no-disponibilidad\solicitud-no-disponibilidad-routing.module.ts" />
-    <None Remove="BackSecurity\src\app\shared\guards\logged.guard.ts" />
-    <None Remove="BackSecurity\src\environments\environment.dev.ts" />
-    <None Remove="BackSecurity\src\environments\environment.qa.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BackSecurity.Dto\BackSecurity.Dto.csproj" />
     <ProjectReference Include="..\BackSecurity.Services\BackSecurity.Services.csproj" />
-    <ProjectReference Include="..\BackSecurity.Settings\BackSecurity.Settings.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="BackSecurity\src\app\modules\dto\tablaInicialValues.ts" />
-    <TypeScriptCompile Include="BackSecurity\src\app\dto\AutServiceToken.dto.ts" />
-    <TypeScriptCompile Include="BackSecurity\src\app\modules\base\base-routing.module.ts" />
-    <TypeScriptCompile Include="BackSecurity\src\app\modules\logo-setup\logo-setup-routing.module.ts" />
-    <TypeScriptCompile Include="BackSecurity\src\app\modules\services\refreshtoken.service.ts" />
-    <TypeScriptCompile Include="BackSecurity\src\app\modules\solicitud-contacto\solicitud-contacto-routing.module.ts" />
-    <TypeScriptCompile Include="BackSecurity\src\app\modules\solicitud-no-disponibilidad\solicitud-no-disponibilidad-routing.module.ts" />
-    <TypeScriptCompile Include="BackSecurity\src\app\shared\guards\logged.guard.ts" />
-    <TypeScriptCompile Include="BackSecurity\src\environments\environment.dev.ts" />
-    <TypeScriptCompile Include="BackSecurity\src\environments\environment.qa.ts" />
   </ItemGroup>
   
-  <ItemGroup>
-    <Content Include="db2\migrations\**\*.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   
   <ItemGroup>
-    <Compile Remove="Controllers\ShiftChangeSolicitudeController.cs" />
   </ItemGroup>
   
   <ItemGroup>
@@ -96,13 +65,6 @@
   </Target>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" Condition="'$(Configuration)' == 'Debug'" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build-qa" Condition="'$(Configuration)' == 'Staging'" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build-prod" Condition="'$(Configuration)' == 'Release'" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
-
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
