@@ -14,6 +14,7 @@ using BackSecurity.Controllers.Common;
 using BackSecurity.Dto.Authentication;
 using BackSecurity.Constants.Constants;
 using BackSecurity.Dto.Company;
+using BackSecurity.Dto.Activity;
 
 namespace BackSecurity.Controllers
 {
@@ -22,13 +23,27 @@ namespace BackSecurity.Controllers
 
     public class ActividadesController : BaseController
     {
-        private readonly ICompanyService _companyService;
+        private readonly IActividadesService _ActividadesService;
 
-        public ActividadesController(ICompanyService companyService)
+        public ActividadesController(IActividadesService ActividadesService)
         {
-            _companyService = companyService;
+            _ActividadesService = ActividadesService;
         }
-
+         [HttpGet("GetAllActivity")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllActivity()
+        {
+            List<Dto.Activity.ActivityList> activi = _ActividadesService.List();
+            return Ok(activi);
+        }
+        [HttpGet("GetAllTemas")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllTemas()
+        {
+            List<Dto.Tema.Item> tema = _ActividadesService.ListTema();
+            return Ok(tema);
+        }
+/*
         [HttpGet("GetActivityById")]
         [AllowAnonymous]
         public async Task<IActionResult> GetActivityById(int id)
@@ -36,31 +51,23 @@ namespace BackSecurity.Controllers
             Company company = _companyService.GetCompanyById(id);
             return Ok(company);
         }
-
-        [HttpGet("GetAllActivity")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllActivity()
-        {
-            List<Dto.Company.Company> company = _companyService.CompanyList();
-            return Ok(company);
-        }
-
+*/
         [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] CompanyCreate companyInsert)
+        public async Task<IActionResult> Create([FromBody] ActivityCreate companyInsert)
         {
-            bool response = _companyService.Create(companyInsert);
+            bool response = _ActividadesService.Create(companyInsert);
             return (response !=false)? Ok():BadRequest();
         }
-        
+        /*
         [HttpPut("Update")]
         [AllowAnonymous]
         public async Task<IActionResult> Update([FromBody] CompanyUpdate companyInsert)
         {
-            bool user = _companyService.Update(companyInsert);
+            bool user = _ActividadesService.Update(companyInsert);
             return Ok(user);
         }
-
+        
         [HttpPut("Disable")]
         [AllowAnonymous]
         public async Task<IActionResult> Disable([FromBody] CompanyUpdate companyCreate)
@@ -68,6 +75,7 @@ namespace BackSecurity.Controllers
             bool user = _companyService.Disable(companyCreate);
             return Ok(user);
         }
+        */
         
     }
 }

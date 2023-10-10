@@ -13,9 +13,12 @@ namespace BackSecurity.Services.IServices
         string Login(string user, string pass);
         bool Create(UserToInsert user);
         List<Users> Users ();
+        List<Users> ProfesionalUsers (int id);
         bool Update(UserUpdate user);
         bool Disable(UserDisable user);
         BackSecurity.Dto.User.Item GetWorker (string UserName);
         List<BackSecurity.Dto.Funcion.Item> ListFunction();
+
+        BackSecurity.Dto.User.Item GetWorkerById(int UserId);
     }
 }

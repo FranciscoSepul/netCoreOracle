@@ -43,6 +43,7 @@ namespace BackSecurity.Controllers
             Dto.Company.Item company= _companyService.GetCompanyByName(id);
             return Ok(company);
         }
+        
         [HttpGet("GetAllCompany")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllCompany()

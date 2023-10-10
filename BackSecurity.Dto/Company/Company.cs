@@ -65,8 +65,6 @@ namespace BackSecurity.Dto.Company
         public int iddireccion { get; set; }
     }
 
-
-
     public class Item
     {
         public int id_empresa { get; set; }

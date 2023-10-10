@@ -95,18 +95,18 @@ namespace BackSecurity.Services.Services
                 string[] strings = userToInsert.nom_usuario.Split(' ');
                 user.apellido = (strings.Length > 1) ? strings[1] : "";
                 user.nom_usuario = strings[0];
-                user.idempresa=userToInsert.id_empresa;
+                user.idempresa = userToInsert.id_empresa;
                 string[] rut = userToInsert.run_usuario.Split('-');
                 user.run_usuario = rut[0];
                 user.clave = rut[0];
                 user.dvrut = (rut.Count() > 1) ? rut[1] : " ";
                 user.isdelete = 0;
                 user.idtipocuenta = userToInsert.funcion;
-                user.funcion= userToInsert.funcion;
-                user.correo=userToInsert.correo;
-                user.fono_usuario=userToInsert.fono_usuario;
-                user.nacionalidad=userToInsert.nacionalidad;
-                user.tipo_contrato=userToInsert.tipo_contrato;
+                user.funcion = userToInsert.funcion;
+                user.correo = userToInsert.correo;
+                user.fono_usuario = userToInsert.fono_usuario;
+                user.nacionalidad = userToInsert.nacionalidad;
+                user.tipo_contrato = userToInsert.tipo_contrato;
                 user.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault();
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertUsers, HttpMethod.Post, JsonConvert.SerializeObject(user));
                 return true;
@@ -187,6 +187,20 @@ namespace BackSecurity.Services.Services
             }
 
         }
+        public BackSecurity.Dto.User.Item GetWorkerById(int UserId)
+        {
+            try
+            {
+                Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
+                BackSecurity.Dto.User.Item user = userItem.items.Where(x => x.id_usuario == UserId).FirstOrDefault();
+                return user;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
         public Function GetFunctionById(int id)
         {
             Function function = _httpService.RequestJson<Function>(GetTypeById + id, HttpMethod.Get);
@@ -211,6 +225,46 @@ namespace BackSecurity.Services.Services
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public List<Users> ProfesionalUsers(int id)
+        {
+            try
+            {
+                Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
+                List<Users> users = new();
+                foreach (BackSecurity.Dto.User.Item item in userItem.items)
+                {
+                    if (item.idtipocuenta==2 && item.idempresa==id)
+                    {
+                        Users user = new();
+                        user.id_usuario = item.id_usuario;
+                        user.run_usuario = item.run_usuario;
+                        user.nom_usuario = item.nom_usuario;
+                        user.tipo_contrato = item.tipo_contrato;
+                        user.fono_usuario = item.fono_usuario;
+                        user.nacionalidad = item.nacionalidad;
+                        user.clave = item.clave;
+                        user.tipocuenta = (item.idtipocuenta > 0) ? GetFunctionById(item.idtipocuenta).nom_fun : "";
+                        user.empresa = (item.idempresa > 0) ? _company.GetCompanyById(item.idempresa).nom_empresa : "";
+                        user.fechacreacion = item.fechacreacion;
+                        user.isdelete = item.isdelete;
+                        user.Eliminado = (item.isdelete != 0) ? "Desactivado" : "Activo";
+                        user.funcion = item.funcion;
+                        user.correo = item.correo;
+                        user.apellido = item.apellido;
+                        user.dvrut = item.dvrut;
+                        user.haxColor = (item.isdelete != 0) ? "#FF0000" : "#00A653";
+                        users.Add(user);
+                    }
+
+                }
+                return users;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

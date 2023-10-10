@@ -52,6 +52,13 @@ namespace BackSecurity.Controllers
             List<Users> user = _userService.Users();
             return Ok(user);
         }
+        [HttpGet("ProfesionalList")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ProfesionalList(int id)
+        {
+            List<Users> user = _userService.ProfesionalUsers(id);
+            return Ok(user);
+        }
 
         [HttpGet("ListFunction")]
         [AllowAnonymous]
