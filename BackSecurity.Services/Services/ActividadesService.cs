@@ -123,7 +123,9 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                
+                Console.WriteLine(_httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Count());
+                activity.id = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Count()+1;
+                activity.isdelete=0;
                 Console.WriteLine(JsonConvert.SerializeObject(activity));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertActivity, HttpMethod.Post, JsonConvert.SerializeObject(activity));
                 return (item != null);
@@ -133,90 +135,90 @@ namespace BackSecurity.Services.Services
                 return false;
             }
         }
-/*
-        public bool Update(CompanyUpdate company)
-        {
-            try
-            {
-                CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + company.id_empresa, HttpMethod.Get);
-
-                #region Update direccion
-                Dto.Direccion.Item direccion = _direccionService.GetDireccionById(companyById.iddireccion);
-                DireccionInsert direccionInsert = new();
-                direccionInsert.id_direccion = direccion.id_direccion;
-                direccionInsert.calle = direccion.calle;
-                direccionInsert.id_region = direccion.id_region;
-                direccionInsert.id_comuna = direccion.id_comuna;
-                int IDDIRECCION = _direccionService.Update(direccionInsert);
-                #endregion
-                #region Update company
-                companyById.correo = company.Correo;
-                string[] rut = company.Rut.Split('-');
-                Console.WriteLine("rr " + rut[1]);
-                companyById.rut = rut[0];
-                companyById.dvrut = (rut.Length > 1) ? rut[1] : " ";
-                companyById.nom_empresa = company.nom_empresa;
-                companyById.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
-                Console.WriteLine(JsonConvert.SerializeObject(companyById));
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
-                #endregion
-
-                return (item != null);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public bool Disable(CompanyUpdate company)
-        {
-            CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + company.id_empresa, HttpMethod.Get);
-            #region Update company
-            companyById.isdelete = (company.isdelete != companyById.isdelete) ? company.isdelete : 0;
-            BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
-            #endregion
-            return (item != null);
-        }
-
-        public List<Company> CompanyListNotDisable()
-        {
-            try
-            {
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
-                List<Dto.Company.Company> companies = new();
-                foreach (Dto.Company.Item item in companys)
+        /*
+                public bool Update(CompanyUpdate company)
                 {
-                    Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.IDDIRECCION);
-                    Dto.Company.Company company = new();
-
-                    company.id_empresa = item.id_empresa;
-                    company.nom_empresa = item.nom_empresa;
-                    company.Rut = item.Rut;
-                    company.DvRut = item.DvRut;
-                    company.ImageBase64 = item.ImageBase64;
-                    company.fechaFinContrato = item.fechaFinContrato;
-                    company.Correo = item.Correo;
-                    company.eliminado = stateCompany(item);
-                    company.fechaCreacion = item.fechaCreacion;
-                    company.haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653";
-                    company.Region = direccion.id_region;
-                    company.Comuna = direccion.id_comuna;
-                    company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                    company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
-                    if (company.IsDelete == 0)
+                    try
                     {
-                        companies.Add(company);
-                    }
+                        CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + company.id_empresa, HttpMethod.Get);
 
+                        #region Update direccion
+                        Dto.Direccion.Item direccion = _direccionService.GetDireccionById(companyById.iddireccion);
+                        DireccionInsert direccionInsert = new();
+                        direccionInsert.id_direccion = direccion.id_direccion;
+                        direccionInsert.calle = direccion.calle;
+                        direccionInsert.id_region = direccion.id_region;
+                        direccionInsert.id_comuna = direccion.id_comuna;
+                        int IDDIRECCION = _direccionService.Update(direccionInsert);
+                        #endregion
+                        #region Update company
+                        companyById.correo = company.Correo;
+                        string[] rut = company.Rut.Split('-');
+                        Console.WriteLine("rr " + rut[1]);
+                        companyById.rut = rut[0];
+                        companyById.dvrut = (rut.Length > 1) ? rut[1] : " ";
+                        companyById.nom_empresa = company.nom_empresa;
+                        companyById.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
+                        Console.WriteLine(JsonConvert.SerializeObject(companyById));
+                        BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
+                        #endregion
+
+                        return (item != null);
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
                 }
-                return companies.OrderBy(x => x.IsDelete).ToList();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message + ex.StackTrace);
-                return null;
-            }
-        }*/
+
+                public bool Disable(CompanyUpdate company)
+                {
+                    CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + company.id_empresa, HttpMethod.Get);
+                    #region Update company
+                    companyById.isdelete = (company.isdelete != companyById.isdelete) ? company.isdelete : 0;
+                    BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
+                    #endregion
+                    return (item != null);
+                }
+
+                public List<Company> CompanyListNotDisable()
+                {
+                    try
+                    {
+                        List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+                        List<Dto.Company.Company> companies = new();
+                        foreach (Dto.Company.Item item in companys)
+                        {
+                            Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.IDDIRECCION);
+                            Dto.Company.Company company = new();
+
+                            company.id_empresa = item.id_empresa;
+                            company.nom_empresa = item.nom_empresa;
+                            company.Rut = item.Rut;
+                            company.DvRut = item.DvRut;
+                            company.ImageBase64 = item.ImageBase64;
+                            company.fechaFinContrato = item.fechaFinContrato;
+                            company.Correo = item.Correo;
+                            company.eliminado = stateCompany(item);
+                            company.fechaCreacion = item.fechaCreacion;
+                            company.haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653";
+                            company.Region = direccion.id_region;
+                            company.Comuna = direccion.id_comuna;
+                            company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
+                            company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
+                            if (company.IsDelete == 0)
+                            {
+                                companies.Add(company);
+                            }
+
+                        }
+                        return companies.OrderBy(x => x.IsDelete).ToList();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message + ex.StackTrace);
+                        return null;
+                    }
+                }*/
     }
 }
