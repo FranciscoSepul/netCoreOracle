@@ -66,7 +66,7 @@ namespace BackSecurity.Services.Services
         }
         public List<Dto.Gravedad.Item> GetAllGravedad()
         {
-            List<Dto.Gravedad.Item> gravedades = _httpService.RequestJson<GravedadList>(GravedadById , HttpMethod.Get).items;
+            List<Dto.Gravedad.Item> gravedades = _httpService.RequestJson<GravedadList>(GravedadById, HttpMethod.Get).items;
             return gravedades;
         }
         public static string ColorIcon(Dto.Accidente.Item item)
@@ -77,7 +77,7 @@ namespace BackSecurity.Services.Services
             }
             else
             {
-                return (item.idgravedad == 2) ? "yellow" : "red";
+                return (item.idgravedad == 2) ? "orange" : "red";
             }
         }
         public List<Accidente> List()
@@ -144,12 +144,24 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                Console.WriteLine(JsonConvert.SerializeObject(accidente));
-                BackSecurity.Dto.Accidente.Accidente item = _httpService.RequestJson<BackSecurity.Dto.Accidente.Accidente>(Insert, HttpMethod.Post, JsonConvert.SerializeObject(accidente));
+                InsertAccidente insertAccidente = new();
+                insertAccidente.idtipoaccidente = accidente.IdTipoDeAccidente;
+                insertAccidente.id = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Count()+1;
+                insertAccidente.idgravedad = accidente.IdGravedad;
+                insertAccidente.idempresa = accidente.IdEmpresa;
+                insertAccidente.idprofesional = accidente.IdProfesional;
+                insertAccidente.fechaaccidente = DateTime.Now.ToString();
+                insertAccidente.descripcion = accidente.Descripcion;
+                insertAccidente.fono_emergencia = int.Parse(accidente.fono);
+                insertAccidente.idtrabajador=accidente.IdTrabajador;
+
+                Console.WriteLine(JsonConvert.SerializeObject(insertAccidente));
+                BackSecurity.Dto.Accidente.Accidente item = _httpService.RequestJson<BackSecurity.Dto.Accidente.Accidente>(Insert, HttpMethod.Post, JsonConvert.SerializeObject(insertAccidente));
                 return (item != null);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message+ex.StackTrace);
                 return false;
             }
         }

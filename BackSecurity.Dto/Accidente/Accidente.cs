@@ -25,10 +25,25 @@ namespace BackSecurity.Dto.Accidente
         public int IdGravedad { get; set; }
         public int IdProfesional { get; set; }
         public int IdTipoDeAccidente { get; set; }
-        public int fono { get; set; }
+        public string fono { get; set; }
+        public int IdEmpresa {get;set;}
         public int IdTrabajador { get; set; }
+        public string Descripcion {get;set;}
     }
 
+    public class InsertAccidente
+    {
+        public string descripcion { get; set; }
+        public string fechaaccidente { get; set; }
+        public string fechaalta { get; set; }
+        public int fono_emergencia { get; set; }
+        public int id { get; set; }
+        public int idempresa { get; set; }
+        public int idgravedad { get; set; }
+        public int idprofesional { get; set; }
+        public int idtipoaccidente { get; set; }
+        public int idtrabajador { get; set; }
+    }
     public class Item
     {
         public int id { get; set; }

@@ -60,9 +60,10 @@ namespace BackSecurity.Controllers
         }
         [HttpPost("Create")]
         [AllowAnonymous]
-        public IActionResult Create([FromBody] CreateAccidente companyInsert)
+        public IActionResult Create([FromBody] CreateAccidente accidenteInsert)
         {
-            bool response = _AccidentesService.Create(companyInsert);
+            Console.WriteLine("en insert");
+            bool response = _AccidentesService.Create(accidenteInsert);
             return (response != false) ? Ok() : BadRequest();
         }
 
