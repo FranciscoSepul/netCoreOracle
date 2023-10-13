@@ -133,6 +133,8 @@ namespace BackSecurity
             services.AddTransient<IDireccionService, DireccionService>();
             services.AddTransient<IVisitasService,VisitasService>();
             services.AddTransient<IActividadesService,ActividadesService>();
+            services.AddTransient<IAccidentesService,AccidentesService>();
+            
         }
     }
 }

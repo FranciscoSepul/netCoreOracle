@@ -45,6 +45,21 @@ namespace BackSecurity.Controllers
 
         }
 
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginPost([FromBody] UserLogin userLogin)
+        {
+            string response = _userService.Login(userLogin.username, userLogin.password);
+            if (response != " " && response != null)
+            {
+                TokenDto token = new TokenDto();
+                token.Token = response;
+                return Ok(token);
+            }
+            return Unauthorized();
+
+        }
+
         [HttpGet("List")]
         [AllowAnonymous]
         public async Task<IActionResult> ListUsers()

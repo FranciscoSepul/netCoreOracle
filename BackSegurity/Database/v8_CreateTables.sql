@@ -109,3 +109,42 @@ CREATE TABLE Capacitacion
 --https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/item/
 --https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/solicitudasesoria/
 --https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/visitaterreno/
+
+
+CREATE TABLE ActividadDeTrabajo
+(
+  id NUMBER PRIMARY KEY,
+  nombre VARCHAR2(210) NOT NULL
+);
+
+    INSERT INTO ActividadDeTrabajo (id,nombre)VALUES
+	(1,'técnicas');
+    INSERT INTO ActividadDeTrabajo (id,nombre)VALUES
+	(2,'comerciales');
+    INSERT INTO ActividadDeTrabajo (id,nombre)VALUES
+	(3,'financieras');
+    INSERT INTO ActividadDeTrabajo (id,nombre)VALUES
+	(4,'seguridad');
+    INSERT INTO ActividadDeTrabajo (id,nombre)VALUES
+	(5,'contables');
+    INSERT INTO ActividadDeTrabajo (id,nombre)VALUES
+	(6,'administrativas');
+
+CREATE TABLE Trabajadores
+(
+  id NUMBER PRIMARY KEY,
+  run VARCHAR2(10) NOT NULL,
+  DvRut VARCHAR2 (5),
+  nombre VARCHAR2(40) NOT NULL,
+  apellido VARCHAR2 (50), 
+  fono_usuario NUMBER(15) NOT NULL,
+  Correo VARCHAR2 (50) ,
+  nacionalidad VARCHAR2(20) NOT NULL,
+  idempresa NUMBER,
+  IsDelete number ,
+  IdDireccion number,
+  idActividadDeTrabajo number
+);
+
+INSERT INTO Trabajadores (id,RUN,DVRUT,nombre,APELLIDO,FONO_USUARIO,CORREO,NACIONALIDAD,IDEMPRESA,ISDELETE,IDDIRECCION,IDACTIVIDADDETRABAJO)VALUES
+(1,'17116112','1','Camilo','loyola',111111111,'correofalso@gmail.com','Chileno',1,0,1,1);

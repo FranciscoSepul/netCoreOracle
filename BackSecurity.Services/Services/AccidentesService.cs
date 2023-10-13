@@ -18,6 +18,10 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using BackSecurity.Dto.Company;
 using BackSecurity.Dto.Direccion;
+using BackSecurity.Dto.Accidente;
+using BackSecurity.Dto.TipoAccidente;
+using BackSecurity.Dto.Gravedad;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace BackSecurity.Services.Services
 {
@@ -26,46 +30,79 @@ namespace BackSecurity.Services.Services
         private readonly IConfiguration _config;
         private readonly IHttpService _httpService;
         private readonly IDireccionService _direccionService;
-        public string GetAllCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa?limit=10000";
-        public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
-        public string InsertCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
+        private readonly ICompanyService _companyService;
+        private readonly IUserService _userService;
+        public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente?limit=10000";
+        public string _GetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente/";
+        public string Insert = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente/";
 
-        public AccidentesService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
+        public string TipoAccidenteGetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipodeaccidente/";
+        public string GravedadById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/gravedad/";
+
+        public AccidentesService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService, ICompanyService companyService, IUserService userService)
         {
             _config = configuration;
             _httpService = httpService;
             _direccionService = direccionService;
+            _companyService = companyService;
+            _userService = userService;
         }
 
-        public List<Dto.Company.Company> CompanyList()
+        public List<Dto.TipoAccidente.Item> GetAllTipoAccidente()
+        {
+            List<Dto.TipoAccidente.Item> accidents = _httpService.RequestJson<TipoAccidenteList>(TipoAccidenteGetById, HttpMethod.Get).items;
+            return accidents;
+        }
+
+        public TipoAccidente GetByIdTipoAccidente(int id)
+        {
+            TipoAccidente accident = _httpService.RequestJson<TipoAccidente>(TipoAccidenteGetById + id, HttpMethod.Get);
+            return accident;
+        }
+        public Gravedad GetByIdGravedad(int id)
+        {
+            Gravedad gravedad = _httpService.RequestJson<Gravedad>(GravedadById + id, HttpMethod.Get);
+            return gravedad;
+        }
+        public List<Dto.Gravedad.Item> GetAllGravedad()
+        {
+            List<Dto.Gravedad.Item> gravedades = _httpService.RequestJson<GravedadList>(GravedadById , HttpMethod.Get).items;
+            return gravedades;
+        }
+        public static string ColorIcon(Dto.Accidente.Item item)
+        {
+            if (item.idgravedad == 1)
+            {
+                return "blue";
+            }
+            else
+            {
+                return (item.idgravedad == 2) ? "yellow" : "red";
+            }
+        }
+        public List<Accidente> List()
         {
             try
             {
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
-                List<Dto.Company.Company> companies = new();
-                foreach (Dto.Company.Item item in companys)
+                List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items;
+                List<Accidente> accidentes = new();
+                foreach (Dto.Accidente.Item item in accident)
                 {
-                    Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.IDDIRECCION);
-                    Dto.Company.Company company = new();
-
-                    company.id_empresa = item.id_empresa;
-                    company.nom_empresa = item.nom_empresa;
-                    company.Rut = item.Rut;
-                    company.DvRut = item.DvRut;
-                    company.ImageBase64 = item.ImageBase64;
-                    company.fechaFinContrato = item.fechaFinContrato;
-                    company.Correo = item.Correo;
-                    company.eliminado = stateCompany(item);
-                    company.fechaCreacion = item.fechaCreacion;
-                    company.haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653";
-                    company.Region = direccion.id_region;
-                    company.Comuna = direccion.id_comuna;
-                    company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                    company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
-
-                    companies.Add(company);
+                    Accidente accidente = new();
+                    accidente.Id = item.id;
+                    accidente.Descripcion = item.descripcion;
+                    accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente).accidente;
+                    accidente.Empresa = _companyService.GetCompanyById(item.idempresa).nom_empresa;
+                    accidente.NombreProfesional = _userService.GetWorkerById(item.idtrabajador).nom_usuario;
+                    accidente.Gravedad = GetByIdGravedad(item.idgravedad).gravedad;
+                    accidente.RutTrabajador = _userService.GetWorkerById(item.idtrabajador).run_usuario;
+                    accidente.Fechaaccidente = item.fechaaccidente;
+                    accidente.Fechaalta = item.fechaalta;
+                    accidente.Fono_emergencia = item.fono_emergencia;
+                    accidente.color = ColorIcon(item);
+                    accidentes.Add(accidente);
                 }
-                return companies.OrderBy(x => x.IsDelete).ToList();
+                return accidentes;
             }
             catch (Exception ex)
             {
@@ -74,7 +111,7 @@ namespace BackSecurity.Services.Services
             }
         }
 
-        public string stateCompany(Dto.Company.Item item)
+        public string state(Dto.Company.Item item)
         {
 
             string estadoBooleanCompany = (item.IsDelete != 0) ? "Desactivado" : "Activo";
@@ -89,11 +126,11 @@ namespace BackSecurity.Services.Services
             }
             return estado;
         }
-        public Company GetCompanyById(int id)
+        public Company GetById(int id)
         {
             try
             {
-                Company company = _httpService.RequestJson<Company>(_GetCompanyById + id, HttpMethod.Get);
+                Company company = _httpService.RequestJson<Company>(_GetById + id, HttpMethod.Get);
                 return company;
             }
             catch (Exception)
@@ -103,38 +140,12 @@ namespace BackSecurity.Services.Services
 
         }
 
-        public Dto.Company.Item GetCompanyByName(string id)
-        {
-            List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
-            Dto.Company.Item company = companys.FirstOrDefault(x => x.nom_empresa == id);
-            return company;
-        }
-
-        public bool Create(CompanyCreate company)
+        public bool Create(CreateAccidente accidente)
         {
             try
             {
-                DireccionInsert direccion = new();
-                direccion.calle = company.Direccion;
-                direccion.id_region = company.Region;
-                direccion.id_comuna = company.Comuna;
-                int IDDIRECCION = _direccionService.Create(direccion);
-
-                CompanyInsert companyInsert = new();
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
-                companyInsert.id_empresa = companys.Count() + 1;
-                companyInsert.iddireccion = IDDIRECCION;
-                companyInsert.correo = company.Correo;
-                companyInsert.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault().Replace('/', '-');
-                Console.WriteLine(companyInsert.fechacreacion);
-                string[] rut = company.Rut.Split('-');
-                companyInsert.rut = rut[0];
-                companyInsert.dvrut = (rut.Count() > 1) ? rut[1] : " ";
-                companyInsert.nom_empresa = company.nom_empresa;
-                companyInsert.isdelete = 0;
-                companyInsert.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
-                Console.WriteLine(JsonConvert.SerializeObject(companyInsert));
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany, HttpMethod.Post, JsonConvert.SerializeObject(companyInsert));
+                Console.WriteLine(JsonConvert.SerializeObject(accidente));
+                BackSecurity.Dto.Accidente.Accidente item = _httpService.RequestJson<BackSecurity.Dto.Accidente.Accidente>(Insert, HttpMethod.Post, JsonConvert.SerializeObject(accidente));
                 return (item != null);
             }
             catch (Exception)
@@ -147,7 +158,7 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + company.id_empresa, HttpMethod.Get);
+                CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetById + company.id_empresa, HttpMethod.Get);
 
                 #region Update direccion
                 Dto.Direccion.Item direccion = _direccionService.GetDireccionById(companyById.iddireccion);
@@ -167,7 +178,7 @@ namespace BackSecurity.Services.Services
                 companyById.nom_empresa = company.nom_empresa;
                 companyById.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
                 Console.WriteLine(JsonConvert.SerializeObject(companyById));
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
+                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(Insert + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
                 #endregion
 
                 return (item != null);
@@ -180,52 +191,14 @@ namespace BackSecurity.Services.Services
 
         public bool Disable(CompanyUpdate company)
         {
-            CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + company.id_empresa, HttpMethod.Get);
+            CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetById + company.id_empresa, HttpMethod.Get);
             #region Update company
             companyById.isdelete = (company.isdelete != companyById.isdelete) ? company.isdelete : 0;
-            BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
+            BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(Insert + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
             #endregion
             return (item != null);
         }
 
-        public List<Company> CompanyListNotDisable()
-        {
-            try
-            {
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
-                List<Dto.Company.Company> companies = new();
-                foreach (Dto.Company.Item item in companys)
-                {
-                    Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.IDDIRECCION);
-                    Dto.Company.Company company = new();
 
-                    company.id_empresa = item.id_empresa;
-                    company.nom_empresa = item.nom_empresa;
-                    company.Rut = item.Rut;
-                    company.DvRut = item.DvRut;
-                    company.ImageBase64 = item.ImageBase64;
-                    company.fechaFinContrato = item.fechaFinContrato;
-                    company.Correo = item.Correo;
-                    company.eliminado = stateCompany(item);
-                    company.fechaCreacion = item.fechaCreacion;
-                    company.haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653";
-                    company.Region = direccion.id_region;
-                    company.Comuna = direccion.id_comuna;
-                    company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                    company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
-                    if (company.IsDelete == 0)
-                    {
-                        companies.Add(company);
-                    }
-
-                }
-                return companies.OrderBy(x => x.IsDelete).ToList();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message + ex.StackTrace);
-                return null;
-            }
-        }
     }
 }

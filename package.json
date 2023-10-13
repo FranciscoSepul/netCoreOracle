@@ -1,5 +1,6 @@
 {
     "dependencies": {
-        "@awesome-cordova-plugins/core": "^5.45.0"
+        "@awesome-cordova-plugins/core": "^5.45.0",
+        "react-icons": "^4.11.0"
     }
 }

@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace BackSecurity.Dto.User
 {
+    public class UserLogin
+    {
+        public string username { get; set; }
+        public string password { get; set; }
+        public string identifier { get; set; }
+    }
 
     public class UserInsert
     {

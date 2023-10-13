@@ -1,4 +1,5 @@
-﻿using BackSecurity.Dto.Company;
+﻿using BackSecurity.Dto.Accidente;
+using BackSecurity.Dto.Company;
 using BackSecurity.Dto.User;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,12 @@ namespace BackSecurity.Services.IServices
 {
     public interface IAccidentesService
     {
-        bool Create(CompanyCreate company);
+        bool Create(CreateAccidente company);
         bool Update(CompanyUpdate company);
         bool Disable(CompanyUpdate company);
-        List<Dto.Company.Company> CompanyList ();
-        List<Dto.Company.Company> CompanyListNotDisable ();
-        Company GetCompanyById (int id);
-        Dto.Company.Item GetCompanyByName(string id);
+        List<Accidente> List ();
+        List<Dto.TipoAccidente.Item> GetAllTipoAccidente();
+        List<Dto.Gravedad.Item> GetAllGravedad();
+        Company GetById (int id);
     }
 }

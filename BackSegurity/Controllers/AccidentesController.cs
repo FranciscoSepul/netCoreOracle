@@ -14,6 +14,7 @@ using BackSecurity.Controllers.Common;
 using BackSecurity.Dto.Authentication;
 using BackSecurity.Constants.Constants;
 using BackSecurity.Dto.Company;
+using BackSecurity.Dto.Accidente;
 
 namespace BackSecurity.Controllers
 {
@@ -31,29 +32,43 @@ namespace BackSecurity.Controllers
 
         [HttpGet("GetAccidentsById")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAccidentsById(int id)
+        public IActionResult GetAccidentsById(int id)
         {
-            Company company = _AccidentesService.GetCompanyById(id);
+            Company company = _AccidentesService.GetById(id);
             return Ok(company);
         }
         [HttpGet("GetAllAccidents")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllAccidents()
+        public IActionResult GetAllAccidents()
         {
-            List<Dto.Company.Company> company = _AccidentesService.CompanyList();
+            List<Accidente> company = _AccidentesService.List();
             return Ok(company);
+        }
+        [HttpGet("GetAllTipoAccidentes")]
+        [AllowAnonymous]
+        public IActionResult GetAllTipoAccidents()
+        {
+            List<Dto.TipoAccidente.Item> tipo = _AccidentesService.GetAllTipoAccidente();
+            return Ok(tipo);
+        }
+        [HttpGet("GetAllGravedad")]
+        [AllowAnonymous]
+        public IActionResult GetAllGravedad()
+        {
+             List<Dto.Gravedad.Item> gravedad = _AccidentesService.GetAllGravedad();
+            return Ok(gravedad);
         }
         [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] CompanyCreate companyInsert)
+        public IActionResult Create([FromBody] CreateAccidente companyInsert)
         {
             bool response = _AccidentesService.Create(companyInsert);
-            return (response !=false)? Ok():BadRequest();
+            return (response != false) ? Ok() : BadRequest();
         }
-        
+
         [HttpPut("Update")]
         [AllowAnonymous]
-        public async Task<IActionResult> Update([FromBody] CompanyUpdate companyInsert)
+        public IActionResult Update([FromBody] CompanyUpdate companyInsert)
         {
             bool user = _AccidentesService.Update(companyInsert);
             return Ok(user);
@@ -61,11 +76,11 @@ namespace BackSecurity.Controllers
 
         [HttpPut("Disable")]
         [AllowAnonymous]
-        public async Task<IActionResult> Disable([FromBody] CompanyUpdate companyCreate)
+        public IActionResult Disable([FromBody] CompanyUpdate companyCreate)
         {
             bool user = _AccidentesService.Disable(companyCreate);
             return Ok(user);
         }
-        
+
     }
 }
