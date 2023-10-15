@@ -22,6 +22,7 @@ using BackSecurity.Dto.Accidente;
 using BackSecurity.Dto.TipoAccidente;
 using BackSecurity.Dto.Gravedad;
 using DocumentFormat.OpenXml.Drawing;
+using BackSecurity.Dto.Empleado;
 
 namespace BackSecurity.Services.Services
 {
@@ -35,10 +36,10 @@ namespace BackSecurity.Services.Services
         public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente?limit=10000";
         public string _GetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente/";
         public string Insert = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente/";
-
         public string TipoAccidenteGetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipodeaccidente/";
         public string GravedadById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/gravedad/";
-
+        public string GetSucursalAchsById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/sucursalachs/";
+        public string GetJobById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/trabajadores/";
         public AccidentesService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService, ICompanyService companyService, IUserService userService)
         {
             _config = configuration;
@@ -92,17 +93,42 @@ namespace BackSecurity.Services.Services
                     accidente.Id = item.id;
                     accidente.Descripcion = item.descripcion;
                     accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente).accidente;
-                    accidente.Empresa = _companyService.GetCompanyById(item.idempresa).nom_empresa;
-                    accidente.NombreProfesional = _userService.GetWorkerById(item.idtrabajador).nom_usuario;
+
+                    CompanyInsert company = _companyService.GetCompanyById(item.idempresa);
+                    Dto.Direccion.Item direccion = _direccionService.GetDireccionById(company.iddireccion);
+                    accidente.Empresa = company.nom_empresa;
+                    accidente.EmpresaDvRut = company.dvrut;
+                    accidente.EmpresaRut = company.rut;
+                    accidente.ComunaEmpresa = _direccionService.GetComunaById(direccion.id_comuna).FirstOrDefault().nombre_comuna;
+                    accidente.CorreoEmpresa = company?.correo;
+                    accidente.RegionEmpresa = _direccionService.DireccionList().Where(x => x.id_region == direccion.id_region).FirstOrDefault().nom_reg;
+                    accidente.DireccionEmpresa = direccion?.calle;
+
+                    Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
+                    accidente.NombreProfesional = user?.nom_usuario;
+                    accidente.CelProfesional = user?.fono_usuario.ToString();
+                    accidente.RutProfesional = user?.run_usuario;
+                    accidente.Apellidofesional = user?.apellido;
+
                     accidente.Gravedad = GetByIdGravedad(item.idgravedad).gravedad;
-                    accidente.RutTrabajador = _userService.GetWorkerById(item.idtrabajador).run_usuario;
-                    accidente.Fechaaccidente = item.fechaaccidente;
-                    accidente.Fechaalta = item.fechaalta;
+
+                    Console.WriteLine(item.idtrabajador);
+                    Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
+                    if (job != null)
+                    {
+                        accidente.RutTrabajador = job?.run;
+                        accidente.EmpleadoNombre = job?.nombre;
+                        accidente.NumeroContactoEmnpleado = job.fono_usuario;
+                        accidente.CorreoEmpleado = job?.correo;
+                    }
+                    
+                    accidente.Fechaaccidente = item?.fechaaccidente;
+                    accidente.Fechaalta = item?.fechaalta;
                     accidente.Fono_emergencia = item.fono_emergencia;
                     accidente.color = ColorIcon(item);
                     accidentes.Add(accidente);
                 }
-                return accidentes;
+                return accidentes.OrderBy(x => x.Id).ToList();
             }
             catch (Exception ex)
             {
@@ -146,14 +172,14 @@ namespace BackSecurity.Services.Services
             {
                 InsertAccidente insertAccidente = new();
                 insertAccidente.idtipoaccidente = accidente.IdTipoDeAccidente;
-                insertAccidente.id = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Count()+1;
+                insertAccidente.id = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Count() + 1;
                 insertAccidente.idgravedad = accidente.IdGravedad;
                 insertAccidente.idempresa = accidente.IdEmpresa;
                 insertAccidente.idprofesional = accidente.IdProfesional;
                 insertAccidente.fechaaccidente = DateTime.Now.ToString();
                 insertAccidente.descripcion = accidente.Descripcion;
                 insertAccidente.fono_emergencia = int.Parse(accidente.fono);
-                insertAccidente.idtrabajador=accidente.IdTrabajador;
+                insertAccidente.idtrabajador = accidente.IdTrabajador;
 
                 Console.WriteLine(JsonConvert.SerializeObject(insertAccidente));
                 BackSecurity.Dto.Accidente.Accidente item = _httpService.RequestJson<BackSecurity.Dto.Accidente.Accidente>(Insert, HttpMethod.Post, JsonConvert.SerializeObject(insertAccidente));
@@ -161,7 +187,7 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message+ex.StackTrace);
+                Console.WriteLine(ex.Message + ex.StackTrace);
                 return false;
             }
         }
@@ -211,6 +237,29 @@ namespace BackSecurity.Services.Services
             return (item != null);
         }
 
+        public Job GetByIdEmpleado(int id)
+        {
+            Job job = _httpService.RequestJson<Job>(GetJobById + id, HttpMethod.Get);
+            return job;
+        }
 
+        public List<Job> GetJobByIdSucursal(int id)
+        {
+            List<Job> jobs = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items;
+            List<Job> jobsBySucursal = new();
+            foreach (Job job in jobs)
+            {
+                if (job.idempresa == id)
+                {
+                    jobsBySucursal.Add(job);
+                }
+            }
+            return jobsBySucursal;
+        }
+
+        public Company GetByIdSucursal(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

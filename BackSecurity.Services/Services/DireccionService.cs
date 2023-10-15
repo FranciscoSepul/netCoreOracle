@@ -101,7 +101,7 @@ namespace BackSecurity.Services.Services
                 BackSecurity.Dto.Direccion.Item item = _httpService.RequestJson< BackSecurity.Dto.Direccion.Item>(InsertDireccionStr, HttpMethod.Post, JsonConvert.SerializeObject(directionInsertOracle));
                 return item.id_direccion;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0;
             }
@@ -120,10 +120,11 @@ namespace BackSecurity.Services.Services
                 BackSecurity.Dto.Direccion.Item item = _httpService.RequestJson< BackSecurity.Dto.Direccion.Item>(InsertDireccionStr+direccion.id_direccion, HttpMethod.Put, JsonConvert.SerializeObject(directionInsertOracle));
                 return item.id_direccion;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0;
             }
         }
+
     }
 }

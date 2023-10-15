@@ -32,7 +32,7 @@ namespace BackSecurity.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string user, string pass)
+        public IActionResult Login(string user, string pass)
         {
             string response = _userService.Login(user, pass);
             if (response != " " && response != null)
@@ -47,7 +47,7 @@ namespace BackSecurity.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> LoginPost([FromBody] UserLogin userLogin)
+        public IActionResult LoginPost([FromBody] UserLogin userLogin)
         {
             string response = _userService.Login(userLogin.username, userLogin.password);
             if (response != " " && response != null)
@@ -62,14 +62,14 @@ namespace BackSecurity.Controllers
 
         [HttpGet("List")]
         [AllowAnonymous]
-        public async Task<IActionResult> ListUsers()
+        public IActionResult ListUsers()
         {
             List<Users> user = _userService.Users();
             return Ok(user);
         }
         [HttpGet("ProfesionalList")]
         [AllowAnonymous]
-        public async Task<IActionResult> ProfesionalList(int id)
+        public IActionResult ProfesionalList(int id)
         {
             List<Users> user = _userService.ProfesionalUsers(id);
             return Ok(user);
@@ -77,7 +77,7 @@ namespace BackSecurity.Controllers
 
         [HttpGet("ListFunction")]
         [AllowAnonymous]
-        public async Task<IActionResult> ListFunction()
+        public IActionResult ListFunction()
         {
             List<BackSecurity.Dto.Funcion.Item> user = _userService.ListFunction();
             return Ok(user);
@@ -85,7 +85,7 @@ namespace BackSecurity.Controllers
 
         [HttpGet("GetWorkerInfo")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetWorkerInfo(string UserName)
+        public IActionResult GetWorkerInfo(string UserName)
         {
             BackSecurity.Dto.User.Item user = _userService.GetWorker(UserName);
             return Ok(user);
@@ -93,7 +93,7 @@ namespace BackSecurity.Controllers
 
         [HttpGet("GetUserById")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetByIdUsers(int id)
+        public IActionResult GetByIdUsers(int id)
         {
             List<Users> user = _userService.Users();
             return Ok(user);
@@ -101,66 +101,66 @@ namespace BackSecurity.Controllers
 
         [HttpGet("GetTipoContrato")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetTipoContrato()
+        public IActionResult GetTipoContrato()
         {
-            List<ContractType> contract =new();
+            List<ContractType> contract = new();
             ContractType contractType = new();
-            contractType.contract="Indefinido";
+            contractType.contract = "Indefinido";
             contract.Add(contractType);
             ContractType contractTypeB = new();
-            contractTypeB.contract="Bono Turno";
+            contractTypeB.contract = "Bono Turno";
             contract.Add(contractTypeB);
             ContractType contractTypeA = new();
-            contractTypeA.contract="Aprendizaje";
+            contractTypeA.contract = "Aprendizaje";
             contract.Add(contractTypeA);
             ContractType contractTypeT = new();
-            contractTypeT.contract="Temporal";
+            contractTypeT.contract = "Temporal";
             contract.Add(contractTypeT);
             ContractType contractTypeO = new();
-            contractTypeO.contract="Ocasional";
+            contractTypeO.contract = "Ocasional";
             contract.Add(contractTypeO);
             ContractType contractTypeP = new();
-            contractTypeP.contract="Plazo Fijo";
+            contractTypeP.contract = "Plazo Fijo";
             contract.Add(contractTypeP);
             return Ok(contract);
         }
         [HttpGet("GetPaises")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetPaises()
+        public IActionResult GetPaises()
         {
-            List<ContractType> contract =new();
+            List<ContractType> contract = new();
             ContractType contractType = new();
-            contractType.contract="Chile";
+            contractType.contract = "Chile";
             contract.Add(contractType);
             ContractType contractTypeB = new();
-            contractTypeB.contract="Colombia";
+            contractTypeB.contract = "Colombia";
             contract.Add(contractTypeB);
             ContractType contractTypeA = new();
-            contractTypeA.contract="Peru";
+            contractTypeA.contract = "Peru";
             contract.Add(contractTypeA);
             ContractType contractTypeT = new();
-            contractTypeT.contract="Uruguai";
+            contractTypeT.contract = "Uruguai";
             contract.Add(contractTypeT);
             ContractType contractTypeO = new();
-            contractTypeO.contract="Bolivia";
+            contractTypeO.contract = "Bolivia";
             contract.Add(contractTypeO);
             ContractType contractTypeP = new();
-            contractTypeP.contract="Mexico";
+            contractTypeP.contract = "Mexico";
             contract.Add(contractTypeP);
             return Ok(contract);
         }
 
         [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] UserToInsert userInsert)
+        public IActionResult Create([FromBody] UserToInsert userInsert)
         {
             bool response = _userService.Create(userInsert);
-            return (response !=false)? Ok():BadRequest();
+            return (response != false) ? Ok() : BadRequest();
         }
-        
+
         [HttpPut("Update")]
         [AllowAnonymous]
-        public async Task<IActionResult> Update([FromBody] UserUpdate userInsert)
+        public IActionResult Update([FromBody] UserUpdate userInsert)
         {
             bool user = _userService.Update(userInsert);
             return Ok(user);
@@ -168,12 +168,12 @@ namespace BackSecurity.Controllers
 
         [HttpPut("Disable")]
         [AllowAnonymous]
-        public async Task<IActionResult> Disable([FromBody] UserDisable userInsert)
+        public IActionResult Disable([FromBody] UserDisable userInsert)
         {
             bool user = _userService.Disable(userInsert);
             return Ok(user);
         }
 
-        
+
     }
 }

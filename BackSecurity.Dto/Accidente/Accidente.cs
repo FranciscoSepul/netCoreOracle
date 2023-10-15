@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,27 @@ namespace BackSecurity.Dto.Accidente
         public int Id { get; set; }
         public string Descripcion { get; set; }
         public string Tipoaccidente { get; set; }
+        #region  datos empresa
         public string Empresa { get; set; }
+        public string EmpresaRut { get; set; }
+        public string EmpresaDvRut { get; set; }
+        public string CorreoEmpresa { get; set; }
+        public string RegionEmpresa { get; set; }
+        public string ComunaEmpresa { get; set; }
+        public string DireccionEmpresa { get; set; }
+        #endregion
+        public string CelProfesional { get; set; }
+        public string RutProfesional { get; set; }
         public string NombreProfesional { get; set; }
+        public string Apellidofesional { get; set; }
         public string Gravedad { get; set; }
+
+        #region  trabajador
         public string RutTrabajador { get; set; }
+        public string EmpleadoNombre {get;set;}
+        public int NumeroContactoEmnpleado {get;set;}
+        public string CorreoEmpleado {get;set;}
+        #endregion
         public string Fechaaccidente { get; set; }
         public string Fechaalta { get; set; }
         public int Fono_emergencia { get; set; }
@@ -26,9 +44,9 @@ namespace BackSecurity.Dto.Accidente
         public int IdProfesional { get; set; }
         public int IdTipoDeAccidente { get; set; }
         public string fono { get; set; }
-        public int IdEmpresa {get;set;}
+        public int IdEmpresa { get; set; }
         public int IdTrabajador { get; set; }
-        public string Descripcion {get;set;}
+        public string Descripcion { get; set; }
     }
 
     public class InsertAccidente

@@ -15,6 +15,7 @@ using BackSecurity.Dto.Authentication;
 using BackSecurity.Constants.Constants;
 using BackSecurity.Dto.Company;
 using BackSecurity.Dto.Accidente;
+using BackSecurity.Dto.Empleado;
 
 namespace BackSecurity.Controllers
 {
@@ -82,6 +83,19 @@ namespace BackSecurity.Controllers
             bool user = _AccidentesService.Disable(companyCreate);
             return Ok(user);
         }
-
+        [HttpGet("GetAllJobId")]
+        [AllowAnonymous]
+        public IActionResult GetAllJobId(int id)
+        {
+            Job tipo = _AccidentesService.GetByIdEmpleado(id);
+            return Ok(tipo);
+        }
+        [HttpGet("GetJobByCompany")]
+        [AllowAnonymous]
+        public IActionResult GetJobByCompany(int id)
+        {
+             List<Job> gravedad = _AccidentesService.GetJobByIdSucursal(id);
+            return Ok(gravedad);
+        }
     }
 }

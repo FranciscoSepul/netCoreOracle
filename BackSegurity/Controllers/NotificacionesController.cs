@@ -33,7 +33,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetNotificationById(int id)
         {
-            Company company = _companyService.GetCompanyById(id);
+            CompanyInsert company = _companyService.GetCompanyById(id);
             return Ok(company);
         }
         [HttpGet("GetNotificationByName")]

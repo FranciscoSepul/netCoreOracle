@@ -1,5 +1,6 @@
 ﻿using BackSecurity.Dto.Accidente;
 using BackSecurity.Dto.Company;
+using BackSecurity.Dto.Empleado;
 using BackSecurity.Dto.User;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,8 @@ namespace BackSecurity.Services.IServices
         List<Dto.TipoAccidente.Item> GetAllTipoAccidente();
         List<Dto.Gravedad.Item> GetAllGravedad();
         Company GetById (int id);
+        Job GetByIdEmpleado (int id);
+        List<Job> GetJobByIdSucursal (int id);
+        Company GetByIdSucursal (int id);
     }
 }

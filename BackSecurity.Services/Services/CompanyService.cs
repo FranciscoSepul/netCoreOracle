@@ -89,11 +89,11 @@ namespace BackSecurity.Services.Services
             }
             return estado;
         }
-        public Company GetCompanyById(int id)
+        public CompanyInsert GetCompanyById(int id)
         {
             try
             {
-                Company company = _httpService.RequestJson<Company>(_GetCompanyById + id, HttpMethod.Get);
+                CompanyInsert company = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get);
                 return company;
             }
             catch (Exception)
