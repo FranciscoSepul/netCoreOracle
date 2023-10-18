@@ -22,39 +22,33 @@ namespace BackSecurity.Controllers
 
     public class NotificacionesController : BaseController
     {
-        private readonly ICompanyService _companyService;
+        private readonly  INotificacionesService _notificacionesService;
 
-        public NotificacionesController(ICompanyService companyService)
+        public NotificacionesController(INotificacionesService notificacionesService)
         {
-            _companyService = companyService;
+            _notificacionesService = notificacionesService;
         }
 
-        [HttpGet("GetNotificationById")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetNotificationById(int id)
-        {
-            CompanyInsert company = _companyService.GetCompanyById(id);
-            return Ok(company);
-        }
-        [HttpGet("GetNotificationByName")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetNotificationByName(string id)
-        {
-            Dto.Company.Item company= _companyService.GetCompanyByName(id);
-            return Ok(company);
-        }
+        //[HttpGet("GetNotificationById")]
+        //[AllowAnonymous]
+       // public async Task<IActionResult> GetNotificationById(int id)
+        //{
+        //    CompanyInsert company = _notificacionesService.GetById(id);
+        //    return Ok(company);
+        //}
+
         [HttpGet("GetAllNotification")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllNotification()
         {
-            List<Dto.Company.Company> company = _companyService.CompanyList();
+            List<Dto.Company.Company> company = _notificacionesService.List();
             return Ok(company);
         }
         [HttpPost("Create")]
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] CompanyCreate companyInsert)
         {
-            bool response = _companyService.Create(companyInsert);
+            bool response = _notificacionesService.Create(companyInsert);
             return (response !=false)? Ok():BadRequest();
         }
         
@@ -62,7 +56,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Update([FromBody] CompanyUpdate companyInsert)
         {
-            bool user = _companyService.Update(companyInsert);
+            bool user = _notificacionesService.Update(companyInsert);
             return Ok(user);
         }
 
@@ -70,7 +64,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Disable([FromBody] CompanyUpdate companyCreate)
         {
-            bool user = _companyService.Disable(companyCreate);
+            bool user = _notificacionesService.Disable(companyCreate);
             return Ok(user);
         }
         

@@ -26,9 +26,8 @@ namespace BackSecurity.Services.Services
         private readonly IConfiguration _config;
         private readonly IHttpService _httpService;
         private readonly IDireccionService _direccionService;
-        public string GetAllCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa?limit=10000";
-        public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
-        public string InsertCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
+        public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa?limit=10000";
+        public string _GetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
 
         public NotificacionesService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
         {
@@ -37,11 +36,11 @@ namespace BackSecurity.Services.Services
             _direccionService = direccionService;
         }
 
-        public List<Dto.Company.Company> CompanyList()
+        public List<Dto.Company.Company> List()
         {
             try
             {
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAll, HttpMethod.Get).items;
                 List<Dto.Company.Company> companies = new();
                 foreach (Dto.Company.Item item in companys)
                 {
@@ -89,11 +88,11 @@ namespace BackSecurity.Services.Services
             }
             return estado;
         }
-        public Company GetCompanyById(int id)
+        public Company GetById(int id)
         {
             try
             {
-                Company company = _httpService.RequestJson<Company>(_GetCompanyById + id, HttpMethod.Get);
+                Company company = _httpService.RequestJson<Company>(_GetById + id, HttpMethod.Get);
                 return company;
             }
             catch (Exception)
@@ -105,7 +104,7 @@ namespace BackSecurity.Services.Services
 
         public Dto.Company.Item GetCompanyByName(string id)
         {
-            List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+            List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAll, HttpMethod.Get).items;
             Dto.Company.Item company = companys.FirstOrDefault(x => x.nom_empresa == id);
             return company;
         }
@@ -121,7 +120,7 @@ namespace BackSecurity.Services.Services
                 int IDDIRECCION = _direccionService.Create(direccion);
 
                 CompanyInsert companyInsert = new();
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAll, HttpMethod.Get).items;
                 companyInsert.id_empresa = companys.Count() + 1;
                 companyInsert.iddireccion = IDDIRECCION;
                 companyInsert.correo = company.Correo;
@@ -134,7 +133,7 @@ namespace BackSecurity.Services.Services
                 companyInsert.isdelete = 0;
                 companyInsert.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
                 Console.WriteLine(JsonConvert.SerializeObject(companyInsert));
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany, HttpMethod.Post, JsonConvert.SerializeObject(companyInsert));
+                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(_GetById, HttpMethod.Post, JsonConvert.SerializeObject(companyInsert));
                 return (item != null);
             }
             catch (Exception)
@@ -147,7 +146,7 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + company.id_empresa, HttpMethod.Get);
+                CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetById + company.id_empresa, HttpMethod.Get);
 
                 #region Update direccion
                 Dto.Direccion.Item direccion = _direccionService.GetDireccionById(companyById.iddireccion);
@@ -167,7 +166,7 @@ namespace BackSecurity.Services.Services
                 companyById.nom_empresa = company.nom_empresa;
                 companyById.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
                 Console.WriteLine(JsonConvert.SerializeObject(companyById));
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
+                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(_GetById + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
                 #endregion
 
                 return (item != null);
@@ -180,10 +179,10 @@ namespace BackSecurity.Services.Services
 
         public bool Disable(CompanyUpdate company)
         {
-            CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + company.id_empresa, HttpMethod.Get);
+            CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetById + company.id_empresa, HttpMethod.Get);
             #region Update company
             companyById.isdelete = (company.isdelete != companyById.isdelete) ? company.isdelete : 0;
-            BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
+            BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(_GetById + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
             #endregion
             return (item != null);
         }
@@ -192,7 +191,7 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAll, HttpMethod.Get).items;
                 List<Dto.Company.Company> companies = new();
                 foreach (Dto.Company.Item item in companys)
                 {

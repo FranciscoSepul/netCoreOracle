@@ -51,12 +51,9 @@ CREATE TABLE casoasesoria
 (
     idcaso NUMBER PRIMARY KEY,
     cod_contrato VARCHAR2(50),
-    plan VARCHAR2
-    (100),
-    contacto VARCHAR2
-    (255),
-    caso_activo CHAR
-    (1)
+    plan VARCHAR2(100),
+    contacto VARCHAR2(255),
+    caso_activo CHAR(1)
 );
 
     CREATE TABLE asesoria
