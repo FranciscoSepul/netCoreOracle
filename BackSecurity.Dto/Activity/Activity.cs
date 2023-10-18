@@ -28,6 +28,9 @@ namespace BackSecurity.Dto.Activity
         public int idprofesionalacargo { get; set; }
         public int isdelete { get; set; }
         public int tema { get; set; }
+        public int idtrabajador { get; set; }
+        public int idimplementos { get; set; }
+
     }
 
 

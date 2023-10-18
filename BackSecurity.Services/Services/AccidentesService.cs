@@ -121,7 +121,7 @@ namespace BackSecurity.Services.Services
                         accidente.NumeroContactoEmnpleado = job.fono_usuario;
                         accidente.CorreoEmpleado = job?.correo;
                     }
-                    
+
                     accidente.Fechaaccidente = item?.fechaaccidente;
                     accidente.Fechaalta = item?.fechaalta;
                     accidente.Fono_emergencia = item.fono_emergencia;
@@ -247,6 +247,14 @@ namespace BackSecurity.Services.Services
         {
             List<Job> jobs = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items;
             List<Job> jobsBySucursal = new();
+            if (jobs.Count > 0)
+            {
+                Job AllJob = new();
+                AllJob.id = 0;
+                AllJob.run = "Todos";
+                jobsBySucursal.Add(AllJob);
+            }
+
             foreach (Job job in jobs)
             {
                 if (job.idempresa == id)

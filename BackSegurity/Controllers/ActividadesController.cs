@@ -43,6 +43,14 @@ namespace BackSecurity.Controllers
             List<Dto.Tema.Item> tema = _ActividadesService.ListTema();
             return Ok(tema);
         }
+
+           [HttpGet("GetAllImplementos")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllImplementos()
+        {
+            List<Dto.Implementos.Item> implementos = _ActividadesService.ListImplementos();
+            return Ok(implementos);
+        }
 /*
         [HttpGet("GetActivityById")]
         [AllowAnonymous]

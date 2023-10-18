@@ -11,6 +11,7 @@ namespace BackSecurity.Services.IServices
     {
         List<Dto.Activity.ActivityList> List ();
         List<BackSecurity.Dto.Tema.Item> ListTema();
+        List<BackSecurity.Dto.Implementos.Item> ListImplementos();
         bool Create(ActivityCreate activity);
         /*
         bool Update(CompanyUpdate company);
