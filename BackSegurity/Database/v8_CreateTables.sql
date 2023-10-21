@@ -13,6 +13,7 @@ CREATE TABLE item (
     precio NUMBER
 );
 
+
 CREATE TABLE visitaterreno (
     idvisitaterreno NUMBER PRIMARY KEY,
     razon VARCHAR2(255),

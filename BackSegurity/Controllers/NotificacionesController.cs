@@ -14,6 +14,8 @@ using BackSecurity.Controllers.Common;
 using BackSecurity.Dto.Authentication;
 using BackSecurity.Constants.Constants;
 using BackSecurity.Dto.Company;
+using BackSecurity.Dto.Notificaciones;
+using BackSecurity.Dto.NotificacionDirigida;
 
 namespace BackSecurity.Controllers
 {
@@ -41,22 +43,31 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAllNotification()
         {
-            List<Dto.Company.Company> company = _notificacionesService.List();
+            List<NotificacionesList> company = _notificacionesService.List();
             return Ok(company);
         }
+        
+         [HttpGet("GetAllNotificationDirigida")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllNotificationDirigida()
+        {
+            List<NotificaciondirigidaFirs> dirigida = _notificacionesService.ListDirigido();
+            return Ok(dirigida);
+        }
+
         [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] CompanyCreate companyInsert)
+        public async Task<IActionResult> Create([FromBody] Notificaciones notificaciones)
         {
-            bool response = _notificacionesService.Create(companyInsert);
+            bool response = _notificacionesService.Create(notificaciones);
             return (response !=false)? Ok():BadRequest();
         }
         
         [HttpPut("Update")]
         [AllowAnonymous]
-        public async Task<IActionResult> Update([FromBody] CompanyUpdate companyInsert)
+        public async Task<IActionResult> Update([FromBody] Notificaciones notificaciones)
         {
-            bool user = _notificacionesService.Update(companyInsert);
+            bool user = _notificacionesService.Update(notificaciones);
             return Ok(user);
         }
 

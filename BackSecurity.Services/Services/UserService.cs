@@ -18,6 +18,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using Newtonsoft.Json;
 using BackSecurity.Dto.Funcion;
+using BackSecurity.Dto.Trabajadores;
 
 
 namespace BackSecurity.Services.Services
@@ -32,6 +33,7 @@ namespace BackSecurity.Services.Services
         public string UpdateUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
         public string GetTypeById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/funcion/";
         public string GetListType = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/funcion/";
+        public string _GetTrabajadoresById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/trabajadores/";
 
         public UserService(IConfiguration configuration, IHttpService httpService, ICompanyService company)
         {
@@ -56,9 +58,8 @@ namespace BackSecurity.Services.Services
             {
                 return null;
             }
-
-
         }
+
         public string GenerarToken(BackSecurity.Dto.User.Item item)
         {
             JwtSecurityToken jwtToken = new
@@ -236,7 +237,7 @@ namespace BackSecurity.Services.Services
                 List<Users> users = new();
                 foreach (BackSecurity.Dto.User.Item item in userItem.items)
                 {
-                    if (item.idtipocuenta==2 && item.idempresa==id)
+                    if (item.idtipocuenta == 2 && item.idempresa == id)
                     {
                         Users user = new();
                         user.id_usuario = item.id_usuario;
@@ -262,10 +263,16 @@ namespace BackSecurity.Services.Services
                 }
                 return users;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
+        }
+
+        public List<TrabajadoresRoot> Trabajadores(int idcompany)
+        {
+            List<TrabajadoresRoot> trabajadoresRoots = _httpService.RequestJson<TrabajadoresListRoot>(_GetTrabajadoresById, HttpMethod.Get).items.Where(x=> x.idempresa==idcompany).ToList();
+            return trabajadoresRoots;
         }
     }
 }

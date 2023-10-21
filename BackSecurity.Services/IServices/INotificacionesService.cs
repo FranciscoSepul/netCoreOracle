@@ -1,4 +1,6 @@
 ﻿using BackSecurity.Dto.Company;
+using BackSecurity.Dto.NotificacionDirigida;
+using BackSecurity.Dto.Notificaciones;
 using BackSecurity.Dto.User;
 using System;
 using System.Collections.Generic;
@@ -10,10 +12,11 @@ namespace BackSecurity.Services.IServices
 {
     public interface INotificacionesService
     {
-        bool Create(CompanyCreate company);
-        bool Update(CompanyUpdate company);
+        bool Create(Notificaciones company);
+        bool Update(Notificaciones company);
         bool Disable(CompanyUpdate company);
-        List<Dto.Company.Company> List ();
-        Company GetById (int id);
+        List<NotificacionesList> List();
+        List<NotificaciondirigidaFirs> ListDirigido();
+        Company GetById(int id);
     }
 }

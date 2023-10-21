@@ -15,6 +15,7 @@ using BackSecurity.Controllers.Common;
 using BackSecurity.Dto.Authentication;
 using BackSecurity.Constants.Constants;
 using BackSecurity.Dto.Funcion;
+using BackSecurity.Dto.Trabajadores;
 
 namespace BackSecurity.Controllers
 {
@@ -65,6 +66,13 @@ namespace BackSecurity.Controllers
         public IActionResult ListUsers()
         {
             List<Users> user = _userService.Users();
+            return Ok(user);
+        }
+        [HttpGet("TrabajadoresList")]
+        [AllowAnonymous]
+        public IActionResult TrabajadoresList(int id)
+        {
+            List<TrabajadoresRoot> user = _userService.Trabajadores(id);
             return Ok(user);
         }
         [HttpGet("ProfesionalList")]

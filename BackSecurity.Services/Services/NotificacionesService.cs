@@ -18,6 +18,10 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using BackSecurity.Dto.Company;
 using BackSecurity.Dto.Direccion;
+using BackSecurity.Dto.Notificaciones;
+using BackSecurity.Dto.TipoNotificacion;
+using BackSecurity.Dto.Trabajadores;
+using BackSecurity.Dto.NotificacionDirigida;
 
 namespace BackSecurity.Services.Services
 {
@@ -26,9 +30,13 @@ namespace BackSecurity.Services.Services
         private readonly IConfiguration _config;
         private readonly IHttpService _httpService;
         private readonly IDireccionService _direccionService;
-        public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa?limit=10000";
-        public string _GetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
-
+        public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notification";
+        public string _GetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notification/";
+        public string _GetByIdNotification = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tiponotification/";
+        public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
+        public string _GetTrabajadoresById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/trabajadores/";
+        public string _GetNotificacionDirigidaById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notificationdirigida/";
+        public string GetUsersById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
         public NotificacionesService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
         {
             _config = configuration;
@@ -36,35 +44,40 @@ namespace BackSecurity.Services.Services
             _direccionService = direccionService;
         }
 
-        public List<Dto.Company.Company> List()
+        public List<NotificacionesList> List()
         {
             try
             {
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAll, HttpMethod.Get).items;
-                List<Dto.Company.Company> companies = new();
-                foreach (Dto.Company.Item item in companys)
+                List<Notificaciones> item = _httpService.RequestJson<NotificacionesRoot>(GetAll, HttpMethod.Get).items;
+                List<NotificacionesList> notificacionesLists = new();
+                foreach (Notificaciones notificaciones in item)
                 {
-                    Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.IDDIRECCION);
-                    Dto.Company.Company company = new();
+                    NotificacionesList notificacionesList = new();
+                    notificacionesList.id = notificaciones.id;
+                    notificacionesList.fechaprogramacion = notificaciones.fechaprogramacion;
+                    notificacionesList.tiponotificacion = _httpService.RequestJson<TipoNotificacionRoot>(_GetByIdNotification + notificaciones.idtiponotificacion, HttpMethod.Get)?.nombre;
+                    notificacionesList.cuerpo = notificaciones.cuerpo;
+                    notificacionesList.titulo = notificaciones.titulo;
+                    notificacionesList.status = notificaciones.status;
+                    notificacionesList.company = _httpService.RequestJson<Company>(_GetCompanyById + notificaciones.idcompany, HttpMethod.Get)?.nom_empresa;
+                    notificacionesList.notificaciondirigida = _httpService.RequestJson<NotificaciondirigidaFirs>(_GetNotificacionDirigidaById + notificaciones.idnotificaciondirigida, HttpMethod.Get)?.nombre;
+                    if (notificacionesList.notificaciondirigida == "Empresa")
+                    {
+                        notificacionesList.trabajador = notificacionesList.company;
+                    }
+                    if (notificacionesList.notificaciondirigida == "Profesional")
+                    {
+                        notificacionesList.trabajador = (notificaciones.idtrabajador > 0) ? _httpService.RequestJson<BackSecurity.Dto.User.Item>(GetUsersById + notificaciones.idtrabajador, HttpMethod.Get)?.run_usuario : "Todos";
+                    }
+                    if (notificacionesList.notificaciondirigida == "Trabajador")
+                    {
+                        notificacionesList.trabajador = (notificaciones.idtrabajador > 0) ? _httpService.RequestJson<TrabajadoresRoot>(_GetTrabajadoresById + notificaciones.idtrabajador, HttpMethod.Get)?.run : "Todos";
+                    }
+                    Console.WriteLine("tra " + notificaciones.idtrabajador);
 
-                    company.id_empresa = item.id_empresa;
-                    company.nom_empresa = item.nom_empresa;
-                    company.Rut = item.Rut;
-                    company.DvRut = item.DvRut;
-                    company.ImageBase64 = item.ImageBase64;
-                    company.fechaFinContrato = item.fechaFinContrato;
-                    company.Correo = item.Correo;
-                    company.eliminado = stateCompany(item);
-                    company.fechaCreacion = item.fechaCreacion;
-                    company.haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653";
-                    company.Region = direccion.id_region;
-                    company.Comuna = direccion.id_comuna;
-                    company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                    company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
-
-                    companies.Add(company);
+                    notificacionesLists.Add(notificacionesList);
                 }
-                return companies.OrderBy(x => x.IsDelete).ToList();
+                return notificacionesLists;
             }
             catch (Exception ex)
             {
@@ -109,67 +122,34 @@ namespace BackSecurity.Services.Services
             return company;
         }
 
-        public bool Create(CompanyCreate company)
+        public bool Create(Notificaciones notificaciones)
         {
             try
             {
-                DireccionInsert direccion = new();
-                direccion.calle = company.Direccion;
-                direccion.id_region = company.Region;
-                direccion.id_comuna = company.Comuna;
-                int IDDIRECCION = _direccionService.Create(direccion);
-
-                CompanyInsert companyInsert = new();
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAll, HttpMethod.Get).items;
-                companyInsert.id_empresa = companys.Count() + 1;
-                companyInsert.iddireccion = IDDIRECCION;
-                companyInsert.correo = company.Correo;
-                companyInsert.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault().Replace('/', '-');
-                Console.WriteLine(companyInsert.fechacreacion);
-                string[] rut = company.Rut.Split('-');
-                companyInsert.rut = rut[0];
-                companyInsert.dvrut = (rut.Count() > 1) ? rut[1] : " ";
-                companyInsert.nom_empresa = company.nom_empresa;
-                companyInsert.isdelete = 0;
-                companyInsert.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
-                Console.WriteLine(JsonConvert.SerializeObject(companyInsert));
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(_GetById, HttpMethod.Post, JsonConvert.SerializeObject(companyInsert));
+                notificaciones.id = _httpService.RequestJson<NotificacionesRoot>(GetAll, HttpMethod.Get).items.Count + 1;
+                Console.WriteLine(JsonConvert.SerializeObject(notificaciones));
+                Notificaciones item = _httpService.RequestJson<Notificaciones>(_GetById, HttpMethod.Post, JsonConvert.SerializeObject(notificaciones));
                 return (item != null);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message + ex.StackTrace);
                 return false;
             }
         }
 
-        public bool Update(CompanyUpdate company)
+        public bool Update(Notificaciones notificaciones)
         {
             try
             {
-                CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetById + company.id_empresa, HttpMethod.Get);
-
+                // CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetById + company.id_empresa, HttpMethod.Get);
                 #region Update direccion
-                Dto.Direccion.Item direccion = _direccionService.GetDireccionById(companyById.iddireccion);
-                DireccionInsert direccionInsert = new();
-                direccionInsert.id_direccion = direccion.id_direccion;
-                direccionInsert.calle = direccion.calle;
-                direccionInsert.id_region = direccion.id_region;
-                direccionInsert.id_comuna = direccion.id_comuna;
-                int IDDIRECCION = _direccionService.Update(direccionInsert);
-                #endregion
-                #region Update company
-                companyById.correo = company.Correo;
-                string[] rut = company.Rut.Split('-');
-                Console.WriteLine("rr " + rut[1]);
-                companyById.rut = rut[0];
-                companyById.dvrut = (rut.Length > 1) ? rut[1] : " ";
-                companyById.nom_empresa = company.nom_empresa;
-                companyById.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
-                Console.WriteLine(JsonConvert.SerializeObject(companyById));
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(_GetById + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
+                Console.WriteLine(JsonConvert.SerializeObject(notificaciones));
+                //BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(_GetById + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
                 #endregion
 
-                return (item != null);
+                // return (item != null);
+                return true;
             }
             catch (Exception)
             {
@@ -225,6 +205,12 @@ namespace BackSecurity.Services.Services
                 Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
+        }
+
+        public List<NotificaciondirigidaFirs> ListDirigido()
+        {
+            List<NotificaciondirigidaFirs> notificacionDirigidaRoots = _httpService.RequestJson<NotificacionDirigidaRoot>(_GetNotificacionDirigidaById, HttpMethod.Get).items;
+            return notificacionDirigidaRoots;
         }
     }
 }

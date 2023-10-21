@@ -1,4 +1,5 @@
 ﻿using BackSecurity.Dto.Funcion;
+using BackSecurity.Dto.Trabajadores;
 using BackSecurity.Dto.User;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace BackSecurity.Services.IServices
         bool Disable(UserDisable user);
         BackSecurity.Dto.User.Item GetWorker (string UserName);
         List<BackSecurity.Dto.Funcion.Item> ListFunction();
-
+        List<TrabajadoresRoot> Trabajadores(int idcompany);
         BackSecurity.Dto.User.Item GetWorkerById(int UserId);
     }
 }

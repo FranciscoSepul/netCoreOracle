@@ -187,7 +187,7 @@ CREATE TABLE casoasesoria
         (1, '17116112', '1', 'Camilo', 'loyola', 111111111, 'correofalso@gmail.com', 'Chileno', 1, 0, 1, 1);
 
 
-    ---Here new modification
+    
     ALTER TABLE Capacitacion 
     ADD Idtrabajador NUMBER ;
 
@@ -233,7 +233,7 @@ CREATE TABLE casoasesoria
     VALUES
         (8, 'Implementos control de incendios');
 
-
+---Here new modification
     CREATE TABLE Notification
     (
         id NUMBER PRIMARY KEY,
