@@ -16,6 +16,7 @@ using BackSecurity.Constants.Constants;
 using BackSecurity.Dto.Company;
 using BackSecurity.Dto.Notificaciones;
 using BackSecurity.Dto.NotificacionDirigida;
+using BackSecurity.Dto.TipoNotificacion;
 
 namespace BackSecurity.Controllers
 {
@@ -47,11 +48,11 @@ namespace BackSecurity.Controllers
             return Ok(company);
         }
         
-         [HttpGet("GetAllNotificationDirigida")]
+        [HttpGet("GetAllTipoNotification")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllNotificationDirigida()
+        public async Task<IActionResult> GetAllTipoNotification()
         {
-            List<NotificaciondirigidaFirs> dirigida = _notificacionesService.ListDirigido();
+            List<TipoNotificacionRoot> dirigida = _notificacionesService.ListTipoNotificacion();
             return Ok(dirigida);
         }
 

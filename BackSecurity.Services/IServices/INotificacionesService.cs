@@ -1,6 +1,7 @@
 ﻿using BackSecurity.Dto.Company;
 using BackSecurity.Dto.NotificacionDirigida;
 using BackSecurity.Dto.Notificaciones;
+using BackSecurity.Dto.TipoNotificacion;
 using BackSecurity.Dto.User;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace BackSecurity.Services.IServices
         bool Update(Notificaciones company);
         bool Disable(CompanyUpdate company);
         List<NotificacionesList> List();
-        List<NotificaciondirigidaFirs> ListDirigido();
+        List<TipoNotificacionRoot> ListTipoNotificacion();
         Company GetById(int id);
     }
 }

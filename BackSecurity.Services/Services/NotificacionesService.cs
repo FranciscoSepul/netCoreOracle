@@ -77,7 +77,7 @@ namespace BackSecurity.Services.Services
 
                     notificacionesLists.Add(notificacionesList);
                 }
-                return notificacionesLists;
+                return notificacionesLists.OrderByDescending(x => x.id).ToList();
             }
             catch (Exception ex)
             {
@@ -207,9 +207,9 @@ namespace BackSecurity.Services.Services
             }
         }
 
-        public List<NotificaciondirigidaFirs> ListDirigido()
+        public List<TipoNotificacionRoot> ListTipoNotificacion()
         {
-            List<NotificaciondirigidaFirs> notificacionDirigidaRoots = _httpService.RequestJson<NotificacionDirigidaRoot>(_GetNotificacionDirigidaById, HttpMethod.Get).items;
+            List<TipoNotificacionRoot> notificacionDirigidaRoots = _httpService.RequestJson<ListIpoNotificacionRoot>(_GetByIdNotification , HttpMethod.Get).items;
             return notificacionDirigidaRoots;
         }
     }
