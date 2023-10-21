@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using BackSecurity.Dto.Activity;
 using BackSecurity.Dto.Tema;
 using BackSecurity.Dto.Implementos;
+using BackSecurity.Dto.Notificaciones;
 
 namespace BackSecurity.Services.Services
 {
@@ -29,19 +30,21 @@ namespace BackSecurity.Services.Services
         private readonly IDireccionService _direccionService;
         private readonly IUserService _userService;
         private readonly ICompanyService _companyService;
+        private readonly INotificacionesService _notificacionesService;
         public string GetAllActivity = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/capacitacion/";
         public string _GetActivityById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/capacitacion/";
         public string InsertActivity = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/capacitacion/";
         public string GetTemas = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/temacapacitacion/";
         public string GetImplementos = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/implementos/";
 
-        public ActividadesService(IConfiguration configuration, ICompanyService companyService, IUserService userService, IHttpService httpService, IDireccionService direccionService)
+        public ActividadesService(IConfiguration configuration,INotificacionesService notificacionesService, ICompanyService companyService, IUserService userService, IHttpService httpService, IDireccionService direccionService)
         {
             _config = configuration;
             _httpService = httpService;
             _direccionService = direccionService;
             _userService = userService;
             _companyService = companyService;
+            _notificacionesService = notificacionesService;
         }
         public List<Dto.Activity.ActivityList> List()
         {
@@ -128,9 +131,22 @@ namespace BackSecurity.Services.Services
         {
             try
             {
+                Console.WriteLine("creando capacitacion");
                 activity.id = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Count() + 1;
                 activity.isdelete = 0;
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertActivity, HttpMethod.Post, JsonConvert.SerializeObject(activity));
+                #region  crear capacitacion
+                Notificaciones notificaciones = new();
+                notificaciones.fechaprogramacion = DateTime.Now.Date.ToString();
+                notificaciones.cuerpo = $"Los invitamos cordial mente a asistir a la capacitacion de {_httpService.RequestJson<OneTemaRoot>(GetTemas + activity.tema, HttpMethod.Get).capacitacion} el dia {DateTime.Parse(activity.fechaprogramacion).Date} - {activity.horaprogramacion} a cargo del profesional {_userService.GetWorkerById(activity.idprofesionalacargo).nom_usuario}";
+                notificaciones.titulo = "Capacitacion";
+                notificaciones.idtiponotificacion = 2;
+                notificaciones.idnotificaciondirigida = 2;
+                notificaciones.idcompany = activity.idcompany;
+                notificaciones.idtrabajador = activity.idtrabajador;
+                _notificacionesService.Create(notificaciones);
+                #endregion
+
                 return (item != null);
             }
             catch (Exception)
