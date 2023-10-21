@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Configurations>Debug;Release;Staging;Production</Configurations>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Security\**" />
+    <EmbeddedResource Remove="Security\**" />
+    <None Remove="Security\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
+    <PackageReference Include="MailKit" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.2" />
+    <PackageReference Include="ChoPGP.Core" Version="1.0.1.2" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
+    <PackageReference Include="Twilio" Version="6.14.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BackSecurity.Constants\BackSecurity.Constants.csproj" />
+    <ProjectReference Include="..\BackSecurity.Dto\BackSecurity.Dto.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="ChoPGP.Core" />
+    <None Remove="Security\" />
+    <None Remove="Common\" />
+    <None Remove="Common\ICommon\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\" />
+    <Folder Include="Common\ICommon\" />
+  </ItemGroup>
+</Project>
