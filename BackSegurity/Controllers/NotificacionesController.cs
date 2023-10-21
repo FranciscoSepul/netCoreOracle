@@ -64,21 +64,5 @@ namespace BackSecurity.Controllers
             return (response !=false)? Ok():BadRequest();
         }
         
-        [HttpPut("Update")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Update([FromBody] Notificaciones notificaciones)
-        {
-            bool user = _notificacionesService.Update(notificaciones);
-            return Ok(user);
-        }
-
-        [HttpPut("Disable")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Disable([FromBody] CompanyUpdate companyCreate)
-        {
-            bool user = _notificacionesService.Disable(companyCreate);
-            return Ok(user);
-        }
-        
     }
 }

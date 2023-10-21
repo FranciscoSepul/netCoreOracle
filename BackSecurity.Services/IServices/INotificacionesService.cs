@@ -15,7 +15,6 @@ namespace BackSecurity.Services.IServices
     {
         bool Create(Notificaciones company);
         bool Update(Notificaciones company);
-        bool Disable(CompanyUpdate company);
         List<NotificacionesList> List();
         List<TipoNotificacionRoot> ListTipoNotificacion();
         Company GetById(int id);

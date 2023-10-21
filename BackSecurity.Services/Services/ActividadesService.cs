@@ -67,7 +67,6 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }
@@ -100,7 +99,6 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }
@@ -130,10 +128,8 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                Console.WriteLine(_httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Count());
                 activity.id = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Count() + 1;
                 activity.isdelete = 0;
-                Console.WriteLine(JsonConvert.SerializeObject(activity));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertActivity, HttpMethod.Post, JsonConvert.SerializeObject(activity));
                 return (item != null);
             }
@@ -152,7 +148,6 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }

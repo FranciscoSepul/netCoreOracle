@@ -68,7 +68,6 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }
@@ -125,14 +124,12 @@ namespace BackSecurity.Services.Services
                 companyInsert.iddireccion = IDDIRECCION;
                 companyInsert.correo = company.Correo;
                 companyInsert.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault().Replace('/', '-');
-                Console.WriteLine(companyInsert.fechacreacion);
                 string[] rut = company.Rut.Split('-');
                 companyInsert.rut = rut[0];
                 companyInsert.dvrut = (rut.Count() > 1) ? rut[1] : " ";
                 companyInsert.nom_empresa = company.nom_empresa;
                 companyInsert.isdelete = 0;
                 companyInsert.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
-                Console.WriteLine(JsonConvert.SerializeObject(companyInsert));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertAsesoria, HttpMethod.Post, JsonConvert.SerializeObject(companyInsert));
                 return (item != null);
             }
@@ -160,12 +157,10 @@ namespace BackSecurity.Services.Services
                 #region Update company
                 companyById.correo = company.Correo;
                 string[] rut = company.Rut.Split('-');
-                Console.WriteLine("rr " + rut[1]);
                 companyById.rut = rut[0];
                 companyById.dvrut = (rut.Length > 1) ? rut[1] : " ";
                 companyById.nom_empresa = company.nom_empresa;
                 companyById.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
-                Console.WriteLine(JsonConvert.SerializeObject(companyById));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertAsesoria + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
                 #endregion
 
@@ -222,7 +217,6 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }

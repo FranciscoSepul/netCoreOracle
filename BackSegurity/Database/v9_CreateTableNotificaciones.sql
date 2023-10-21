@@ -180,12 +180,27 @@ CREATE TABLE casoasesoria
         IdDireccion number,
         idActividadDeTrabajo number
     );
-
-    INSERT INTO Trabajadores
+    
+ INSERT INTO Trabajadores
         (id,RUN,DVRUT,nombre,APELLIDO,FONO_USUARIO,CORREO,NACIONALIDAD,IDEMPRESA,ISDELETE,IDDIRECCION,IDACTIVIDADDETRABAJO)
     VALUES
-        (1, '17116112', '1', 'Camilo', 'loyola', 111111111, 'correofalso@gmail.com', 'Chileno', 1, 0, 1, 1);
+        (1, '19557236', '4', 'Francisco', 'Sepulveda', 949694538, 'franciscosepul96@gmail.com', 'Chileno', 1, 0, 1, 1);
 
+        INSERT INTO Trabajadores
+        (id,RUN,DVRUT,nombre,APELLIDO,FONO_USUARIO,CORREO,NACIONALIDAD,IDEMPRESA,ISDELETE,IDDIRECCION,IDACTIVIDADDETRABAJO)
+    VALUES
+        (2, '29557236', '4', 'Francisco', 'Sepulveda', 949694538, 'wwwvisualkei@gmail.com', 'Chileno', 1, 0, 1, 1);
+
+
+         INSERT INTO Trabajadores
+        (id,RUN,DVRUT,nombre,APELLIDO,FONO_USUARIO,CORREO,NACIONALIDAD,IDEMPRESA,ISDELETE,IDDIRECCION,IDACTIVIDADDETRABAJO)
+    VALUES
+        (3, '19557236', '4', 'Francisco', 'Sepulveda', 949694538, 'franciscosepul96@gmail.com', 'Chileno', 2, 0, 1, 1);
+
+         INSERT INTO Trabajadores
+        (id,RUN,DVRUT,nombre,APELLIDO,FONO_USUARIO,CORREO,NACIONALIDAD,IDEMPRESA,ISDELETE,IDDIRECCION,IDACTIVIDADDETRABAJO)
+    VALUES
+        (4, '19557236', '4', 'Francisco', 'Sepulveda', 949694538, 'franciscosepul96@gmail.com', 'Chileno', 3, 0, 1, 1);
 
     
     ALTER TABLE Capacitacion 

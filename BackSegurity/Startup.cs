@@ -1,25 +1,17 @@
 using System;
 using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Text;
 using BackSecurity.Services.IServices;
 using BackSecurity.Services.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
 using BackSecurity.Services.Common.ICommon;
 using BackSecurity.Services.Common;
-using BackSecurity.Services;
+using Hangfire;
 
 namespace BackSecurity
 {
@@ -42,7 +34,6 @@ namespace BackSecurity
         {
             services.AddMvc();
             services.AddRazorPages();
-
             services.Configure<IISServerOptions>(options => { });
 
 

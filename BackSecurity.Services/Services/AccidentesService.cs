@@ -111,8 +111,6 @@ namespace BackSecurity.Services.Services
                     accidente.Apellidofesional = user?.apellido;
 
                     accidente.Gravedad = GetByIdGravedad(item.idgravedad).gravedad;
-
-                    Console.WriteLine(item.idtrabajador);
                     Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
                     if (job != null)
                     {
@@ -132,7 +130,6 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }
@@ -180,14 +177,11 @@ namespace BackSecurity.Services.Services
                 insertAccidente.descripcion = accidente.Descripcion;
                 insertAccidente.fono_emergencia = int.Parse(accidente.fono);
                 insertAccidente.idtrabajador = accidente.IdTrabajador;
-
-                Console.WriteLine(JsonConvert.SerializeObject(insertAccidente));
                 BackSecurity.Dto.Accidente.Accidente item = _httpService.RequestJson<BackSecurity.Dto.Accidente.Accidente>(Insert, HttpMethod.Post, JsonConvert.SerializeObject(insertAccidente));
                 return (item != null);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + ex.StackTrace);
                 return false;
             }
         }
@@ -210,12 +204,10 @@ namespace BackSecurity.Services.Services
                 #region Update company
                 companyById.correo = company.Correo;
                 string[] rut = company.Rut.Split('-');
-                Console.WriteLine("rr " + rut[1]);
                 companyById.rut = rut[0];
                 companyById.dvrut = (rut.Length > 1) ? rut[1] : " ";
                 companyById.nom_empresa = company.nom_empresa;
                 companyById.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
-                Console.WriteLine(JsonConvert.SerializeObject(companyById));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(Insert + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
                 #endregion
 

@@ -22,6 +22,11 @@ using BackSecurity.Dto.Notificaciones;
 using BackSecurity.Dto.TipoNotificacion;
 using BackSecurity.Dto.Trabajadores;
 using BackSecurity.Dto.NotificacionDirigida;
+using System.Net.Mail;
+using System.Net;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 
 namespace BackSecurity.Services.Services
 {
@@ -73,7 +78,6 @@ namespace BackSecurity.Services.Services
                     {
                         notificacionesList.trabajador = (notificaciones.idtrabajador > 0) ? _httpService.RequestJson<TrabajadoresRoot>(_GetTrabajadoresById + notificaciones.idtrabajador, HttpMethod.Get)?.run : "Todos";
                     }
-                    Console.WriteLine("tra " + notificaciones.idtrabajador);
 
                     notificacionesLists.Add(notificacionesList);
                 }
@@ -81,7 +85,6 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }
@@ -127,8 +130,48 @@ namespace BackSecurity.Services.Services
             try
             {
                 notificaciones.id = _httpService.RequestJson<NotificacionesRoot>(GetAll, HttpMethod.Get).items.Count + 1;
-                Console.WriteLine(JsonConvert.SerializeObject(notificaciones));
                 Notificaciones item = _httpService.RequestJson<Notificaciones>(_GetById, HttpMethod.Post, JsonConvert.SerializeObject(notificaciones));
+
+                if (item.idtrabajador == 0)
+                {
+                    List<TrabajadoresRoot> trabajadoresRoots = _httpService.RequestJson<TrabajadoresListRoot>(_GetTrabajadoresById, HttpMethod.Get).items.Where(x => x.idempresa == item.idcompany).ToList();
+                    foreach (TrabajadoresRoot trabajadoresRoot in trabajadoresRoots)
+                    {
+                        if (item.idtiponotificacion == 1)
+                        {
+                            smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+                            sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                        }
+                        if (item.idtiponotificacion == 2)
+                        {
+                            smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+
+                        }
+                        if (item.idtiponotificacion == 3)
+                        {
+                            sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                        }
+
+                    }
+                }
+                else
+                {
+                    TrabajadoresRoot trabajadoresRoot = _httpService.RequestJson<TrabajadoresRoot>(_GetTrabajadoresById + item.idtrabajador, HttpMethod.Get);
+                    if (item.idtiponotificacion == 1)
+                    {
+                        smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+                        sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                    }
+                    if (item.idtiponotificacion == 2)
+                    {
+                        smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+
+                    }
+                    if (item.idtiponotificacion == 3)
+                    {
+                        sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                    }
+                }
                 return (item != null);
             }
             catch (Exception ex)
@@ -157,60 +200,69 @@ namespace BackSecurity.Services.Services
             }
         }
 
-        public bool Disable(CompanyUpdate company)
-        {
-            CompanyInsert companyById = _httpService.RequestJson<CompanyInsert>(_GetById + company.id_empresa, HttpMethod.Get);
-            #region Update company
-            companyById.isdelete = (company.isdelete != companyById.isdelete) ? company.isdelete : 0;
-            BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(_GetById + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
-            #endregion
-            return (item != null);
-        }
 
-        public List<Company> CompanyListNotDisable()
-        {
-            try
-            {
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAll, HttpMethod.Get).items;
-                List<Dto.Company.Company> companies = new();
-                foreach (Dto.Company.Item item in companys)
-                {
-                    Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.IDDIRECCION);
-                    Dto.Company.Company company = new();
-
-                    company.id_empresa = item.id_empresa;
-                    company.nom_empresa = item.nom_empresa;
-                    company.Rut = item.Rut;
-                    company.DvRut = item.DvRut;
-                    company.ImageBase64 = item.ImageBase64;
-                    company.fechaFinContrato = item.fechaFinContrato;
-                    company.Correo = item.Correo;
-                    company.eliminado = stateCompany(item);
-                    company.fechaCreacion = item.fechaCreacion;
-                    company.haxColor = (stateCompany(item) != "Activo") ? "#FF0000" : "#00A653";
-                    company.Region = direccion.id_region;
-                    company.Comuna = direccion.id_comuna;
-                    company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                    company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
-                    if (company.IsDelete == 0)
-                    {
-                        companies.Add(company);
-                    }
-
-                }
-                return companies.OrderBy(x => x.IsDelete).ToList();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message + ex.StackTrace);
-                return null;
-            }
-        }
 
         public List<TipoNotificacionRoot> ListTipoNotificacion()
         {
-            List<TipoNotificacionRoot> notificacionDirigidaRoots = _httpService.RequestJson<ListIpoNotificacionRoot>(_GetByIdNotification , HttpMethod.Get).items;
+            List<TipoNotificacionRoot> notificacionDirigidaRoots = _httpService.RequestJson<ListIpoNotificacionRoot>(_GetByIdNotification, HttpMethod.Get).items;
             return notificacionDirigidaRoots;
+        }
+
+        public bool smtp(string Subject, string titulo, string body, string destinatario)
+        {
+
+            string emailRemitente = "nomasaccidentescompany@gmail.com";
+            string contraseñaRemitente = "ebam sxxy eebj grox";
+
+            string emailDestinatario = destinatario;
+
+            MailMessage mensaje = new MailMessage
+            {
+                From = new MailAddress(emailRemitente),
+                Subject = Subject,
+                IsBodyHtml = true,
+                Body = $"<html><body><h1>{titulo}</h1><p>{body}</p></body></html>"
+            };
+
+            mensaje.To.Add(new MailAddress(emailDestinatario));
+
+            SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com")
+            {
+                UseDefaultCredentials = false,
+                Port = 587,
+                Credentials = new NetworkCredential(emailRemitente, contraseñaRemitente),
+                EnableSsl = true
+            };
+
+            try
+            {
+                clienteSmtp.Send(mensaje);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+
+            }
+        }
+        public bool sms(string numeroTelefonico, string body)
+        {
+            const string accountSid = "ACafa7fd641e35d38b538d18278aec90ca";
+            const string authToken = "517b211835c5a6eb882df2b1dbc5f83b";
+
+            TwilioClient.Init(accountSid, authToken);
+
+            var fromPhoneNumber = new PhoneNumber("19896601277");
+
+            var toPhoneNumber = new PhoneNumber("+56" + numeroTelefonico);
+
+            var message = MessageResource.Create(
+                to: toPhoneNumber,
+                from: fromPhoneNumber,
+                body: body
+            );
+
+            return true;
         }
     }
 }
