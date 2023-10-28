@@ -102,15 +102,6 @@ CREATE TABLE Capacitacion
  
   INSERT INTO Capacitacion (Id, Tema,IdProfesionalACargo,IdCompany,Descripcion,fechaProgramacion,horaProgramacion,isDelete)VALUES
 	(1,1,1,1,'Primeros auxilios','01-10-2023','11:00',0);
-    
---https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/asesoria/
---https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/casoasesoria/
---https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/checklist/
---https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/factura/
---https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/item/
---https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/solicitudasesoria/
---https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/visitaterreno/
-
 
 CREATE TABLE ActividadDeTrabajo
 (

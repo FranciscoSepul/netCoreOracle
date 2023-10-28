@@ -22,6 +22,10 @@ namespace BackSecurity.Dto.Company
         public int Region { get; set; }
         public int Comuna { get; set; }
         public string Direccion { get; set; }
+        public int numeroTelefonico { get; set; }
+        public string ActividadEconomica { get; set; }
+        public int IdPropiedadEmpresa { get; set; }
+        public int idTipoDeEmpresa { get; set; }
     }
 
     public class CompanyCreate
@@ -34,12 +38,16 @@ namespace BackSecurity.Dto.Company
         public int Region { get; set; }
         public int Comuna { get; set; }
         public string Direccion { get; set; }
-        public int IdDireccion {get;set;}
+        public int IdDireccion { get; set; }
+        public int numeroTelefonico { get; set; }
+        public string ActividadEconomica { get; set; }
+        public int IdPropiedadEmpresa { get; set; }
+        public int idTipoDeEmpresa { get; set; }
     }
 
     public class CompanyUpdate
     {
-        public int id_empresa {get;set;}
+        public int id_empresa { get; set; }
         public string nom_empresa { get; set; }
         public string Rut { get; set; }
         public string fechaCreacion { get; set; }
@@ -48,10 +56,10 @@ namespace BackSecurity.Dto.Company
         public int Region { get; set; }
         public int Comuna { get; set; }
         public string Direccion { get; set; }
-        public int IdDireccion {get;set;}
+        public int IdDireccion { get; set; }
         public int isdelete { get; set; }
     }
-     public class CompanyInsert
+    public class CompanyInsert
     {
         public int id_empresa { get; set; }
         public string nom_empresa { get; set; }
@@ -63,6 +71,11 @@ namespace BackSecurity.Dto.Company
         public string imageBase64 { get; set; }
         public string correo { get; set; }
         public int iddireccion { get; set; }
+        public int numeroTelefonico { get; set; }
+        public string ActividadEconomica { get; set; }
+        public int IdPropiedadEmpresa { get; set; }
+        public int idTipoDeEmpresa { get; set; }
+
     }
 
     public class Item
@@ -77,6 +90,10 @@ namespace BackSecurity.Dto.Company
         public string ImageBase64 { get; set; }
         public string Correo { get; set; }
         public int IDDIRECCION { get; set; }
+        public int numeroTelefonico { get; set; }
+        public string ActividadEconomica { get; set; }
+        public int IdPropiedadEmpresa { get; set; }
+        public int idTipoDeEmpresa { get; set; }
         public List<Link> links { get; set; }
     }
 

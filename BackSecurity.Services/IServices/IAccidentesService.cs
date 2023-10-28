@@ -19,6 +19,7 @@ namespace BackSecurity.Services.IServices
         List<Dto.Gravedad.Item> GetAllGravedad();
         Company GetById (int id);
         Job GetByIdEmpleado (int id);
+        Accidente AccidenteById(int id);
         List<Job> GetJobByIdSucursal (int id);
         Company GetByIdSucursal (int id);
     }

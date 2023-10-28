@@ -27,6 +27,18 @@ namespace BackSecurity.Dto.Empleado
         public int isdelete { get; set; }
         public int iddireccion { get; set; }
         public int idactividaddetrabajo { get; set; }
+        public int sexo { get; set; }
+        public string HoraIngreso { get; set; }
+        public string HoraSalida { get; set; }
+        ///
+        public string FechaNacimiento { get; set; }
+        public string FechaContrato { get; set; }
+        public string PuebloOriginario { get; set; }
+        public string Profesion { get; set; }
+        public string TipoDeContrato { get; set; }
+        public int idCategoriaOcupacional { get; set; }
+        public int IdTipoDeIngreso { get; set; }
+
         public List<Link> links { get; set; }
     }
 

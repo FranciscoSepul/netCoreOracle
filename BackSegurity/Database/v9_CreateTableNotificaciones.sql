@@ -307,5 +307,209 @@ CREATE TABLE casoasesoria
         (3, 'Profesional');
 
 
-    update usuario set FONO_USUARIO=949694538 ;
-    update usuario set CORREO='franciscosepul96@gmail.com' ;
+    update usuario set FONO_USUARIO=949694538
+    ;
+    update usuario set CORREO='franciscosepul96@gmail.com'
+    ;
+
+
+    CREATE TABLE PropiedadEmpresa
+    (
+        Id NUMBER PRIMARY KEY,
+        Nombre VARCHAR2 (250)
+    );
+
+    INSERT INTO PropiedadEmpresa
+        (id,nombre)
+    VALUES
+        (1, 'Publica');
+    INSERT INTO PropiedadEmpresa
+        (id,nombre)
+    VALUES
+        (2, 'Privada');
+
+    CREATE TABLE TipoDeEmpresa
+    (
+        Id NUMBER PRIMARY KEY,
+        Nombre VARCHAR2 (250)
+    );
+
+    INSERT INTO TipoDeEmpresa
+        (id,nombre)
+    VALUES
+        (1, 'Principal');
+    INSERT INTO TipoDeEmpresa
+        (id,nombre)
+    VALUES
+        (2, 'Contratista');
+    INSERT INTO TipoDeEmpresa
+        (id,nombre)
+    VALUES
+        (3, 'Subcontratista');
+    INSERT INTO TipoDeEmpresa
+        (id,nombre)
+    VALUES
+        (4, 'De Servicio Transitorio');
+
+    ALTER TABLE Empresa 
+    ADD NumeroTelefonico number;
+    ALTER TABLE Empresa 
+    ADD ActividadEconomica VARCHAR(250);
+    ALTER TABLE Empresa 
+    ADD IdPropiedadEmpresa number;
+    ALTER TABLE Empresa 
+    ADD idTipoDeEmpresa number;
+
+    INSERT INTO EMPRESA
+        (id_empresa, nom_empresa,Rut,DvRut,fechaCreacion,fechaFinContrato,IsDelete,ImageBase64,Correo,IdDireccion,NumeroTelefonico,ActividadEconomica,IdPropiedadEmpresa,idTipoDeEmpresa)
+    VALUES
+        (1, 'Codelco', '11111111', 'k', '01-01-2023', '01-01-2025', 0, null, 'Codelco@gmail.com', 1, 949694538, 'Mineria', 2, 1);
+    INSERT INTO EMPRESA
+        (id_empresa, nom_empresa,Rut,DvRut,fechaCreacion,fechaFinContrato,IsDelete,ImageBase64,Correo,IdDireccion,NumeroTelefonico,ActividadEconomica,IdPropiedadEmpresa,idTipoDeEmpresa)
+    VALUES
+        (2, 'BCI', '22222222', 'k', '02-02-2023', '01/03-2026', 0, null, 'Bci@gmail.com', 2, 949694538, 'Bancaria', 2, 1);
+    INSERT INTO EMPRESA
+        (id_empresa, nom_empresa,Rut,DvRut,fechaCreacion,fechaFinContrato,IsDelete,ImageBase64,Correo,IdDireccion,NumeroTelefonico,ActividadEconomica,IdPropiedadEmpresa,idTipoDeEmpresa)
+    VALUES
+        (3, 'Sonda', '33333333', 'k', '03-03-2023', '01-02-2024', 0, null, 'Sonda@gmail.com', 3, 949694538, 'Tecnologia', 2, 1);
+    INSERT INTO EMPRESA
+        (id_empresa, nom_empresa,Rut,DvRut,fechaCreacion,fechaFinContrato,IsDelete,ImageBase64,Correo,IdDireccion,NumeroTelefonico,ActividadEconomica,IdPropiedadEmpresa,idTipoDeEmpresa)
+    VALUES
+        (4, 'Todos', '44444444', 'k', '04-04-2023', '01-04-2024', 0, null, 'NoMasAccidentes@gmail.com', 4, 949694538, '', 2, 1);
+
+
+    ALTER TABLE trabajadores 
+    ADD sexo number;
+
+    ALTER TABLE trabajadores 
+    ADD HoraIngreso VARCHAR2(250);
+    ALTER TABLE trabajadores 
+    ADD HoraSalida VARCHAR2(250);
+
+    update trabajadores set HoraIngreso='08:30';
+    update trabajadores set HoraSalida='06:00';
+    update trabajadores set sexo=1;
+
+    ALTER TABLE trabajadores 
+ ADD FechaNacimiento VARCHAR2(250);
+    update trabajadores set FechaNacimiento='15-09-1996';
+
+    ALTER TABLE trabajadores 
+  ADD PuebloOriginario VARCHAR2(250);
+    update trabajadores set PuebloOriginario='Ninguno';
+
+
+    ALTER TABLE trabajadores 
+    ADD Profesion VARCHAR2(250);
+    update trabajadores set Profesion='Programador';
+
+    ALTER TABLE trabajadores 
+    ADD fechaContrato VARCHAR2(250);
+    update trabajadores set fechaContrato='01-01-2020';
+
+    ALTER TABLE trabajadores 
+    ADD TipoDeContrato VARCHAR2(250);
+    update trabajadores set TipoDeContrato='Indefinido';
+
+    CREATE TABLE CategoriaOcupacional
+    (
+        Id NUMBER PRIMARY KEY,
+        Nombre VARCHAR2 (250)
+    );
+
+    INSERT INTO CategoriaOcupacional
+        (id,nombre)
+    VALUES
+        (1, 'Empleador');
+    INSERT INTO CategoriaOcupacional
+        (id,nombre)
+    VALUES
+        (2, 'Trabajador Independiente');
+    INSERT INTO CategoriaOcupacional
+        (id,nombre)
+    VALUES
+        (3, 'Trabajador Dependiente');
+    INSERT INTO CategoriaOcupacional
+        (id,nombre)
+    VALUES
+        (4, 'Familiar No Remunerado');
+    INSERT INTO CategoriaOcupacional
+        (id,nombre)
+    VALUES
+        (5, 'Trabajador Voluntario');
+
+    ALTER TABLE trabajadores 
+    ADD idCategoriaOcupacional int;
+    update trabajadores set idCategoriaOcupacional=2;
+
+    CREATE TABLE TipoDeIngreso
+    (
+        Id NUMBER PRIMARY KEY,
+        Nombre VARCHAR2 (250)
+    );
+
+    INSERT INTO TipoDeIngreso
+        (id,nombre)
+    VALUES
+        (1, 'Remuneración fija');
+    INSERT INTO TipoDeIngreso
+        (id,nombre)
+    VALUES
+        (2, 'Remuneración variable');
+    INSERT INTO TipoDeIngreso
+        (id,nombre)
+    VALUES
+        (3, 'Honorarios');
+
+    ALTER TABLE trabajadores 
+    ADD IdTipoDeIngreso VARCHAR2(250);
+    update trabajadores set IdTipoDeIngreso=1;
+
+
+   CREATE TABLE LugarDeAccidente
+    (
+        Id NUMBER PRIMARY KEY,
+        Nombre VARCHAR2 (250)
+    );
+
+    INSERT INTO LugarDeAccidente
+        (id,nombre)
+    VALUES
+        (1, 'Trabajo');
+    INSERT INTO LugarDeAccidente
+        (id,nombre)
+    VALUES
+        (2, 'Trajecto');
+
+
+    ALTER TABLE Accidente 
+    ADD IdLugarDeAccidente int;
+    update Accidente set IdLugarDeAccidente=1;
+
+    CREATE TABLE MedioDePrueba
+    (
+        Id NUMBER PRIMARY KEY,
+        Nombre VARCHAR2 (250)
+    );
+
+    INSERT INTO MedioDePrueba
+        (id,nombre)
+    VALUES
+        (1, 'Parte de Carabineros');
+    INSERT INTO MedioDePrueba
+        (id,nombre)
+    VALUES
+        (2, 'Declaración');
+    INSERT INTO MedioDePrueba
+        (id,nombre)
+    VALUES
+        (3, 'Testigos');
+    INSERT INTO MedioDePrueba
+        (id,nombre)
+    VALUES
+        (4, 'Otro');
+
+    ALTER TABLE Accidente 
+    ADD IdMedioDePrueba int;
+    update Accidente set IdMedioDePrueba=2;
+

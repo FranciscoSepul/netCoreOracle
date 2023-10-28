@@ -82,6 +82,13 @@ namespace BackSecurity.Controllers
             Job tipo = _AccidentesService.GetByIdEmpleado(id);
             return Ok(tipo);
         }
+         [HttpGet("AccidentById")]
+        [AllowAnonymous]
+        public IActionResult AccidentById(int id)
+        {
+            Accidente accidente = _AccidentesService.AccidenteById(id);
+            return Ok(accidente);
+        }
         [HttpGet("GetJobByCompany")]
         [AllowAnonymous]
         public IActionResult GetJobByCompany(int id)

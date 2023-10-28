@@ -24,6 +24,7 @@ using BackSecurity.Dto.Gravedad;
 using DocumentFormat.OpenXml.Drawing;
 using BackSecurity.Dto.Empleado;
 using BackSecurity.Dto.Notificaciones;
+using BackSecurity.Dto.PropiedadEmpresa;
 
 namespace BackSecurity.Services.Services
 {
@@ -43,6 +44,14 @@ namespace BackSecurity.Services.Services
         public string GravedadById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/gravedad/";
         public string GetSucursalAchsById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/sucursalachs/";
         public string GetJobById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/trabajadores/";
+        public string idPropiedadEmpresa = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/propiedadempresa/";
+        public string idTipoDeEmpresa = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipodeempresa/";
+        public string CategoriaOcupacional = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/categoriaocupacional/";
+        public string TipoDeIngreso = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipodeingreso/";
+        public string LugarDelAccidente = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/lugardeaccidente/";
+        public string MedioDePrueba = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/mediodeprueba/";
+
+
         public AccidentesService(IConfiguration configuration, INotificacionesService notificacionesService, IHttpService httpService, IDireccionService direccionService, ICompanyService companyService, IUserService userService)
         {
             _config = configuration;
@@ -85,6 +94,79 @@ namespace BackSecurity.Services.Services
                 return (item.idgravedad == 2) ? "orange" : "red";
             }
         }
+
+        public Accidente AccidenteById(int id)
+        {
+            Console.WriteLine("accident by id ");
+            Dto.Accidente.Item item = _httpService.RequestJson<Dto.Accidente.Item>(_GetById + id, HttpMethod.Get);
+            Accidente accidente = new();
+            accidente.Id = item.id;
+            accidente.Descripcion = item.descripcion;
+            accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente).accidente;
+
+            CompanyInsert company = _companyService.GetCompanyById(item.idempresa);
+            Console.WriteLine("company " + item.idempresa);
+            Dto.Direccion.Item direccion = _direccionService.GetDireccionById(company.iddireccion);
+            accidente.Empresa = company.nom_empresa;
+            accidente.EmpresaDvRut = company.dvrut;
+            accidente.EmpresaRut = company.rut;
+            Console.WriteLine(direccion.id_comuna);
+            accidente.ComunaEmpresa = _direccionService.GetComunaById(direccion.id_comuna).FirstOrDefault().nombre_comuna;
+            accidente.CorreoEmpresa = company?.correo;
+            accidente.RegionEmpresa = _direccionService.DireccionList().Where(x => x.id_region == direccion.id_region).FirstOrDefault().nom_reg;
+            accidente.DireccionEmpresa = direccion?.calle;
+            accidente.numeroTelefonico = company.numeroTelefonico;
+            accidente.ActividadEconomica = company.ActividadEconomica;
+            accidente.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + company.IdPropiedadEmpresa, HttpMethod.Get).nombre;
+            accidente.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + company.idTipoDeEmpresa, HttpMethod.Get).nombre;
+            accidente.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 1).Count();
+            accidente.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 0).Count(); ;
+
+            Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
+            accidente.NombreProfesional = user?.nom_usuario;
+            accidente.CelProfesional = user?.fono_usuario.ToString();
+            accidente.RutProfesional = user?.run_usuario;
+            accidente.Apellidofesional = user?.apellido;
+            accidente.ClasificacionDenunciante = "Empleador";
+            accidente.Gravedad = GetByIdGravedad(item.idgravedad).gravedad;
+            Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
+            if (job != null)
+            {
+                accidente.RutTrabajador = job?.run;
+                accidente.EmpleadoNombre = job?.nombre;
+                accidente.NumeroContactoEmnpleado = job.fono_usuario;
+                accidente.CorreoEmpleado = job?.correo;
+                Dto.Direccion.Item direccionTrabajadores = _direccionService.GetDireccionById(job.iddireccion);
+                accidente.DireccionTrabajador = direccionTrabajadores.calle;
+                accidente.ComunaTrabajador = _direccionService.GetComunaById(direccion.id_comuna).FirstOrDefault().nombre_comuna;
+                accidente.HoraAccidente = DateTime.Parse(item.fechaaccidente).ToString("HH:mm");
+                accidente.Sexo = (job.sexo == 0) ? "Mujer" : "Hombre";
+                accidente.HoraIngresoAlTrabajo = job.HoraIngreso;
+                accidente.HoraSalidaTrabajo = job.HoraSalida;
+                accidente.FechaNacimiento=job.FechaNacimiento;
+                accidente.Edad = (DateTime.Now.Year-DateTime.Parse(job.FechaNacimiento).Year).ToString()+" Años" ;
+                accidente.ProfesionTrabajador=job.Profesion;
+                accidente.PuebloOriginario=job.PuebloOriginario;
+                accidente.TipoDeContratoTrabajador=job.TipoDeContrato;  
+                accidente.CategoriaOcupacional = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(CategoriaOcupacional + job.idCategoriaOcupacional, HttpMethod.Get).nombre;
+                accidente.TipoDeIngreso =_httpService.RequestJson<Dto.CategoriaOcupacional.Item>(TipoDeIngreso + job.IdTipoDeIngreso, HttpMethod.Get).nombre; 
+                accidente.Nacionalidad = job.nacionalidad;
+                accidente.Antiguedad = (DateTime.Now.Year - DateTime.Parse(job.FechaContrato).Year).ToString() +" Años";
+
+            }
+
+            accidente.Fechaaccidente = DateTime.Parse(item?.fechaaccidente).ToString("dd/MM/yyyy");
+            accidente.Fechaalta = item?.fechaalta;
+            accidente.Fono_emergencia = item.fono_emergencia;
+            accidente.TipoDeAccidente = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(LugarDelAccidente + item.IdLugarDeAccidente, HttpMethod.Get).nombre; 
+           Console.WriteLine("Tipo de accidente "+accidente.TipoDeAccidente);
+           Console.WriteLine("Medio de prueba "+item.IdMedioDePrueba);
+            accidente.MedioDePrueba = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(MedioDePrueba + item.IdMedioDePrueba, HttpMethod.Get).nombre; 
+            accidente.color = ColorIcon(item);
+            return accidente;
+
+        }
+
         public List<Accidente> List()
         {
             try
@@ -95,38 +177,19 @@ namespace BackSecurity.Services.Services
                 {
                     Accidente accidente = new();
                     accidente.Id = item.id;
-                    accidente.Descripcion = item.descripcion;
                     accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente).accidente;
-
                     CompanyInsert company = _companyService.GetCompanyById(item.idempresa);
-                    Dto.Direccion.Item direccion = _direccionService.GetDireccionById(company.iddireccion);
                     accidente.Empresa = company.nom_empresa;
-                    accidente.EmpresaDvRut = company.dvrut;
-                    accidente.EmpresaRut = company.rut;
-                    accidente.ComunaEmpresa = _direccionService.GetComunaById(direccion.id_comuna).FirstOrDefault().nombre_comuna;
-                    accidente.CorreoEmpresa = company?.correo;
-                    accidente.RegionEmpresa = _direccionService.DireccionList().Where(x => x.id_region == direccion.id_region).FirstOrDefault().nom_reg;
-                    accidente.DireccionEmpresa = direccion?.calle;
-
                     Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
                     accidente.NombreProfesional = user?.nom_usuario;
-                    accidente.CelProfesional = user?.fono_usuario.ToString();
-                    accidente.RutProfesional = user?.run_usuario;
-                    accidente.Apellidofesional = user?.apellido;
-
                     accidente.Gravedad = GetByIdGravedad(item.idgravedad).gravedad;
                     Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
                     if (job != null)
                     {
                         accidente.RutTrabajador = job?.run;
-                        accidente.EmpleadoNombre = job?.nombre;
-                        accidente.NumeroContactoEmnpleado = job.fono_usuario;
-                        accidente.CorreoEmpleado = job?.correo;
                     }
 
-                    accidente.Fechaaccidente = item?.fechaaccidente;
-                    accidente.Fechaalta = item?.fechaalta;
-                    accidente.Fono_emergencia = item.fono_emergencia;
+                    accidente.Fechaaccidente = DateTime.Parse(item?.fechaaccidente).ToString("dd/MM/yyyy");
                     accidente.color = ColorIcon(item);
                     accidentes.Add(accidente);
                 }
@@ -187,10 +250,10 @@ namespace BackSecurity.Services.Services
                 CompanyInsert company = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + accidente.IdEmpresa, HttpMethod.Get);
                 notificaciones.cuerpo = $"Favor comunicarse de manera urgente con la empresa {company.nom_empresa} al correo {company.correo} o al fono {accidente.fono} ya que el trabajador {_userService.GetWorkerById(accidente.IdTrabajador).nom_usuario} tuvo un accidente de grado {GetByIdGravedad(accidente.IdGravedad).gravedad} Tipo de accidente: {GetByIdTipoAccidente(accidente.IdTipoDeAccidente).accidente}  Descripcion: {accidente.Descripcion} ";
                 notificaciones.titulo = "Urgente";
-                notificaciones.idtiponotificacion=1;
-                notificaciones.idnotificaciondirigida=3;
-                notificaciones.idcompany=accidente.IdEmpresa;
-                notificaciones.idtrabajador=accidente.IdProfesional;
+                notificaciones.idtiponotificacion = 1;
+                notificaciones.idnotificaciondirigida = 3;
+                notificaciones.idcompany = accidente.IdEmpresa;
+                notificaciones.idtrabajador = accidente.IdProfesional;
                 _notificacionesService.Create(notificaciones);
                 return (item != null);
             }

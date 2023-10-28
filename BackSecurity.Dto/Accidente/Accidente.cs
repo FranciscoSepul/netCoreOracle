@@ -20,6 +20,12 @@ namespace BackSecurity.Dto.Accidente
         public string RegionEmpresa { get; set; }
         public string ComunaEmpresa { get; set; }
         public string DireccionEmpresa { get; set; }
+        public int numeroTelefonico { get; set; }
+        public string ActividadEconomica { get; set; }
+        public string IdPropiedadEmpresa { get; set; }
+        public string idTipoDeEmpresa { get; set; }
+        public int trabajadoresHombres { get; set; }
+        public int trabajadoresMujeres { get; set; }
         #endregion
         public string CelProfesional { get; set; }
         public string RutProfesional { get; set; }
@@ -32,11 +38,30 @@ namespace BackSecurity.Dto.Accidente
         public string EmpleadoNombre {get;set;}
         public int NumeroContactoEmnpleado {get;set;}
         public string CorreoEmpleado {get;set;}
+        //
+        public string DireccionTrabajador {get;set;}
+        public string ComunaTrabajador {get;set;}
+        public string Sexo {get;set;}
+        public string Edad {get;set;}
+        public string FechaNacimiento {get;set;}
+        public string PuebloOriginario {get;set;}
+        public string Nacionalidad {get;set;}
+        public string ProfesionTrabajador {get;set;}
+        public string Antiguedad {get;set;}
+        public string TipoDeContratoTrabajador {get;set;}
+        public string CategoriaOcupacional {get;set;}
+        public string TipoDeIngreso {get;set;}
         #endregion
         public string Fechaaccidente { get; set; }
+        public string HoraAccidente { get; set; }
+        public string HoraIngresoAlTrabajo { get; set; }
+        public string HoraSalidaTrabajo { get; set; }
+        public string TipoDeAccidente { get; set; }
+        public string MedioDePrueba { get; set; }
         public string Fechaalta { get; set; }
         public int Fono_emergencia { get; set; }
         public string color { get; set; }
+        public string ClasificacionDenunciante { get; set; }
     }
     public class CreateAccidente
     {
@@ -74,6 +99,8 @@ namespace BackSecurity.Dto.Accidente
         public string fechaaccidente { get; set; }
         public string fechaalta { get; set; }
         public int fono_emergencia { get; set; }
+        public int IdLugarDeAccidente { get; set; }
+        public int IdMedioDePrueba { get; set; }
         public List<Link> links { get; set; }
     }
 
