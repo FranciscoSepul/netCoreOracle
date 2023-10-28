@@ -72,6 +72,8 @@ namespace BackSecurity.Dto.Accidente
         public int IdEmpresa { get; set; }
         public int IdTrabajador { get; set; }
         public string Descripcion { get; set; }
+        public int Idlugardeaccidente { get; set; }
+        public int Idmediodeprueba { get; set; }
     }
 
     public class InsertAccidente
@@ -86,6 +88,8 @@ namespace BackSecurity.Dto.Accidente
         public int idprofesional { get; set; }
         public int idtipoaccidente { get; set; }
         public int idtrabajador { get; set; }
+        public int idlugardeaccidente { get; set; }
+        public int idmediodeprueba { get; set; }
     }
     public class Item
     {
@@ -99,8 +103,8 @@ namespace BackSecurity.Dto.Accidente
         public string fechaaccidente { get; set; }
         public string fechaalta { get; set; }
         public int fono_emergencia { get; set; }
-        public int IdLugarDeAccidente { get; set; }
-        public int IdMedioDePrueba { get; set; }
+        public int idLugarDeAccidente { get; set; }
+        public int idMedioDePrueba { get; set; }
         public List<Link> links { get; set; }
     }
 

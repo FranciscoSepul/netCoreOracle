@@ -143,28 +143,37 @@ namespace BackSecurity.Services.Services
                 accidente.Sexo = (job.sexo == 0) ? "Mujer" : "Hombre";
                 accidente.HoraIngresoAlTrabajo = job.HoraIngreso;
                 accidente.HoraSalidaTrabajo = job.HoraSalida;
-                accidente.FechaNacimiento=job.FechaNacimiento;
-                accidente.Edad = (DateTime.Now.Year-DateTime.Parse(job.FechaNacimiento).Year).ToString()+" Años" ;
-                accidente.ProfesionTrabajador=job.Profesion;
-                accidente.PuebloOriginario=job.PuebloOriginario;
-                accidente.TipoDeContratoTrabajador=job.TipoDeContrato;  
+                accidente.FechaNacimiento = job.FechaNacimiento;
+                accidente.Edad = (DateTime.Now.Year - DateTime.Parse(job.FechaNacimiento).Year).ToString() + " Años";
+                accidente.ProfesionTrabajador = job.Profesion;
+                accidente.PuebloOriginario = job.PuebloOriginario;
+                accidente.TipoDeContratoTrabajador = job.TipoDeContrato;
                 accidente.CategoriaOcupacional = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(CategoriaOcupacional + job.idCategoriaOcupacional, HttpMethod.Get).nombre;
-                accidente.TipoDeIngreso =_httpService.RequestJson<Dto.CategoriaOcupacional.Item>(TipoDeIngreso + job.IdTipoDeIngreso, HttpMethod.Get).nombre; 
+                accidente.TipoDeIngreso = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(TipoDeIngreso + job.IdTipoDeIngreso, HttpMethod.Get).nombre;
                 accidente.Nacionalidad = job.nacionalidad;
-                accidente.Antiguedad = (DateTime.Now.Year - DateTime.Parse(job.FechaContrato).Year).ToString() +" Años";
+                accidente.Antiguedad = (DateTime.Now.Year - DateTime.Parse(job.FechaContrato).Year).ToString() + " Años";
 
             }
 
             accidente.Fechaaccidente = DateTime.Parse(item?.fechaaccidente).ToString("dd/MM/yyyy");
             accidente.Fechaalta = item?.fechaalta;
             accidente.Fono_emergencia = item.fono_emergencia;
-            accidente.TipoDeAccidente = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(LugarDelAccidente + item.IdLugarDeAccidente, HttpMethod.Get).nombre; 
-           Console.WriteLine("Tipo de accidente "+accidente.TipoDeAccidente);
-           Console.WriteLine("Medio de prueba "+item.IdMedioDePrueba);
-            accidente.MedioDePrueba = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(MedioDePrueba + item.IdMedioDePrueba, HttpMethod.Get).nombre; 
+            accidente.TipoDeAccidente = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(LugarDelAccidente + item.idLugarDeAccidente, HttpMethod.Get).nombre;
+            Console.WriteLine("Tipo de accidente " + accidente.TipoDeAccidente);
+            Console.WriteLine("Medio de prueba " + item.idMedioDePrueba);
+            accidente.MedioDePrueba = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(MedioDePrueba + item.idMedioDePrueba, HttpMethod.Get).nombre;
             accidente.color = ColorIcon(item);
             return accidente;
 
+        }
+
+        public List<Dto.CategoriaOcupacional.Item> LugarDelAccidentes()
+        {
+           return _httpService.RequestJson<Dto.CategoriaOcupacional.CategoriaOcupacionalRoot>(LugarDelAccidente , HttpMethod.Get).items;
+        }
+        public List<Dto.CategoriaOcupacional.Item> MediosDePruebas()
+        {
+           return  _httpService.RequestJson<Dto.CategoriaOcupacional.CategoriaOcupacionalRoot>(MedioDePrueba , HttpMethod.Get).items;
         }
 
         public List<Accidente> List()
@@ -188,7 +197,6 @@ namespace BackSecurity.Services.Services
                     {
                         accidente.RutTrabajador = job?.run;
                     }
-
                     accidente.Fechaaccidente = DateTime.Parse(item?.fechaaccidente).ToString("dd/MM/yyyy");
                     accidente.color = ColorIcon(item);
                     accidentes.Add(accidente);
@@ -197,6 +205,7 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }
@@ -244,6 +253,8 @@ namespace BackSecurity.Services.Services
                 insertAccidente.descripcion = accidente.Descripcion;
                 insertAccidente.fono_emergencia = int.Parse(accidente.fono);
                 insertAccidente.idtrabajador = accidente.IdTrabajador;
+                insertAccidente.idlugardeaccidente = accidente.Idlugardeaccidente;
+                insertAccidente.idmediodeprueba =accidente.Idmediodeprueba;
                 BackSecurity.Dto.Accidente.Accidente item = _httpService.RequestJson<BackSecurity.Dto.Accidente.Accidente>(Insert, HttpMethod.Post, JsonConvert.SerializeObject(insertAccidente));
                 Notificaciones notificaciones = new();
                 notificaciones.fechaprogramacion = DateTime.Now.Date.ToString();
@@ -259,6 +270,7 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine("llegu catch "+ex.Message +ex.InnerException);
                 return false;
             }
         }

@@ -82,6 +82,20 @@ namespace BackSecurity.Controllers
             Job tipo = _AccidentesService.GetByIdEmpleado(id);
             return Ok(tipo);
         }
+        [HttpGet("LugarDelAccidentes")]
+        [AllowAnonymous]
+        public IActionResult LugarDelAccidentes()
+        {
+            List<Dto.CategoriaOcupacional.Item> tipo = _AccidentesService.LugarDelAccidentes();
+            return Ok(tipo);
+        }
+        [HttpGet("GetAllMediosDePruebas")]
+        [AllowAnonymous]
+        public IActionResult GetAllMediosDePruebas()
+        {
+            List<Dto.CategoriaOcupacional.Item> tipo  = _AccidentesService.MediosDePruebas();
+            return Ok(tipo);
+        }
          [HttpGet("AccidentById")]
         [AllowAnonymous]
         public IActionResult AccidentById(int id)

@@ -22,5 +22,7 @@ namespace BackSecurity.Services.IServices
         Accidente AccidenteById(int id);
         List<Job> GetJobByIdSucursal (int id);
         Company GetByIdSucursal (int id);
+        List<Dto.CategoriaOcupacional.Item> LugarDelAccidentes();
+        List<Dto.CategoriaOcupacional.Item> MediosDePruebas();
     }
 }
