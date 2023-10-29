@@ -85,6 +85,7 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message+ex.StackTrace);
                 return null;
             }
         }

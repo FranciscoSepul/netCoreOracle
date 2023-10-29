@@ -165,23 +165,28 @@ namespace BackSecurity.Services.Services
             try
             {
                 DireccionInsert direccion = new();
-                direccion.calle = company.Direccion;
-                direccion.id_region = company.Region;
-                direccion.id_comuna = company.Comuna;
+                direccion.calle = company.direccion;
+                direccion.id_region = company.region;
+                direccion.id_comuna = company.comuna;
                 int IDDIRECCION = _direccionService.Create(direccion);
 
                 CompanyInsert companyInsert = new();
                 List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
                 companyInsert.id_empresa = companys.Count() + 1;
                 companyInsert.iddireccion = IDDIRECCION;
-                companyInsert.correo = company.Correo;
+                companyInsert.correo = company.correo;
                 companyInsert.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault().Replace('/', '-');
-                string[] rut = company.Rut.Split('-');
+                string[] rut = company.rut.Split('-');
                 companyInsert.rut = rut[0];
                 companyInsert.dvrut = (rut.Count() > 1) ? rut[1] : " ";
                 companyInsert.nom_empresa = company.nom_empresa;
                 companyInsert.isdelete = 0;
-                companyInsert.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
+                companyInsert.fechafincontrato = company.fechaFinContrato.ToString().Split('T').FirstOrDefault();
+                companyInsert.numeroTelefonico=company.numeroTelefonico;
+                companyInsert.IdPropiedadEmpresa=int.Parse(company.idPropiedadEmpresa);
+                companyInsert.idTipoDeEmpresa=int.Parse(company.idTipoDeEmpresa);
+                companyInsert.ActividadEconomica=company.actividadEconomica;
+                companyInsert.CantidadDeEmpleadosPorContrato=company.cantidadDeEmpleadosPorContrato;
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany, HttpMethod.Post, JsonConvert.SerializeObject(companyInsert));
                 return (item != null);
             }
@@ -213,18 +218,15 @@ namespace BackSecurity.Services.Services
                 companyById.dvrut = (rut.Length > 1) ? rut[1] : " ";
                 companyById.nom_empresa = company.nom_empresa;
                 companyById.fechafincontrato = company.fechaFinContrato.ToString().Split('T').FirstOrDefault();
-
-                //
                 companyById.numeroTelefonico=company.numeroTelefonico;
                 companyById.IdPropiedadEmpresa=int.Parse(company.idPropiedadEmpresa);
                 companyById.idTipoDeEmpresa=int.Parse(company.idTipoDeEmpresa);
                 companyById.ActividadEconomica=company.actividadEconomica;
                 companyById.CantidadDeEmpleadosPorContrato=company.cantidadDeEmpleadosPorContrato;
-                
+
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
                 #endregion
-                return false;
-                // return (item != null);
+                return (item != null);
             }
             catch (Exception)
             {

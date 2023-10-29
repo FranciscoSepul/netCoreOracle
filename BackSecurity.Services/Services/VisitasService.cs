@@ -113,23 +113,23 @@ namespace BackSecurity.Services.Services
             try
             {
                 DireccionInsert direccion = new();
-                direccion.calle = company.Direccion;
-                direccion.id_region = company.Region;
-                direccion.id_comuna = company.Comuna;
+                direccion.calle = company.direccion;
+                direccion.id_region = company.region;
+                direccion.id_comuna = company.comuna;
                 int IDDIRECCION = _direccionService.Create(direccion);
 
                 CompanyInsert companyInsert = new();
                 List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllAsesoria, HttpMethod.Get).items;
                 companyInsert.id_empresa = companys.Count() + 1;
                 companyInsert.iddireccion = IDDIRECCION;
-                companyInsert.correo = company.Correo;
+                companyInsert.correo = company.correo;
                 companyInsert.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault().Replace('/', '-');
-                string[] rut = company.Rut.Split('-');
+                string[] rut = company.rut.Split('-');
                 companyInsert.rut = rut[0];
                 companyInsert.dvrut = (rut.Count() > 1) ? rut[1] : " ";
                 companyInsert.nom_empresa = company.nom_empresa;
                 companyInsert.isdelete = 0;
-                companyInsert.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
+                companyInsert.fechafincontrato = company.fechaFinContrato.ToString().Split('T').FirstOrDefault();
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertAsesoria, HttpMethod.Post, JsonConvert.SerializeObject(companyInsert));
                 return (item != null);
             }
