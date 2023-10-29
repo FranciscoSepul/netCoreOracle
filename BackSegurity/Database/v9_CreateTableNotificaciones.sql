@@ -466,7 +466,7 @@ CREATE TABLE casoasesoria
     update trabajadores set IdTipoDeIngreso=1;
 
 
-   CREATE TABLE LugarDeAccidente
+    CREATE TABLE LugarDeAccidente
     (
         Id NUMBER PRIMARY KEY,
         Nombre VARCHAR2 (250)
@@ -513,3 +513,36 @@ CREATE TABLE casoasesoria
     ADD IdMedioDePrueba int;
     update Accidente set IdMedioDePrueba=2;
 
+    ALTER TABLE Empresa 
+    ADD CantidadDeEmpleadosPorContrato number;
+    update Empresa set CantidadDeEmpleadosPorContrato=50;
+
+
+    CREATE TABLE PreciosPorEmpresa
+    (
+        Id NUMBER PRIMARY KEY,
+        IdEmpresa number,
+        CostoPorAccidente number,
+        CostoPorCharla number,
+        CostoPorVisita number,
+        CostoBase number,
+        CostoPorAsesoria number,
+        CostoPorAsesoriaEspecial number,
+        CostoPorPersonaExtra number
+    );
+
+     INSERT INTO PreciosPorEmpresa
+        (Id,IdEmpresa ,CostoPorAccidente , CostoPorCharla ,CostoPorVisita ,CostoBase ,
+        CostoPorAsesoria ,CostoPorAsesoriaEspecial ,CostoPorPersonaExtra )
+    VALUES
+        (1, 1,10000,10000,10000,10000,10000,10000,10000);
+         INSERT INTO PreciosPorEmpresa
+        (Id,IdEmpresa ,CostoPorAccidente , CostoPorCharla ,CostoPorVisita ,CostoBase ,
+        CostoPorAsesoria ,CostoPorAsesoriaEspecial ,CostoPorPersonaExtra )
+    VALUES
+        (2, 2,10000,10000,10000,10000,10000,10000,10000);
+         INSERT INTO PreciosPorEmpresa
+        (Id,IdEmpresa ,CostoPorAccidente , CostoPorCharla ,CostoPorVisita ,CostoBase ,
+        CostoPorAsesoria ,CostoPorAsesoriaEspecial ,CostoPorPersonaExtra )
+    VALUES
+        (3, 3,10000,10000,10000,10000,10000,10000,10000);

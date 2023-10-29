@@ -18,6 +18,9 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using BackSecurity.Dto.Company;
 using BackSecurity.Dto.Direccion;
+using BackSecurity.Dto.Empleado;
+using BackSecurity.Dto.PreciosPorEmpresa;
+using BackSecurity.Dto.Accidente;
 
 namespace BackSecurity.Services.Services
 {
@@ -29,6 +32,16 @@ namespace BackSecurity.Services.Services
         public string GetAllCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa?limit=10000";
         public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
         public string InsertCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
+        public string idPropiedadEmpresa = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/propiedadempresa/";
+        public string idTipoDeEmpresa = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipodeempresa/";
+        public string CategoriaOcupacional = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/categoriaocupacional/";
+        public string TipoDeIngreso = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipodeingreso/";
+        public string LugarDelAccidente = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/lugardeaccidente/";
+        public string MedioDePrueba = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/mediodeprueba/";
+        public string GetJobById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/trabajadores/";
+        public string PreciosPorEmpresa = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/preciosporempresa/";
+        public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente?limit=10000";
+
 
         public CompanyService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
         {
@@ -61,6 +74,14 @@ namespace BackSecurity.Services.Services
                     company.Region = direccion.id_region;
                     company.Comuna = direccion.id_comuna;
                     company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
+                    company.numeroTelefonico = item.numeroTelefonico;
+                    company.ActividadEconomica = item.ActividadEconomica;
+                    company.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + item.IdPropiedadEmpresa, HttpMethod.Get).nombre;
+                    company.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + item.idTipoDeEmpresa, HttpMethod.Get).nombre;
+                    company.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 1).Count();
+                    company.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 0).Count();
+
+
                     company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
 
                     companies.Add(company);
@@ -88,15 +109,45 @@ namespace BackSecurity.Services.Services
             }
             return estado;
         }
-        public CompanyInsert GetCompanyById(int id)
+        public Dto.Company.Company GetCompanyById(int id)
         {
             try
             {
-                CompanyInsert company = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get);
+                CompanyInsert item = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get);
+                Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.iddireccion);
+                Dto.Company.Company company = new();
+
+                company.id_empresa = item.id_empresa;
+                company.nom_empresa = item.nom_empresa;
+                company.Rut = item.rut;
+                company.DvRut = item.dvrut;
+                company.ImageBase64 = item.imageBase64;
+                company.fechaFinContrato = item.fechafincontrato;
+                company.Correo = item.correo;
+                company.Region = direccion.id_region;
+                company.Comuna = direccion.id_comuna;
+                company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
+                company.numeroTelefonico = item.numeroTelefonico;
+                company.ActividadEconomica = item.ActividadEconomica;
+                company.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + item.IdPropiedadEmpresa, HttpMethod.Get).nombre;
+                company.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + item.idTipoDeEmpresa, HttpMethod.Get).nombre;
+                company.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 1).Count();
+                company.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 0).Count();
+                company.CantidadDeEmpleadosPorContrato = item.CantidadDeEmpleadosPorContrato;
+
+                BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa == id).FirstOrDefault();
+                company.costoporaccidente = preciosPorE.costoporaccidente;
+                company.costoporcharla = preciosPorE.costoporcharla;
+                company.costoporvisita = preciosPorE.costoporvisita;
+                company.costobase = preciosPorE.costobase;
+                company.costoporasesoria = preciosPorE.costoporasesoria;
+                company.costoporasesoriaespecial = preciosPorE.costoporasesoriaespecial;
+                company.costoporpersonaextra = preciosPorE.costoporpersonaextra;
                 return company;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message+ex.StackTrace);
                 return null;
             }
 
@@ -156,16 +207,24 @@ namespace BackSecurity.Services.Services
                 int IDDIRECCION = _direccionService.Update(direccionInsert);
                 #endregion
                 #region Update company
-                companyById.correo = company.Correo;
-                string[] rut = company.Rut.Split('-');
+                companyById.correo = company.correo;
+                string[] rut = company.rut.Split('-');
                 companyById.rut = rut[0];
                 companyById.dvrut = (rut.Length > 1) ? rut[1] : " ";
                 companyById.nom_empresa = company.nom_empresa;
-                companyById.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
+                companyById.fechafincontrato = company.fechaFinContrato.ToString().Split('T').FirstOrDefault();
+
+                //
+                companyById.numeroTelefonico=company.numeroTelefonico;
+                companyById.IdPropiedadEmpresa=int.Parse(company.idPropiedadEmpresa);
+                companyById.idTipoDeEmpresa=int.Parse(company.idTipoDeEmpresa);
+                companyById.ActividadEconomica=company.actividadEconomica;
+                companyById.CantidadDeEmpleadosPorContrato=company.cantidadDeEmpleadosPorContrato;
+                
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
                 #endregion
-
-                return (item != null);
+                return false;
+                // return (item != null);
             }
             catch (Exception)
             {
@@ -220,6 +279,42 @@ namespace BackSecurity.Services.Services
             {
                 return null;
             }
+        }
+
+        public Factura GetCompanyFactura(string id, string desde, string hasta)
+        {
+            Factura factura = new();
+            BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
+            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= DateTime.Parse(desde)
+            && DateTime.Parse(x.fechaaccidente) <= DateTime.Parse(hasta)).ToList();
+            factura.CostoTotalAccidente = (accident.Count > 0) ? accident.Count * preciosPorE.costoporaccidente : 0;
+            factura.CostoTotalCharla = 0;
+            factura.CostoTotalVisita = 0;
+            factura.CostoTotalAsesoria = 0;
+            factura.CostoTotalAsesoriaEspecial = 0;
+            int cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
+            int cantidadPorContrato = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get).CantidadDeEmpleadosPorContrato;
+            factura.CostoTotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) * preciosPorE.costoporpersonaextra : 0;
+            factura.CostoTotal = preciosPorE.costobase + (factura.CostoTotalAccidente + factura.CostoTotalCharla + factura.CostoTotalVisita + factura.CostoTotalAsesoria + factura.CostoTotalAsesoriaEspecial +
+            factura.CostoTotalPersonasExtra);
+            return factura;
+        }
+
+        public Operaciones GetCompanyOperaciones(string id, string desde, string hasta)
+        {
+            Operaciones operaciones = new();
+            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= DateTime.Parse(desde)
+            && DateTime.Parse(x.fechaaccidente) <= DateTime.Parse(hasta)).ToList();
+            operaciones.TotalAccidente = accident.Count;
+            operaciones.TotalCharla = 0;
+            operaciones.TotalVisita = 0;
+            operaciones.TotalAsesoria = 0;
+            operaciones.TotalAsesoriaEspecial = 0;
+            int cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
+            int cantidadPorContrato = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get).CantidadDeEmpleadosPorContrato;
+            operaciones.TotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) : 0;
+            return operaciones;
+
         }
     }
 }

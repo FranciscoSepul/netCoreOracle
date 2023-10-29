@@ -33,17 +33,32 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetCompanyById(int id)
         {
-            CompanyInsert company = _companyService.GetCompanyById(id);
+            Dto.Company.Company company = _companyService.GetCompanyById(id);
             return Ok(company);
         }
         [HttpGet("GetCompanyByName")]
         [AllowAnonymous]
         public async Task<IActionResult> GetCompanyByName(string id)
         {
-            Dto.Company.Item company= _companyService.GetCompanyByName(id);
+            Dto.Company.Item company = _companyService.GetCompanyByName(id);
             return Ok(company);
         }
-        
+
+        [HttpGet("GetCompanyFactura")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCompanyFactura(string id, string desde, string hasta)
+        {
+            Factura factura = _companyService.GetCompanyFactura(id, desde, hasta);
+            return Ok(factura);
+        }
+        [HttpGet("GetCompanyOperaciones")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCompanyOperaciones(string id, string desde, string hasta)
+        {
+            Operaciones factura = _companyService.GetCompanyOperaciones(id, desde, hasta);
+            return Ok(factura);
+        }
+
         [HttpGet("GetAllCompany")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllCompany()
@@ -63,9 +78,9 @@ namespace BackSecurity.Controllers
         public async Task<IActionResult> Create([FromBody] CompanyCreate companyInsert)
         {
             bool response = _companyService.Create(companyInsert);
-            return (response !=false)? Ok():BadRequest();
+            return (response != false) ? Ok() : BadRequest();
         }
-        
+
         [HttpPut("Update")]
         [AllowAnonymous]
         public async Task<IActionResult> Update([FromBody] CompanyUpdate companyInsert)
@@ -81,6 +96,6 @@ namespace BackSecurity.Controllers
             bool user = _companyService.Disable(companyCreate);
             return Ok(user);
         }
-        
+
     }
 }

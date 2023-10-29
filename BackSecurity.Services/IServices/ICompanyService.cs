@@ -15,7 +15,9 @@ namespace BackSecurity.Services.IServices
         bool Disable(CompanyUpdate company);
         List<Dto.Company.Company> CompanyList ();
         List<Dto.Company.Company> CompanyListNotDisable ();
-        CompanyInsert GetCompanyById (int id);
+        Dto.Company.Company GetCompanyById (int id);
         Dto.Company.Item GetCompanyByName(string id);
+        Factura GetCompanyFactura(string id,string desde,string hasta);
+        Operaciones GetCompanyOperaciones(string id, string desde, string hasta);
     }
 }

@@ -155,12 +155,12 @@ namespace BackSecurity.Services.Services
                 int IDDIRECCION = _direccionService.Update(direccionInsert);
                 #endregion
                 #region Update company
-                companyById.correo = company.Correo;
-                string[] rut = company.Rut.Split('-');
+                companyById.correo = company.correo;
+                string[] rut = company.rut.Split('-');
                 companyById.rut = rut[0];
                 companyById.dvrut = (rut.Length > 1) ? rut[1] : " ";
                 companyById.nom_empresa = company.nom_empresa;
-                companyById.fechafincontrato = company.fechaFinContrato.Split('T').FirstOrDefault();
+                companyById.fechafincontrato = company.fechaFinContrato.ToString().Split('T').FirstOrDefault();
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertAsesoria + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
                 #endregion
 

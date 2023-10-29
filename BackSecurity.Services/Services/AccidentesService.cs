@@ -104,23 +104,21 @@ namespace BackSecurity.Services.Services
             accidente.Descripcion = item.descripcion;
             accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente).accidente;
 
-            CompanyInsert company = _companyService.GetCompanyById(item.idempresa);
+            Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
             Console.WriteLine("company " + item.idempresa);
-            Dto.Direccion.Item direccion = _direccionService.GetDireccionById(company.iddireccion);
             accidente.Empresa = company.nom_empresa;
-            accidente.EmpresaDvRut = company.dvrut;
-            accidente.EmpresaRut = company.rut;
-            Console.WriteLine(direccion.id_comuna);
-            accidente.ComunaEmpresa = _direccionService.GetComunaById(direccion.id_comuna).FirstOrDefault().nombre_comuna;
-            accidente.CorreoEmpresa = company?.correo;
-            accidente.RegionEmpresa = _direccionService.DireccionList().Where(x => x.id_region == direccion.id_region).FirstOrDefault().nom_reg;
-            accidente.DireccionEmpresa = direccion?.calle;
+            accidente.EmpresaDvRut = company.DvRut;
+            accidente.EmpresaRut = company.Rut;
+            accidente.ComunaEmpresa = _direccionService.GetComunaById(company.Comuna).FirstOrDefault().nombre_comuna;
+            accidente.CorreoEmpresa = company?.Correo;
+            accidente.RegionEmpresa = _direccionService.DireccionList().Where(x => x.id_region == company.Region).FirstOrDefault().nom_reg;
+            accidente.DireccionEmpresa = company?.Direccion;
             accidente.numeroTelefonico = company.numeroTelefonico;
             accidente.ActividadEconomica = company.ActividadEconomica;
             accidente.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + company.IdPropiedadEmpresa, HttpMethod.Get).nombre;
             accidente.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + company.idTipoDeEmpresa, HttpMethod.Get).nombre;
             accidente.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 1).Count();
-            accidente.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 0).Count(); ;
+            accidente.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 0).Count(); 
 
             Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
             accidente.NombreProfesional = user?.nom_usuario;
@@ -138,7 +136,7 @@ namespace BackSecurity.Services.Services
                 accidente.CorreoEmpleado = job?.correo;
                 Dto.Direccion.Item direccionTrabajadores = _direccionService.GetDireccionById(job.iddireccion);
                 accidente.DireccionTrabajador = direccionTrabajadores.calle;
-                accidente.ComunaTrabajador = _direccionService.GetComunaById(direccion.id_comuna).FirstOrDefault().nombre_comuna;
+                accidente.ComunaTrabajador = _direccionService.GetComunaById(direccionTrabajadores.id_comuna).FirstOrDefault().nombre_comuna;
                 accidente.HoraAccidente = DateTime.Parse(item.fechaaccidente).ToString("HH:mm");
                 accidente.Sexo = (job.sexo == 0) ? "Mujer" : "Hombre";
                 accidente.HoraIngresoAlTrabajo = job.HoraIngreso;
@@ -187,7 +185,7 @@ namespace BackSecurity.Services.Services
                     Accidente accidente = new();
                     accidente.Id = item.id;
                     accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente).accidente;
-                    CompanyInsert company = _companyService.GetCompanyById(item.idempresa);
+                    Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
                     accidente.Empresa = company.nom_empresa;
                     Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
                     accidente.NombreProfesional = user?.nom_usuario;
