@@ -21,6 +21,7 @@ using BackSecurity.Dto.Direccion;
 using BackSecurity.Dto.Empleado;
 using BackSecurity.Dto.PreciosPorEmpresa;
 using BackSecurity.Dto.Accidente;
+using System.Globalization;
 
 namespace BackSecurity.Services.Services
 {
@@ -41,7 +42,7 @@ namespace BackSecurity.Services.Services
         public string GetJobById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/trabajadores/";
         public string PreciosPorEmpresa = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/preciosporempresa/";
         public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente?limit=10000";
-
+        public string format = "ddd MMM dd yyyy HH:mm:ss 'GMT'zzz '(hora de verano de Chile)'";
 
         public CompanyService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
         {
@@ -286,9 +287,14 @@ namespace BackSecurity.Services.Services
         public Factura GetCompanyFactura(string id, string desde, string hasta)
         {
             Factura factura = new();
+            Console.WriteLine(desde);
+            Console.WriteLine(hasta);
+           
+            DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture); 
+            DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture); 
             BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
-            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= DateTime.Parse(desde)
-            && DateTime.Parse(x.fechaaccidente) <= DateTime.Parse(hasta)).ToList();
+            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= Fdesde
+            && DateTime.Parse(x.fechaaccidente) <= Fhasta).ToList();
             factura.CostoTotalAccidente = (accident.Count > 0) ? accident.Count * preciosPorE.costoporaccidente : 0;
             factura.CostoTotalCharla = 0;
             factura.CostoTotalVisita = 0;
@@ -305,8 +311,10 @@ namespace BackSecurity.Services.Services
         public Operaciones GetCompanyOperaciones(string id, string desde, string hasta)
         {
             Operaciones operaciones = new();
-            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= DateTime.Parse(desde)
-            && DateTime.Parse(x.fechaaccidente) <= DateTime.Parse(hasta)).ToList();
+            DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture); 
+            DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture); 
+            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= Fdesde
+            && DateTime.Parse(x.fechaaccidente) <= Fhasta).ToList();
             operaciones.TotalAccidente = accident.Count;
             operaciones.TotalCharla = 0;
             operaciones.TotalVisita = 0;
