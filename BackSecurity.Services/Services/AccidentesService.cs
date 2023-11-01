@@ -184,22 +184,23 @@ namespace BackSecurity.Services.Services
                 {
                     Accidente accidente = new();
                     accidente.Id = item.id;
-                    accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente)?.accidente;
-                    Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
-                    accidente.Empresa = company.nom_empresa;
-                    Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
-                    accidente.NombreProfesional = user?.nom_usuario;
-                    accidente.Gravedad = GetByIdGravedad(item.idgravedad)?.gravedad;
-                    Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
-                    if (job != null)
-                    {
-                        accidente.RutTrabajador = job?.run;
-                    }
+                    //accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente)?.accidente;
+                    //Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
+                    //accidente.Empresa = company.nom_empresa;
+                    //Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
+                    //accidente.NombreProfesional = user?.nom_usuario;
+                    //accidente.Gravedad = GetByIdGravedad(item.idgravedad)?.gravedad;
+                    //Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
+                    //if (job != null)
+                   // {
+                    //    accidente.RutTrabajador = job?.run;
+                   // }
                     accidente.Fechaaccidente = DateTime.Parse(item?.fechaaccidente).ToString("dd/MM/yyyy");
                     accidente.color = ColorIcon(item);
+
                     accidentes.Add(accidente);
                 }
-                return accidentes.OrderBy(x => x.Id).ToList();
+                return accidentes;//.OrderBy(x => x.Id).ToList();
             }
             catch (Exception ex)
             {

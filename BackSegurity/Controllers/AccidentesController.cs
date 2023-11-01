@@ -38,6 +38,7 @@ namespace BackSecurity.Controllers
             Company company = _AccidentesService.GetById(id);
             return Ok(company);
         }
+        
         [HttpGet("GetAllAccidents")]
         [AllowAnonymous]
         public IActionResult GetAllAccidents()
