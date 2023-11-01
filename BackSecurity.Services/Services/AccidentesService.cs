@@ -208,7 +208,7 @@ namespace BackSecurity.Services.Services
                 Accidente acc = new();
                 acc.Empresa=ex.Message + ex.StackTrace;
                 accidentes.Add(acc);
-                return null;
+                return accidentes;
             }
         }
 
