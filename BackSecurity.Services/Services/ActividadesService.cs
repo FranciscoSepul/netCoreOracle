@@ -59,14 +59,14 @@ namespace BackSecurity.Services.Services
                     activityList.id = activity.id;
                     activityList.profesionalacargo = _userService.GetWorkerById(activity.idprofesionalacargo).nom_usuario;
                     activityList.haxColor = (stateCompany(activity) != "Activo") ? "#FF0000" : "#00A653";
-                    //activityList.tema = _httpService.RequestJson<OneTemaRoot>(GetTemas + activity.tema, HttpMethod.Get).capacitacion;
+                    activityList.tema = _httpService.RequestJson<OneTemaRoot>(GetTemas + activity.tema, HttpMethod.Get).capacitacion;
                     activityList.company = _companyService.GetCompanyById(activity.idcompany).nom_empresa;
                     activityList.fechaprogramacionyHora = ($"{DateTime.Parse(activity.fechaprogramacion).ToString("dd/MM/yyyy")} {activity.horaprogramacion}");
                     activityList.isdelete = activity.isdelete;
                     activityList.eliminado = stateCompany(activity);
                     activitysList.Add(activityList);
                 }
-                return activitysList.OrderByDescending(x => x.isdelete).ToList();
+                return activitysList.OrderByDescending(x => x.id).ToList();
             }
             catch (Exception ex)
             {
