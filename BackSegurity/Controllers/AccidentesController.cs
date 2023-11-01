@@ -49,8 +49,13 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public IActionResult GetAllTipoAccidents()
         {
-            List<Dto.TipoAccidente.Item> tipo = _AccidentesService.GetAllTipoAccidente();
+            try{
+ List<Dto.TipoAccidente.Item> tipo = _AccidentesService.GetAllTipoAccidente();
             return Ok(tipo);
+            }catch(Exception ex){
+return BadRequest(ex.Message+ex.StackTrace);
+            }
+           
         }
         [HttpGet("GetAllGravedad")]
         [AllowAnonymous]
