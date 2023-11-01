@@ -195,7 +195,7 @@ namespace BackSecurity.Services.Services
                     {
                         accidente.RutTrabajador = job?.run;
                     }
-                    accidente.Fechaaccidente = DateTime.Parse(item?.fechaaccidente).ToString("dd/MM/yyyy");
+                    //accidente.Fechaaccidente = DateTime.Parse(item?.fechaaccidente).ToString("dd/MM/yyyy");
                     accidente.color = ColorIcon(item);
                     accidentes.Add(accidente);
                 }
