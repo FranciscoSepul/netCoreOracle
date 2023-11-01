@@ -137,18 +137,22 @@ namespace BackSecurity.Services.Services
                 company.CantidadDeEmpleadosPorContrato = item.CantidadDeEmpleadosPorContrato;
 
                 BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa == id).FirstOrDefault();
-                company.costoporaccidente = preciosPorE.costoporaccidente;
-                company.costoporcharla = preciosPorE.costoporcharla;
-                company.costoporvisita = preciosPorE.costoporvisita;
-                company.costobase = preciosPorE.costobase;
-                company.costoporasesoria = preciosPorE.costoporasesoria;
-                company.costoporasesoriaespecial = preciosPorE.costoporasesoriaespecial;
-                company.costoporpersonaextra = preciosPorE.costoporpersonaextra;
+                if (preciosPorE != null)
+                {
+                    company.costoporaccidente = preciosPorE.costoporaccidente;
+                    company.costoporcharla = preciosPorE.costoporcharla;
+                    company.costoporvisita = preciosPorE.costoporvisita;
+                    company.costobase = preciosPorE.costobase;
+                    company.costoporasesoria = preciosPorE.costoporasesoria;
+                    company.costoporasesoriaespecial = preciosPorE.costoporasesoriaespecial;
+                    company.costoporpersonaextra = preciosPorE.costoporpersonaextra;
+                }
+
                 return company;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message+ex.StackTrace);
+                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
 
@@ -183,11 +187,11 @@ namespace BackSecurity.Services.Services
                 companyInsert.nom_empresa = company.nom_empresa;
                 companyInsert.isdelete = 0;
                 companyInsert.fechafincontrato = company.fechaFinContrato.ToString().Split('T').FirstOrDefault();
-                companyInsert.numeroTelefonico=company.numeroTelefonico;
-                companyInsert.IdPropiedadEmpresa=int.Parse(company.idPropiedadEmpresa);
-                companyInsert.idTipoDeEmpresa=int.Parse(company.idTipoDeEmpresa);
-                companyInsert.ActividadEconomica=company.actividadEconomica;
-                companyInsert.CantidadDeEmpleadosPorContrato=company.cantidadDeEmpleadosPorContrato;
+                companyInsert.numeroTelefonico = company.numeroTelefonico;
+                companyInsert.IdPropiedadEmpresa = int.Parse(company.idPropiedadEmpresa);
+                companyInsert.idTipoDeEmpresa = int.Parse(company.idTipoDeEmpresa);
+                companyInsert.ActividadEconomica = company.actividadEconomica;
+                companyInsert.CantidadDeEmpleadosPorContrato = company.cantidadDeEmpleadosPorContrato;
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany, HttpMethod.Post, JsonConvert.SerializeObject(companyInsert));
                 return (item != null);
             }
@@ -219,11 +223,11 @@ namespace BackSecurity.Services.Services
                 companyById.dvrut = (rut.Length > 1) ? rut[1] : " ";
                 companyById.nom_empresa = company.nom_empresa;
                 companyById.fechafincontrato = company.fechaFinContrato.ToString().Split('T').FirstOrDefault();
-                companyById.numeroTelefonico=company.numeroTelefonico;
-                companyById.IdPropiedadEmpresa=int.Parse(company.idPropiedadEmpresa);
-                companyById.idTipoDeEmpresa=int.Parse(company.idTipoDeEmpresa);
-                companyById.ActividadEconomica=company.actividadEconomica;
-                companyById.CantidadDeEmpleadosPorContrato=company.cantidadDeEmpleadosPorContrato;
+                companyById.numeroTelefonico = company.numeroTelefonico;
+                companyById.IdPropiedadEmpresa = int.Parse(company.idPropiedadEmpresa);
+                companyById.idTipoDeEmpresa = int.Parse(company.idTipoDeEmpresa);
+                companyById.ActividadEconomica = company.actividadEconomica;
+                companyById.CantidadDeEmpleadosPorContrato = company.cantidadDeEmpleadosPorContrato;
 
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertCompany + company.id_empresa, HttpMethod.Put, JsonConvert.SerializeObject(companyById));
                 #endregion
@@ -289,9 +293,9 @@ namespace BackSecurity.Services.Services
             Factura factura = new();
             Console.WriteLine(desde);
             Console.WriteLine(hasta);
-           
-            DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture); 
-            DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture); 
+
+            DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture);
+            DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture);
             BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
             List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= Fdesde
             && DateTime.Parse(x.fechaaccidente) <= Fhasta).ToList();
@@ -311,8 +315,8 @@ namespace BackSecurity.Services.Services
         public Operaciones GetCompanyOperaciones(string id, string desde, string hasta)
         {
             Operaciones operaciones = new();
-            DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture); 
-            DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture); 
+            DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture);
+            DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture);
             List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= Fdesde
             && DateTime.Parse(x.fechaaccidente) <= Fhasta).ToList();
             operaciones.TotalAccidente = accident.Count;
