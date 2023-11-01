@@ -42,26 +42,38 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public IActionResult GetAllAccidents()
         {
-            List<Accidente> company = _AccidentesService.List();
-            return Ok(company);
+
+            try
+            {
+                List<Accidente> company = _AccidentesService.List();
+                return Ok(company);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + ex.StackTrace);
+            }
+
         }
         [HttpGet("GetAllTipoAccidentes")]
         [AllowAnonymous]
         public IActionResult GetAllTipoAccidents()
         {
-            try{
- List<Dto.TipoAccidente.Item> tipo = _AccidentesService.GetAllTipoAccidente();
-            return Ok(tipo);
-            }catch(Exception ex){
-return BadRequest(ex.Message+ex.StackTrace);
+            try
+            {
+                List<Dto.TipoAccidente.Item> tipo = _AccidentesService.GetAllTipoAccidente();
+                return Ok(tipo);
             }
-           
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message + ex.StackTrace);
+            }
+
         }
         [HttpGet("GetAllGravedad")]
         [AllowAnonymous]
         public IActionResult GetAllGravedad()
         {
-             List<Dto.Gravedad.Item> gravedad = _AccidentesService.GetAllGravedad();
+            List<Dto.Gravedad.Item> gravedad = _AccidentesService.GetAllGravedad();
             return Ok(gravedad);
         }
         [HttpPost("Create")]
@@ -98,10 +110,10 @@ return BadRequest(ex.Message+ex.StackTrace);
         [AllowAnonymous]
         public IActionResult GetAllMediosDePruebas()
         {
-            List<Dto.CategoriaOcupacional.Item> tipo  = _AccidentesService.MediosDePruebas();
+            List<Dto.CategoriaOcupacional.Item> tipo = _AccidentesService.MediosDePruebas();
             return Ok(tipo);
         }
-         [HttpGet("AccidentById")]
+        [HttpGet("AccidentById")]
         [AllowAnonymous]
         public IActionResult AccidentById(int id)
         {
@@ -112,7 +124,7 @@ return BadRequest(ex.Message+ex.StackTrace);
         [AllowAnonymous]
         public IActionResult GetJobByCompany(int id)
         {
-             List<Job> gravedad = _AccidentesService.GetJobByIdSucursal(id);
+            List<Job> gravedad = _AccidentesService.GetJobByIdSucursal(id);
             return Ok(gravedad);
         }
     }
