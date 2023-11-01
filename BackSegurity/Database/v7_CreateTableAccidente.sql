@@ -68,3 +68,7 @@ CREATE TABLE accidente (
 
 INSERT INTO accidente (id,descripcion,IdtipoAccidente,IdProfesional,IdGravedad,IdTrabajador,IdEmpresa,FechaAccidente,FechaAlta,fono_emergencia)VALUES
 	(1,'caida desde altura ',1,1,1,1,1,'15-10-2023','20-10-2023','1231241412');
+
+
+update accidente
+set FechaAccidente='17/10/2023 21:08:14' where id=1
