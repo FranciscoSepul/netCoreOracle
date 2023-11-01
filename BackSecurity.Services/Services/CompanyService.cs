@@ -297,8 +297,8 @@ namespace BackSecurity.Services.Services
             DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture);
             DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture);
             BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
-            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= Fdesde
-            && DateTime.Parse(x.fechaaccidente) <= Fhasta).ToList();
+            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture)  >= Fdesde
+            && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture) <= Fhasta).ToList();
             factura.CostoTotalAccidente = (accident.Count > 0) ? accident.Count * preciosPorE.costoporaccidente : 0;
             factura.CostoTotalCharla = 0;
             factura.CostoTotalVisita = 0;
