@@ -118,7 +118,7 @@ namespace BackSecurity.Services.Services
             accidente.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + company.IdPropiedadEmpresa, HttpMethod.Get).nombre;
             accidente.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + company.idTipoDeEmpresa, HttpMethod.Get).nombre;
             accidente.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 1).Count();
-            accidente.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 0).Count(); 
+            accidente.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 0).Count();
 
             Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
             accidente.NombreProfesional = user?.nom_usuario;
@@ -167,11 +167,11 @@ namespace BackSecurity.Services.Services
 
         public List<Dto.CategoriaOcupacional.Item> LugarDelAccidentes()
         {
-           return _httpService.RequestJson<Dto.CategoriaOcupacional.CategoriaOcupacionalRoot>(LugarDelAccidente , HttpMethod.Get).items;
+            return _httpService.RequestJson<Dto.CategoriaOcupacional.CategoriaOcupacionalRoot>(LugarDelAccidente, HttpMethod.Get).items;
         }
         public List<Dto.CategoriaOcupacional.Item> MediosDePruebas()
         {
-           return  _httpService.RequestJson<Dto.CategoriaOcupacional.CategoriaOcupacionalRoot>(MedioDePrueba , HttpMethod.Get).items;
+            return _httpService.RequestJson<Dto.CategoriaOcupacional.CategoriaOcupacionalRoot>(MedioDePrueba, HttpMethod.Get).items;
         }
 
         public List<Accidente> List()
@@ -184,29 +184,28 @@ namespace BackSecurity.Services.Services
                 {
                     Accidente accidente = new();
                     accidente.Id = item.id;
-                    //accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente)?.accidente;
-                    //Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
-                    //accidente.Empresa = company.nom_empresa;
-                    //Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
-                    //accidente.NombreProfesional = user?.nom_usuario;
-                    //accidente.Gravedad = GetByIdGravedad(item.idgravedad)?.gravedad;
-                    //Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
-                    //if (job != null)
-                   // {
-                    //    accidente.RutTrabajador = job?.run;
-                   // }
+                    accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente)?.accidente;
+                    Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
+                    accidente.Empresa = company.nom_empresa;
+                    Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
+                    accidente.NombreProfesional = user?.nom_usuario;
+                    accidente.Gravedad = GetByIdGravedad(item.idgravedad)?.gravedad;
+                    Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
+                    if (job != null)
+                    {
+                        accidente.RutTrabajador = job?.run;
+                    }
                     accidente.Fechaaccidente = DateTime.Parse(item?.fechaaccidente).ToString("dd/MM/yyyy");
                     accidente.color = ColorIcon(item);
-
                     accidentes.Add(accidente);
                 }
-                return accidentes;//.OrderBy(x => x.Id).ToList();
+                return accidentes.OrderBy(x => x.Id).ToList();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message + ex.StackTrace);
                 Accidente acc = new();
-                acc.Empresa=ex.Message + ex.StackTrace;
+                acc.Empresa = ex.Message + ex.StackTrace;
                 accidentes.Add(acc);
                 return accidentes;
             }
@@ -256,7 +255,7 @@ namespace BackSecurity.Services.Services
                 insertAccidente.fono_emergencia = int.Parse(accidente.fono);
                 insertAccidente.idtrabajador = accidente.IdTrabajador;
                 insertAccidente.idlugardeaccidente = accidente.Idlugardeaccidente;
-                insertAccidente.idmediodeprueba =accidente.Idmediodeprueba;
+                insertAccidente.idmediodeprueba = accidente.Idmediodeprueba;
                 BackSecurity.Dto.Accidente.Accidente item = _httpService.RequestJson<BackSecurity.Dto.Accidente.Accidente>(Insert, HttpMethod.Post, JsonConvert.SerializeObject(insertAccidente));
                 Notificaciones notificaciones = new();
                 notificaciones.fechaprogramacion = DateTime.Now.Date.ToString();
@@ -272,7 +271,7 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("llegu catch "+ex.Message +ex.InnerException);
+                Console.WriteLine("llegu catch " + ex.Message + ex.InnerException);
                 return false;
             }
         }
