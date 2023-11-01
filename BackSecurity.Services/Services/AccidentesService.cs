@@ -97,15 +97,17 @@ namespace BackSecurity.Services.Services
 
         public Accidente AccidenteById(int id)
         {
-            Console.WriteLine("accident by id ");
+           
             Dto.Accidente.Item item = _httpService.RequestJson<Dto.Accidente.Item>(_GetById + id, HttpMethod.Get);
             Accidente accidente = new();
             accidente.Id = item.id;
             accidente.Descripcion = item.descripcion;
             accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente).accidente;
 
+
             Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
             Console.WriteLine("company " + item.idempresa);
+            Console.WriteLine("accident by id "+company.IdPropiedadEmpresa);
             accidente.Empresa = company.nom_empresa;
             accidente.EmpresaDvRut = company.DvRut;
             accidente.EmpresaRut = company.Rut;
@@ -115,8 +117,8 @@ namespace BackSecurity.Services.Services
             accidente.DireccionEmpresa = company?.Direccion;
             accidente.numeroTelefonico = company.numeroTelefonico;
             accidente.ActividadEconomica = company.ActividadEconomica;
-            accidente.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + company.IdPropiedadEmpresa, HttpMethod.Get).nombre;
-            accidente.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + company.idTipoDeEmpresa, HttpMethod.Get).nombre;
+            accidente.IdPropiedadEmpresa = company.IdPropiedadEmpresa;
+            accidente.idTipoDeEmpresa = company.idTipoDeEmpresa;
             accidente.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 1).Count();
             accidente.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.idempresa && x.sexo == 0).Count();
 
@@ -126,7 +128,7 @@ namespace BackSecurity.Services.Services
             accidente.RutProfesional = user?.run_usuario;
             accidente.Apellidofesional = user?.apellido;
             accidente.ClasificacionDenunciante = "Empleador";
-            accidente.Gravedad = GetByIdGravedad(item.idgravedad).gravedad;
+            accidente.Gravedad = GetByIdGravedad(item.idgravedad)?.gravedad;
             Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
             if (job != null)
             {
@@ -135,8 +137,8 @@ namespace BackSecurity.Services.Services
                 accidente.NumeroContactoEmnpleado = job.fono_usuario;
                 accidente.CorreoEmpleado = job?.correo;
                 Dto.Direccion.Item direccionTrabajadores = _direccionService.GetDireccionById(job.iddireccion);
-                accidente.DireccionTrabajador = direccionTrabajadores.calle;
-                accidente.ComunaTrabajador = _direccionService.GetComunaById(direccionTrabajadores.id_comuna).FirstOrDefault().nombre_comuna;
+                accidente.DireccionTrabajador = direccionTrabajadores?.calle;
+                accidente.ComunaTrabajador = _direccionService.GetComunaById(direccionTrabajadores.id_comuna).FirstOrDefault()?.nombre_comuna;
                 accidente.HoraAccidente = DateTime.Parse(item.fechaaccidente).ToString("HH:mm");
                 accidente.Sexo = (job.sexo == 0) ? "Mujer" : "Hombre";
                 accidente.HoraIngresoAlTrabajo = job.HoraIngreso;
@@ -146,7 +148,7 @@ namespace BackSecurity.Services.Services
                 accidente.ProfesionTrabajador = job.Profesion;
                 accidente.PuebloOriginario = job.PuebloOriginario;
                 accidente.TipoDeContratoTrabajador = job.TipoDeContrato;
-                accidente.CategoriaOcupacional = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(CategoriaOcupacional + job.idCategoriaOcupacional, HttpMethod.Get).nombre;
+                accidente.CategoriaOcupacional = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(CategoriaOcupacional + job.idCategoriaOcupacional, HttpMethod.Get)?.nombre;
                 accidente.TipoDeIngreso = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(TipoDeIngreso + job.IdTipoDeIngreso, HttpMethod.Get).nombre;
                 accidente.Nacionalidad = job.nacionalidad;
                 accidente.Antiguedad = (DateTime.Now.Year - DateTime.Parse(job.FechaContrato).Year).ToString() + " Años";
