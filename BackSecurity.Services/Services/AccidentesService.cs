@@ -143,7 +143,7 @@ namespace BackSecurity.Services.Services
                 accidente.Sexo = (job.sexo == 0) ? "Mujer" : "Hombre";
                 accidente.HoraIngresoAlTrabajo = job.HoraIngreso;
                 accidente.HoraSalidaTrabajo = job.HoraSalida;
-                accidente.FechaNacimiento = job.FechaNacimiento;
+                accidente.FechaNacimiento = DateTime.Parse(job.FechaNacimiento).ToString("dd-MMM-yyyy");
                 accidente.Edad = (DateTime.Now.Year - DateTime.Parse(job.FechaNacimiento).Year).ToString() + " Años";
                 accidente.ProfesionTrabajador = job.Profesion;
                 accidente.PuebloOriginario = job.PuebloOriginario;
