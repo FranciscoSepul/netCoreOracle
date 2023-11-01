@@ -38,9 +38,11 @@ namespace BackSecurity.Services.Services
         public string GetTemas = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/temacapacitacion/";
         public string GetImplementos = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/implementos/";
         public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
+        public string GetAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario?limit=10000";
 
 
-        public ActividadesService(IConfiguration configuration,INotificacionesService notificacionesService, ICompanyService companyService, IUserService userService, IHttpService httpService, IDireccionService direccionService)
+
+        public ActividadesService(IConfiguration configuration, INotificacionesService notificacionesService, ICompanyService companyService, IUserService userService, IHttpService httpService, IDireccionService direccionService)
         {
             _config = configuration;
             _httpService = httpService;
@@ -60,10 +62,10 @@ namespace BackSecurity.Services.Services
 
                     ActivityList activityList = new();
                     activityList.id = activity.id;
-                    activityList.profesionalacargo = _userService.GetWorkerById(activity.idprofesionalacargo).nom_usuario;
+                    activityList.profesionalacargo = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get).items.Where(x => x.id_usuario == activity.idprofesionalacargo).FirstOrDefault().nom_usuario;
                     activityList.haxColor = (stateCompany(activity) != "Activo") ? "#FF0000" : "#00A653";
                     activityList.tema = _httpService.RequestJson<OneTemaRoot>(GetTemas + activity.tema, HttpMethod.Get).capacitacion;
-                    activityList.company =_httpService.RequestJson<CompanyInsert>(_GetCompanyById + activity.idcompany, HttpMethod.Get).nom_empresa;
+                    activityList.company = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + activity.idcompany, HttpMethod.Get).nom_empresa;
                     activityList.fechaprogramacionyHora = ($"{DateTime.Parse(activity.fechaprogramacion).ToString("dd/MM/yyyy")} {activity.horaprogramacion}");
                     activityList.isdelete = activity.isdelete;
                     activityList.eliminado = stateCompany(activity);
