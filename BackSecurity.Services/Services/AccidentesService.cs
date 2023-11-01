@@ -176,20 +176,20 @@ namespace BackSecurity.Services.Services
 
         public List<Accidente> List()
         {
+            List<Accidente> accidentes = new();
             try
             {
                 List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items;
-                List<Accidente> accidentes = new();
                 foreach (Dto.Accidente.Item item in accident)
                 {
                     Accidente accidente = new();
                     accidente.Id = item.id;
-                    accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente).accidente;
+                    accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente)?.accidente;
                     Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
                     accidente.Empresa = company.nom_empresa;
                     Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
                     accidente.NombreProfesional = user?.nom_usuario;
-                    accidente.Gravedad = GetByIdGravedad(item.idgravedad).gravedad;
+                    accidente.Gravedad = GetByIdGravedad(item.idgravedad)?.gravedad;
                     Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
                     if (job != null)
                     {
@@ -204,6 +204,9 @@ namespace BackSecurity.Services.Services
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message + ex.StackTrace);
+                Accidente acc = new();
+                acc.Empresa=ex.Message + ex.StackTrace;
+                accidentes.Add(acc);
                 return null;
             }
         }
