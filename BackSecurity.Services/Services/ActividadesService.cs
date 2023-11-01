@@ -20,6 +20,7 @@ using BackSecurity.Dto.Activity;
 using BackSecurity.Dto.Tema;
 using BackSecurity.Dto.Implementos;
 using BackSecurity.Dto.Notificaciones;
+using BackSecurity.Dto.Company;
 
 namespace BackSecurity.Services.Services
 {
@@ -36,6 +37,8 @@ namespace BackSecurity.Services.Services
         public string InsertActivity = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/capacitacion/";
         public string GetTemas = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/temacapacitacion/";
         public string GetImplementos = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/implementos/";
+        public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
+
 
         public ActividadesService(IConfiguration configuration,INotificacionesService notificacionesService, ICompanyService companyService, IUserService userService, IHttpService httpService, IDireccionService direccionService)
         {
@@ -60,7 +63,7 @@ namespace BackSecurity.Services.Services
                     activityList.profesionalacargo = _userService.GetWorkerById(activity.idprofesionalacargo).nom_usuario;
                     activityList.haxColor = (stateCompany(activity) != "Activo") ? "#FF0000" : "#00A653";
                     activityList.tema = _httpService.RequestJson<OneTemaRoot>(GetTemas + activity.tema, HttpMethod.Get).capacitacion;
-                    activityList.company = _companyService.GetCompanyById(activity.idcompany).nom_empresa;
+                    activityList.company =_httpService.RequestJson<CompanyInsert>(_GetCompanyById + activity.idcompany, HttpMethod.Get).nom_empresa;
                     activityList.fechaprogramacionyHora = ($"{DateTime.Parse(activity.fechaprogramacion).ToString("dd/MM/yyyy")} {activity.horaprogramacion}");
                     activityList.isdelete = activity.isdelete;
                     activityList.eliminado = stateCompany(activity);
@@ -68,7 +71,7 @@ namespace BackSecurity.Services.Services
                 }
                 return activitysList.OrderByDescending(x => x.id).ToList();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
