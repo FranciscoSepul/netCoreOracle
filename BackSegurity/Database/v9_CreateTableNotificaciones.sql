@@ -549,3 +549,5 @@ CREATE TABLE casoasesoria
 
 
         update trabajadores set FechaNacimiento='09/15/1996 00:00:00';
+
+        update USUARIO set CLAVE=12345;
