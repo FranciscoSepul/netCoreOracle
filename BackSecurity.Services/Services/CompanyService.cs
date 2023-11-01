@@ -317,8 +317,8 @@ namespace BackSecurity.Services.Services
             Operaciones operaciones = new();
             DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture);
             DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture);
-            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.Parse(x.fechaaccidente) >= Fdesde
-            && DateTime.Parse(x.fechaaccidente) <= Fhasta).ToList();
+            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.ParseExact(x.fechaaccidente, format, CultureInfo.InvariantCulture)  >= Fdesde
+            && DateTime.ParseExact(x.fechaaccidente, format, CultureInfo.InvariantCulture) <= Fhasta).ToList();
             operaciones.TotalAccidente = accident.Count;
             operaciones.TotalCharla = 0;
             operaciones.TotalVisita = 0;

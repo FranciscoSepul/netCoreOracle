@@ -152,7 +152,6 @@ namespace BackSecurity.Services.Services
                 accidente.TipoDeIngreso = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(TipoDeIngreso + job.IdTipoDeIngreso, HttpMethod.Get).nombre;
                 accidente.Nacionalidad = job.nacionalidad;
                 accidente.Antiguedad = (DateTime.Now.Year - DateTime.Parse(job.FechaContrato).Year).ToString() + " Años";
-
             }
 
             accidente.Fechaaccidente = item?.fechaaccidente;
