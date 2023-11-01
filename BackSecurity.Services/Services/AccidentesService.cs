@@ -155,7 +155,7 @@ namespace BackSecurity.Services.Services
 
             }
 
-            accidente.Fechaaccidente = DateTime.Parse(item?.fechaaccidente).ToString("dd/MM/yyyy");
+            accidente.Fechaaccidente = item?.fechaaccidente;
             accidente.Fechaalta = item?.fechaalta;
             accidente.Fono_emergencia = item.fono_emergencia;
             accidente.TipoDeAccidente = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(LugarDelAccidente + item.idLugarDeAccidente, HttpMethod.Get).nombre;

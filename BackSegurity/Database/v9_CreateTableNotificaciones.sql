@@ -546,3 +546,6 @@ CREATE TABLE casoasesoria
         CostoPorAsesoria ,CostoPorAsesoriaEspecial ,CostoPorPersonaExtra )
     VALUES
         (3, 3,10000,10000,10000,10000,10000,10000,10000);
+
+
+        update trabajadores set FechaNacimiento='09/15/1996 00:00:00';
