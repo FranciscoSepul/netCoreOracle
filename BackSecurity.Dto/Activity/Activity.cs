@@ -16,6 +16,7 @@ namespace BackSecurity.Dto.Activity
         public string haxColor { get; set; }
         public int isdelete { get; set; }
         public string eliminado { get; set; }
+        public string descripcion { get; set; }
     }
 
     public class ActivityCreate

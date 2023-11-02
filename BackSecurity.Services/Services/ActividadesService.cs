@@ -69,6 +69,7 @@ namespace BackSecurity.Services.Services
                     activityList.fechaprogramacionyHora = ($"{DateTime.Parse(activity.fechaprogramacion).ToString("dd/MM/yyyy")} {activity.horaprogramacion}");
                     activityList.isdelete = activity.isdelete;
                     activityList.eliminado = stateCompany(activity);
+                    activityList.descripcion = activity?.descripcion;
                     activitysList.Add(activityList);
                 }
                 return activitysList.OrderByDescending(x => x.id).ToList();
