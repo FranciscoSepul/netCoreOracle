@@ -39,6 +39,7 @@ namespace BackSecurity.Services.Services
         public string GetImplementos = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/implementos/";
         public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
         public string GetAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario?limit=10000";
+        public string GetAllCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa?limit=10000";
 
 
 
@@ -67,9 +68,7 @@ namespace BackSecurity.Services.Services
                     activityList.tema = _httpService.RequestJson<OneTemaRoot>(GetTemas + activity.tema, HttpMethod.Get).capacitacion;
                     activityList.company = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + activity.idcompany, HttpMethod.Get).nom_empresa;
                     activityList.fechaprogramacionyHora = ($"{DateTime.Parse(activity.fechaprogramacion).ToString("dd/MM/yyyy")} {activity.horaprogramacion}");
-                    activityList.isdelete = activity.isdelete;
                     activityList.eliminado = stateCompany(activity);
-                    activityList.descripcion = activity?.descripcion;
                     activitysList.Add(activityList);
                 }
                 return activitysList.OrderByDescending(x => x.id).ToList();
@@ -111,13 +110,13 @@ namespace BackSecurity.Services.Services
                 return null;
             }
         }
-        /*
-        public Company GetCompanyById(int id)
+
+        public Dto.Activity.Item GetActivityById(int id)
         {
             try
             {
-                Company company = _httpService.RequestJson<Company>(_GetCompanyById + id, HttpMethod.Get);
-                return company;
+                Dto.Activity.Item activitys = _httpService.RequestJson<Dto.Activity.Item>(GetAllActivity + id.ToString(), HttpMethod.Get);
+                return activitys;
             }
             catch (Exception)
             {
@@ -132,7 +131,7 @@ namespace BackSecurity.Services.Services
             Dto.Company.Item company = companys.FirstOrDefault(x => x.nom_empresa == id);
             return company;
         }
-*/
+
         public bool Create(ActivityCreate activity)
         {
             try

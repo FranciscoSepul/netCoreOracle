@@ -51,15 +51,15 @@ namespace BackSecurity.Controllers
             List<Dto.Implementos.Item> implementos = _ActividadesService.ListImplementos();
             return Ok(implementos);
         }
-/*
+
         [HttpGet("GetActivityById")]
         [AllowAnonymous]
         public async Task<IActionResult> GetActivityById(int id)
         {
-            Company company = _companyService.GetCompanyById(id);
+            Company company = _ActividadesService.GetCompanyById(id);
             return Ok(company);
         }
-*/
+
         [HttpPost("Create")]
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] ActivityCreate companyInsert)
