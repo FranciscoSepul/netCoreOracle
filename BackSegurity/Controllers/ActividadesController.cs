@@ -56,8 +56,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetActivityById(int id)
         {
-            Company company = _ActividadesService.GetCompanyById(id);
-            return Ok(company);
+            return Ok(_ActividadesService.GetActivityById(id));
         }
 
         [HttpPost("Create")]
