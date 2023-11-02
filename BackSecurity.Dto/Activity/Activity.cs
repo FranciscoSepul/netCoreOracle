@@ -46,6 +46,7 @@ namespace BackSecurity.Dto.Activity
         public string horaprogramacion { get; set; }
         public int isdelete { get; set; }
         public int idtrabajador { get; set; }
+        public int idimplementos { get; set; }
         public List<Link> links { get; set; }
     }
 

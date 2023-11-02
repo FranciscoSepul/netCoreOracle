@@ -60,7 +60,6 @@ namespace BackSecurity.Services.Services
                 List<ActivityList> activitysList = new();
                 foreach (Dto.Activity.Item activity in activitys)
                 {
-
                     ActivityList activityList = new();
                     activityList.id = activity.id;
                     activityList.profesionalacargo = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get).items.Where(x => x.id_usuario == activity.idprofesionalacargo).FirstOrDefault().nom_usuario;
@@ -73,8 +72,9 @@ namespace BackSecurity.Services.Services
                 }
                 return activitysList.OrderByDescending(x => x.id).ToList();
             }
-            catch (Exception)
+            catch (Exception ex )
             {
+                Console.WriteLine(ex.Message+ex.StackTrace);
                 return null;
             }
         }
