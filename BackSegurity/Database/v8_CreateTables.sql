@@ -53,7 +53,7 @@ CREATE TABLE casoasesoria (
 
 CREATE TABLE asesoria (
     idasesoria NUMBER PRIMARY KEY,
-    fecha_asesoria DATE,
+    fecha_asesoria VARCHAR2(255),
     profesional VARCHAR2(255),
     lugar VARCHAR2(255),
     comentario VARCHAR2(1000)

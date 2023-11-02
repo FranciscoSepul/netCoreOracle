@@ -76,6 +76,36 @@ namespace BackSecurity.Controllers
             List<Dto.Gravedad.Item> gravedad = _AccidentesService.GetAllGravedad();
             return Ok(gravedad);
         }
+
+        [HttpGet("GetAllMotivoAsesoria")]
+        [AllowAnonymous]
+        public IActionResult GetAllMotivoAsesoria()
+        {
+            return Ok(_AccidentesService.GetAllMotivoAsesoria());
+        }
+
+        [HttpGet("GetAllAsesoria")]
+        [AllowAnonymous]
+        public IActionResult GetAllAsesoria()
+        {
+            return Ok(_AccidentesService.GetAllAsesoria());
+        }
+
+        [HttpPost("CreateAsesoria")]
+        [AllowAnonymous]
+        public IActionResult CreateAsesoria([FromBody] BackSecurity.Dto.Asesoria.AsesoriaInsert insert)
+        {
+            Console.WriteLine("en insert 1");
+            return  Ok(_AccidentesService.InsertAsesoria(insert));
+        }
+
+        [HttpGet("GetAllTipoAsesoria")]
+        [AllowAnonymous]
+        public IActionResult GetAllTipoAsesoria()
+        {
+            return Ok(_AccidentesService.GetAllTipoAsesoria());
+        }
+
         [HttpPost("Create")]
         [AllowAnonymous]
         public IActionResult Create([FromBody] CreateAccidente accidenteInsert)

@@ -50,7 +50,9 @@ namespace BackSecurity.Services.Services
         public string TipoDeIngreso = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipodeingreso/";
         public string LugarDelAccidente = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/lugardeaccidente/";
         public string MedioDePrueba = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/mediodeprueba/";
-
+        public string ListaMotivoAsesoria = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/motivoasesoria/";
+        public string ListaTipoAsesoria = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipoasesoria/";
+        public string ListaAsesoria = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/asesoria/";
 
         public AccidentesService(IConfiguration configuration, INotificacionesService notificacionesService, IHttpService httpService, IDireccionService direccionService, ICompanyService companyService, IUserService userService)
         {
@@ -68,6 +70,34 @@ namespace BackSecurity.Services.Services
             return accidents;
         }
 
+        public List<BackSecurity.Dto.Asesoria.Item> GetAllAsesoria()
+        {
+            List<BackSecurity.Dto.Asesoria.Item> accidents = _httpService.RequestJson<BackSecurity.Dto.Asesoria.AsesoriaRoot>(ListaAsesoria, HttpMethod.Get).items;
+            return accidents;
+        }
+        public BackSecurity.Dto.Asesoria.Item InsertAsesoria(BackSecurity.Dto.Asesoria.AsesoriaInsert insert)
+        {
+            try
+            {
+                Console.WriteLine("en create ");
+                BackSecurity.Dto.Asesoria.Item itemInsert = new();
+                itemInsert.idasesoria = _httpService.RequestJson<BackSecurity.Dto.Asesoria.AsesoriaRoot>(ListaAsesoria, HttpMethod.Get).items.Count()+1;
+                itemInsert.idtipodeasesoria = insert.idtipodeasesoria;
+                itemInsert.profesional = insert.profesional.ToString();
+                itemInsert.idcompany = itemInsert.idcompany;
+                itemInsert.idtipodeasesoria = itemInsert.idtipodeasesoria;
+                itemInsert.idmotivoasesoria = itemInsert.idmotivoasesoria;
+                Console.WriteLine(JsonConvert.SerializeObject(itemInsert));
+                BackSecurity.Dto.Asesoria.Item accidents = _httpService.RequestJson<BackSecurity.Dto.Asesoria.Item>(ListaAsesoria, HttpMethod.Post, JsonConvert.SerializeObject(itemInsert));
+                return accidents;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + ex.StackTrace);
+                return null;
+            }
+
+        }
         public TipoAccidente GetByIdTipoAccidente(int id)
         {
             TipoAccidente accident = _httpService.RequestJson<TipoAccidente>(TipoAccidenteGetById + id, HttpMethod.Get);
@@ -78,11 +108,25 @@ namespace BackSecurity.Services.Services
             Gravedad gravedad = _httpService.RequestJson<Gravedad>(GravedadById + id, HttpMethod.Get);
             return gravedad;
         }
+
         public List<Dto.Gravedad.Item> GetAllGravedad()
         {
             List<Dto.Gravedad.Item> gravedades = _httpService.RequestJson<GravedadList>(GravedadById, HttpMethod.Get).items;
             return gravedades;
         }
+
+        public List<Dto.CategoriaOcupacional.Item> GetAllMotivoAsesoria()
+        {
+            return _httpService.RequestJson<Dto.CategoriaOcupacional.CategoriaOcupacionalRoot>(ListaMotivoAsesoria, HttpMethod.Get).items;
+        }
+
+        public List<Dto.CategoriaOcupacional.Item> GetAllTipoAsesoria()
+        {
+            return _httpService.RequestJson<Dto.CategoriaOcupacional.CategoriaOcupacionalRoot>(ListaTipoAsesoria, HttpMethod.Get).items;
+        }
+
+
+
         public static string ColorIcon(Dto.Accidente.Item item)
         {
             if (item.idgravedad == 1)
@@ -97,7 +141,7 @@ namespace BackSecurity.Services.Services
 
         public Accidente AccidenteById(int id)
         {
-           
+
             Dto.Accidente.Item item = _httpService.RequestJson<Dto.Accidente.Item>(_GetById + id, HttpMethod.Get);
             Accidente accidente = new();
             accidente.Id = item.id;
@@ -107,7 +151,7 @@ namespace BackSecurity.Services.Services
 
             Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
             Console.WriteLine("company " + item.idempresa);
-            Console.WriteLine("accident by id "+company.IdPropiedadEmpresa);
+            Console.WriteLine("accident by id " + company.IdPropiedadEmpresa);
             accidente.Empresa = company.nom_empresa;
             accidente.EmpresaDvRut = company.DvRut;
             accidente.EmpresaRut = company.Rut;

@@ -24,5 +24,10 @@ namespace BackSecurity.Services.IServices
         Company GetByIdSucursal (int id);
         List<Dto.CategoriaOcupacional.Item> LugarDelAccidentes();
         List<Dto.CategoriaOcupacional.Item> MediosDePruebas();
+        List<Dto.CategoriaOcupacional.Item> GetAllMotivoAsesoria();
+        List<Dto.CategoriaOcupacional.Item> GetAllTipoAsesoria();
+        BackSecurity.Dto.Asesoria.Item InsertAsesoria(BackSecurity.Dto.Asesoria.AsesoriaInsert insert);
+        List<BackSecurity.Dto.Asesoria.Item> GetAllAsesoria();
+        
     }
 }
