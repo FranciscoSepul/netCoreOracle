@@ -22,6 +22,7 @@ using BackSecurity.Dto.Empleado;
 using BackSecurity.Dto.PreciosPorEmpresa;
 using BackSecurity.Dto.Accidente;
 using System.Globalization;
+using BackSecurity.Dto.Activity;
 
 namespace BackSecurity.Services.Services
 {
@@ -42,7 +43,7 @@ namespace BackSecurity.Services.Services
         public string GetJobById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/trabajadores/";
         public string PreciosPorEmpresa = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/preciosporempresa/";
         public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente?limit=10000";
-        public string format = "ddd MMM dd yyyy HH:mm:ss 'GMT'zzz '(hora de verano de Chile)'";
+        public string GetAllActivity = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/capacitacion/";
 
         public CompanyService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
         {
@@ -290,44 +291,58 @@ namespace BackSecurity.Services.Services
 
         public Factura GetCompanyFactura(string id, int desde)
         {
-            Factura factura = new();
-            Console.WriteLine(desde);
-
-
-            DateTime Fdesde = new DateTime(DateTime.Now.Year, desde, 01, 00, 00, 0); 
-            DateTime Fhasta =new DateTime(DateTime.Now.Year, desde+1, 01, 00, 00, 0);
-            BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
-            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture)  >= Fdesde
-            && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture) <= Fhasta).ToList();
-            factura.CostoTotalAccidente = (accident.Count > 0) ? accident.Count * preciosPorE.costoporaccidente : 0;
-            factura.CostoTotalCharla = 0;
-            factura.CostoTotalVisita = 0;
-            factura.CostoTotalAsesoria = 0;
-            factura.CostoTotalAsesoriaEspecial = 0;
-            int cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
-            int cantidadPorContrato = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get).CantidadDeEmpleadosPorContrato;
-            factura.CostoTotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) * preciosPorE.costoporpersonaextra : 0;
-            factura.CostoTotal = preciosPorE.costobase + (factura.CostoTotalAccidente + factura.CostoTotalCharla + factura.CostoTotalVisita + factura.CostoTotalAsesoria + factura.CostoTotalAsesoriaEspecial +
-            factura.CostoTotalPersonasExtra);
-            return factura;
+            try
+            {
+                Factura factura = new();
+                Console.WriteLine(desde);
+                DateTime Fdesde = new DateTime(DateTime.Now.Year, desde, 01, 00, 00, 0);
+                DateTime Fhasta = new DateTime(DateTime.Now.Year, desde + 1, 01, 00, 00, 0);
+                BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
+                List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[1]) == desde).ToList();
+                factura.CostoTotalAccidente = (accident.Count > 0) ? accident.Count * preciosPorE.costoporaccidente : 0;
+                 List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList();;
+                factura.CostoTotalCharla = (activitys.Count>0)?activitys.Count*preciosPorE.costoporcharla:0;
+                factura.CostoTotalVisita = 0;
+                factura.CostoTotalAsesoria = 0;
+                factura.CostoTotalAsesoriaEspecial = 0;
+                int cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
+                int cantidadPorContrato = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get).CantidadDeEmpleadosPorContrato;
+                factura.CostoTotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) * preciosPorE.costoporpersonaextra : 0;
+                factura.CostoTotal = preciosPorE.costobase + (factura.CostoTotalAccidente + factura.CostoTotalCharla + factura.CostoTotalVisita + factura.CostoTotalAsesoria + factura.CostoTotalAsesoriaEspecial +
+                factura.CostoTotalPersonasExtra);
+                return factura;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + ex.StackTrace);
+                return null;
+            }
         }
 
         public Operaciones GetCompanyOperaciones(string id, int desde)
         {
-            Operaciones operaciones = new();
-           DateTime Fdesde = new DateTime(DateTime.Now.Year, desde, 01, 00, 00, 0); 
-            DateTime Fhasta =new DateTime(DateTime.Now.Year, desde+1, 01, 00, 00, 0);
-            List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture)  >= Fdesde
-            && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture) <= Fhasta).ToList();
-            operaciones.TotalAccidente = accident.Count;
-            operaciones.TotalCharla = 0;
-            operaciones.TotalVisita = 0;
-            operaciones.TotalAsesoria = 0;
-            operaciones.TotalAsesoriaEspecial = 0;
-            int cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
-            int cantidadPorContrato = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get).CantidadDeEmpleadosPorContrato;
-            operaciones.TotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) : 0;
-            return operaciones;
+            try
+            {
+
+                Operaciones operaciones = new();
+                Console.WriteLine(desde);
+                List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[1]) == desde).ToList();
+                operaciones.TotalAccidente = accident.Count;
+                List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList();;
+                operaciones.TotalCharla = activitys.Count;
+                operaciones.TotalVisita = 0;
+                operaciones.TotalAsesoria = 0;
+                operaciones.TotalAsesoriaEspecial = 0;
+                int cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
+                int cantidadPorContrato = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get).CantidadDeEmpleadosPorContrato;
+                operaciones.TotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) : 0;
+                return operaciones;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + ex.StackTrace);
+                return null;
+            }
 
         }
     }
