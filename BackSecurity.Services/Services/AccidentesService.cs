@@ -348,6 +348,7 @@ namespace BackSecurity.Services.Services
                 Job AllJob = new();
                 AllJob.id = 0;
                 AllJob.run = "Todos";
+                AllJob.nombre="Todos";
                 jobsBySucursal.Add(AllJob);
             }
 
