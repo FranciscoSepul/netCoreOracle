@@ -125,6 +125,8 @@ namespace BackSecurity.Services.Services
                 activityInsert.idprofesionalacargo = activitys.idprofesionalacargo;
                 activityInsert.isdelete = activitys.isdelete;
                 activityInsert.tema = activitys.tema;
+                activityInsert.idtrabajador= new();
+                activityInsert.idimplementos=new();
                 foreach (string job in activitys.idusuarioscapacitacion.Split(';'))
                 {
                     activityInsert.idtrabajador.Add(int.Parse(job));
@@ -136,8 +138,9 @@ namespace BackSecurity.Services.Services
 
                 return activityInsert;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message+ex.StackTrace);
                 return null;
             }
 
