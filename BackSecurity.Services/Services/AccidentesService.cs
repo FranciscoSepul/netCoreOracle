@@ -341,25 +341,8 @@ namespace BackSecurity.Services.Services
 
         public List<Job> GetJobByIdSucursal(int id)
         {
-            List<Job> jobs = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items;
-            List<Job> jobsBySucursal = new();
-            if (jobs.Count > 0)
-            {
-                Job AllJob = new();
-                AllJob.id = 0;
-                AllJob.run = "Todos";
-                AllJob.nombre="Todos";
-                jobsBySucursal.Add(AllJob);
-            }
-
-            foreach (Job job in jobs)
-            {
-                if (job.idempresa == id)
-                {
-                    jobsBySucursal.Add(job);
-                }
-            }
-            return jobsBySucursal;
+            List<Job> jobs = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa==id).ToList();
+            return jobs;
         }
 
         public Company GetByIdSucursal(int id)

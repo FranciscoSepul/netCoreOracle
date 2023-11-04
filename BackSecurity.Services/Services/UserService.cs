@@ -272,10 +272,6 @@ namespace BackSecurity.Services.Services
         public List<TrabajadoresRoot> Trabajadores(int idcompany)
         {
             List<TrabajadoresRoot> trabajadoresRoots = _httpService.RequestJson<TrabajadoresListRoot>(_GetTrabajadoresById, HttpMethod.Get).items.Where(x=> x.idempresa==idcompany).ToList();
-            TrabajadoresRoot trabajadoresRoot = new();
-            trabajadoresRoot.id=0;
-            trabajadoresRoot.run="Todos";
-            trabajadoresRoots.Add(trabajadoresRoot);
             return trabajadoresRoots.OrderBy(x => x.id).ToList();
         }
     }
