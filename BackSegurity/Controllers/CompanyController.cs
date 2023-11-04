@@ -46,16 +46,16 @@ namespace BackSecurity.Controllers
 
         [HttpGet("GetCompanyFactura")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetCompanyFactura(string id, string desde, string hasta)
+        public async Task<IActionResult> GetCompanyFactura(string id,  int desde)
         {
-            Factura factura = _companyService.GetCompanyFactura(id, desde, hasta);
+            Factura factura = _companyService.GetCompanyFactura(id, desde);
             return Ok(factura);
         }
         [HttpGet("GetCompanyOperaciones")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetCompanyOperaciones(string id, string desde, string hasta)
+        public async Task<IActionResult> GetCompanyOperaciones(string id, int desde)
         {
-            Operaciones factura = _companyService.GetCompanyOperaciones(id, desde, hasta);
+            Operaciones factura = _companyService.GetCompanyOperaciones(id, desde);
             return Ok(factura);
         }
 

@@ -17,7 +17,7 @@ namespace BackSecurity.Services.IServices
         List<Dto.Company.Company> CompanyListNotDisable ();
         Dto.Company.Company GetCompanyById (int id);
         Dto.Company.Item GetCompanyByName(string id);
-        Factura GetCompanyFactura(string id,string desde,string hasta);
-        Operaciones GetCompanyOperaciones(string id, string desde, string hasta);
+        Factura GetCompanyFactura(string id,int desde);
+        Operaciones GetCompanyOperaciones(string id, int desde);
     }
 }

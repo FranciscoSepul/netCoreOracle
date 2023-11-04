@@ -288,14 +288,14 @@ namespace BackSecurity.Services.Services
             }
         }
 
-        public Factura GetCompanyFactura(string id, string desde, string hasta)
+        public Factura GetCompanyFactura(string id, int desde)
         {
             Factura factura = new();
             Console.WriteLine(desde);
-            Console.WriteLine(hasta);
 
-            DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture);
-            DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture);
+
+            DateTime Fdesde = new DateTime(DateTime.Now.Year, desde, 01, 00, 00, 0); 
+            DateTime Fhasta =new DateTime(DateTime.Now.Year, desde+1, 01, 00, 00, 0);
             BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
             List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture)  >= Fdesde
             && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture) <= Fhasta).ToList();
@@ -312,11 +312,11 @@ namespace BackSecurity.Services.Services
             return factura;
         }
 
-        public Operaciones GetCompanyOperaciones(string id, string desde, string hasta)
+        public Operaciones GetCompanyOperaciones(string id, int desde)
         {
             Operaciones operaciones = new();
-            DateTime Fdesde = DateTime.ParseExact(desde, format, CultureInfo.InvariantCulture);
-            DateTime Fhasta = DateTime.ParseExact(hasta, format, CultureInfo.InvariantCulture);
+           DateTime Fdesde = new DateTime(DateTime.Now.Year, desde, 01, 00, 00, 0); 
+            DateTime Fhasta =new DateTime(DateTime.Now.Year, desde+1, 01, 00, 00, 0);
             List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture)  >= Fdesde
             && DateTime.ParseExact(x.fechaaccidente, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture) <= Fhasta).ToList();
             operaciones.TotalAccidente = accident.Count;
