@@ -60,7 +60,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] Notificaciones notificaciones)
         {
-            bool response = _notificacionesService.Create(notificaciones);
+            bool response = _notificacionesService.Create(notificaciones,null);
             return (response !=false)? Ok():BadRequest();
         }
         
