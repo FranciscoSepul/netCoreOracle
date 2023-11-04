@@ -51,3 +51,38 @@ ALTER TABLE Capacitacion
 ADD IdImplementosCapacitacion varchar(500);
 
  delete Implementos where id =1
+
+
+ CREATE TABLE factura
+(
+    id NUMBER PRIMARY KEY,
+    fechaemision varchar2(250),
+    fechacobro  varchar2(250),
+    fechapago  varchar2(250),
+    estado number,
+    idDetalleFactura number,
+    HabilitadoPago number,
+    IdCompany number,
+    MesEmision number,
+    AnoEmision number,
+    DiaEmision number
+);
+
+CREATE TABLE DetalleFactura
+(
+    id NUMBER PRIMARY KEY,
+    costoBase number,
+    costoPorCharla number,
+    costoPorVisita number,
+    costoPorAsesoria number,
+    costoPorAsesoriaEspecial number,
+    costoPorPersonaExtra number,
+    totalPorPersonaExtra number,
+    totalPorCharla number,
+    totalPorVisita number,
+    totalPorAsesoria number,
+    totalPorAsesoriaEspecial number,
+    MesalizacionValores number,
+    AnoalizacionValores number,
+    DiaalizacionValores number
+);

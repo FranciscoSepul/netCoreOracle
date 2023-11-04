@@ -23,6 +23,9 @@ using BackSecurity.Dto.PreciosPorEmpresa;
 using BackSecurity.Dto.Accidente;
 using System.Globalization;
 using BackSecurity.Dto.Activity;
+using BackSecurity.Dto.DetalleFactura;
+using BackSecurity.Dto.Factura;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace BackSecurity.Services.Services
 {
@@ -44,6 +47,11 @@ namespace BackSecurity.Services.Services
         public string PreciosPorEmpresa = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/preciosporempresa/";
         public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente?limit=10000";
         public string GetAllActivity = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/capacitacion/";
+
+        #region Facturacion endpoints
+        public string GetAllDetalleFactura = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/detallefactura/";
+        public string GetAllFactura = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/factura/";
+        #endregion
 
         public CompanyService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
         {
@@ -289,6 +297,72 @@ namespace BackSecurity.Services.Services
             }
         }
 
+        public Boolean InsertFactura(int mes, int idDetalle, int idCompany)
+        {
+            InsertFactura insertFactura = new();
+            insertFactura.anoemision = DateTime.Now.Year;
+            insertFactura.diaemision = DateTime.Now.Day;
+            insertFactura.estado = 0;
+            insertFactura.fechacobro = new DateTime(DateTime.Now.Year, mes, 29).ToString();
+            insertFactura.fechaemision = DateTime.Now.ToString();
+            insertFactura.fechapago = new DateTime(DateTime.Now.Year, mes, 29).ToString();
+            insertFactura.habilitadopago = (new DateTime(DateTime.Now.Year, mes, 29) < DateTime.Now) ? 1 : 0;
+            insertFactura.id = _httpService.RequestJson<FacturaRoot>(GetAllFactura, HttpMethod.Get).items.Count() + 1;
+            insertFactura.idcompany = idCompany;
+            insertFactura.iddetallefactura = idDetalle;
+            insertFactura.mesemision = DateTime.Now.Month;
+
+            InsertFactura item = _httpService.RequestJson<InsertFactura>(GetAllFactura, HttpMethod.Post, JsonConvert.SerializeObject(insertFactura));
+
+            return true;
+        }
+
+        public Boolean UpdateDetalleFactura(int id, Factura factura, BackSecurity.Dto.PreciosPorEmpresa.Item precios)
+        {
+
+            InsertDetalleFactura insertDetalleFactura = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura + id, HttpMethod.Get);
+            insertDetalleFactura.anoalizacionvalores = DateTime.Now.Year;
+            insertDetalleFactura.costobase = precios.costobase;
+            insertDetalleFactura.costoporasesoria = precios.costoporasesoria;
+            insertDetalleFactura.costoporasesoriaespecial = precios.costoporasesoriaespecial;
+            insertDetalleFactura.costoporcharla = precios.costoporcharla;
+            insertDetalleFactura.costoporpersonaextra = precios.costoporpersonaextra;
+            insertDetalleFactura.costoporvisita = precios.costoporvisita;
+            insertDetalleFactura.diaalizacionvalores = DateTime.Now.Day;
+            insertDetalleFactura.mesalizacionvalores = DateTime.Now.Month;
+            insertDetalleFactura.totalporasesoria = factura.CostoTotal;
+            insertDetalleFactura.totalporasesoriaespecial = factura.CostoTotalAsesoriaEspecial;
+            insertDetalleFactura.totalporaccidente = factura.CostoTotalAccidente;
+            insertDetalleFactura.totalporcharla = factura.CostoTotalCharla;
+            insertDetalleFactura.totalporpersonaextra = factura.CostoTotalPersonasExtra;
+            insertDetalleFactura.totalporvisita = factura.CostoTotalVisita;
+            InsertDetalleFactura item = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura, HttpMethod.Put, JsonConvert.SerializeObject(insertDetalleFactura));
+            return true;
+        }
+
+        public int InsertDetalleFactura(Factura factura, BackSecurity.Dto.PreciosPorEmpresa.Item precios)
+        {
+            InsertDetalleFactura insertDetalleFactura = new();
+            insertDetalleFactura.anoalizacionvalores = DateTime.Now.Year;
+            insertDetalleFactura.costobase = precios.costobase;
+            insertDetalleFactura.costoporasesoria = precios.costoporasesoria;
+            insertDetalleFactura.costoporasesoriaespecial = precios.costoporasesoriaespecial;
+            insertDetalleFactura.costoporcharla = precios.costoporcharla;
+            insertDetalleFactura.costoporpersonaextra = precios.costoporpersonaextra;
+            insertDetalleFactura.costoporvisita = precios.costoporvisita;
+            insertDetalleFactura.diaalizacionvalores = DateTime.Now.Day;
+            insertDetalleFactura.id = _httpService.RequestJson<Dto.DetalleFactura.DetalleFacturaRoot>(GetAllDetalleFactura, HttpMethod.Get).items.Count + 1;
+            insertDetalleFactura.mesalizacionvalores = DateTime.Now.Month;
+            insertDetalleFactura.totalporasesoria = factura.CostoTotal;
+            insertDetalleFactura.totalporasesoriaespecial = factura.CostoTotalAsesoriaEspecial;
+            insertDetalleFactura.totalporaccidente = factura.CostoTotalAccidente;
+            insertDetalleFactura.totalporcharla = factura.CostoTotalCharla;
+            insertDetalleFactura.totalporpersonaextra = factura.CostoTotalPersonasExtra;
+            insertDetalleFactura.totalporvisita = factura.CostoTotalVisita;
+            InsertDetalleFactura item = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura, HttpMethod.Post, JsonConvert.SerializeObject(insertDetalleFactura));
+            return item.id;
+        }
+
         public Factura GetCompanyFactura(string id, int desde)
         {
             try
@@ -300,8 +374,8 @@ namespace BackSecurity.Services.Services
                 BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
                 List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[1]) == desde).ToList();
                 factura.CostoTotalAccidente = (accident.Count > 0) ? accident.Count * preciosPorE.costoporaccidente : 0;
-                 List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList();;
-                factura.CostoTotalCharla = (activitys.Count>0)?activitys.Count*preciosPorE.costoporcharla:0;
+                List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList(); ;
+                factura.CostoTotalCharla = (activitys.Count > 0) ? activitys.Count * preciosPorE.costoporcharla : 0;
                 factura.CostoTotalVisita = 0;
                 factura.CostoTotalAsesoria = 0;
                 factura.CostoTotalAsesoriaEspecial = 0;
@@ -310,6 +384,18 @@ namespace BackSecurity.Services.Services
                 factura.CostoTotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) * preciosPorE.costoporpersonaextra : 0;
                 factura.CostoTotal = preciosPorE.costobase + (factura.CostoTotalAccidente + factura.CostoTotalCharla + factura.CostoTotalVisita + factura.CostoTotalAsesoria + factura.CostoTotalAsesoriaEspecial +
                 factura.CostoTotalPersonasExtra);
+                #region Creamos o updateamos la factura
+                List<BackSecurity.Dto.Factura.Item> facturaCount = _httpService.RequestJson<FacturaRoot>(GetAllFactura, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && x.anoemision == DateTime.Now.Year && x.mesemision == desde).ToList();
+                if (facturaCount?.Count > 0)
+                {
+                    UpdateDetalleFactura(facturaCount.FirstOrDefault().id, factura, preciosPorE);
+                }
+                else
+                {
+                    int idDetalle = InsertDetalleFactura(factura, preciosPorE);
+                    InsertFactura(desde, idDetalle, int.Parse(id));
+                }
+                #endregion
                 return factura;
             }
             catch (Exception ex)
@@ -328,7 +414,7 @@ namespace BackSecurity.Services.Services
                 Console.WriteLine(desde);
                 List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[1]) == desde).ToList();
                 operaciones.TotalAccidente = accident.Count;
-                List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList();;
+                List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList(); ;
                 operaciones.TotalCharla = activitys.Count;
                 operaciones.TotalVisita = 0;
                 operaciones.TotalAsesoria = 0;
