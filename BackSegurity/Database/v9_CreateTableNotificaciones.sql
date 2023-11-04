@@ -475,12 +475,15 @@ CREATE TABLE casoasesoria
     INSERT INTO LugarDeAccidente
         (id,nombre)
     VALUES
-        (1, 'Trabajo');
+        (1, 'Domicilio - Trabajo');
     INSERT INTO LugarDeAccidente
         (id,nombre)
     VALUES
-        (2, 'Trajecto');
-
+        (2, 'Trajecto - Domicilio');
+        INSERT INTO LugarDeAccidente
+         (id,nombre)
+    VALUES
+        (3, 'Entre dos Trabajos');
 
     ALTER TABLE Accidente 
     ADD IdLugarDeAccidente int;

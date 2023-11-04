@@ -28,11 +28,11 @@ CREATE TABLE Gravedad(
 )
 
 INSERT INTO Gravedad (id,gravedad)VALUES
-	(1,'Leve');
+	(1,'Grave');
 INSERT INTO Gravedad (id,gravedad)VALUES
-	(2,'Moderada');
+	(2,'Fatal');
 INSERT INTO Gravedad (id,gravedad)VALUES
-	(3,'Grave');
+	(3,'Otro');
 
 CREATE table SucursalAchs(
 	id NUMBER PRIMARY KEY,

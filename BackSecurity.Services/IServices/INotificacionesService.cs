@@ -13,7 +13,7 @@ namespace BackSecurity.Services.IServices
 {
     public interface INotificacionesService
     {
-        bool Create(Notificaciones company);
+        bool Create(Notificaciones company,List<int> trabajadores);
         bool Update(Notificaciones company);
         List<NotificacionesList> List();
         List<TipoNotificacionRoot> ListTipoNotificacion();

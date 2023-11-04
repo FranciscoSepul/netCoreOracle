@@ -311,7 +311,7 @@ namespace BackSecurity.Services.Services
                 notificaciones.idnotificaciondirigida = 3;
                 notificaciones.idcompany = accidente.IdEmpresa;
                 notificaciones.idtrabajador = accidente.IdProfesional;
-                _notificacionesService.Create(notificaciones);
+                _notificacionesService.Create(notificaciones,null);
                 return (item != null);
             }
             catch (Exception ex)

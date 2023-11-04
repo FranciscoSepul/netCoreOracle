@@ -192,8 +192,8 @@ namespace BackSecurity.Services.Services
                 notificaciones.idtiponotificacion = 2;
                 notificaciones.idnotificaciondirigida = 2;
                 notificaciones.idcompany = activity.idcompany;
-                // notificaciones.idtrabajador = activity.idtrabajador;
-                //_notificacionesService.Create(notificaciones);
+                notificaciones.idtrabajador = activity.idtrabajador;
+                _notificacionesService.Create(notificaciones,activityInsert.idtrabajador);
                 #endregion
                 return (item != null);
             }
@@ -211,7 +211,7 @@ namespace BackSecurity.Services.Services
                 List<BackSecurity.Dto.Implementos.Item> temas = _httpService.RequestJson<ImplementosRoot>(GetImplementos, HttpMethod.Get).items;
                 return temas.OrderBy(x => x.id).ToList();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
