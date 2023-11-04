@@ -317,6 +317,11 @@ namespace BackSecurity.Services.Services
             return true;
         }
 
+        public List<BackSecurity.Dto.Factura.Item>  GetAllFacturas()
+        {
+            List<BackSecurity.Dto.Factura.Item> factura = _httpService.RequestJson<FacturaRoot>(GetAllFactura, HttpMethod.Get).items;
+            return factura;
+        }
         public Boolean UpdateDetalleFactura(int id, Factura factura, BackSecurity.Dto.PreciosPorEmpresa.Item precios)
         {
 
