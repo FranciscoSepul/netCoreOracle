@@ -47,8 +47,8 @@ namespace BackSecurity.Dto.Activity
         public int idtrabajador { get; set; }
         public int idimplementos { get; set; }
 
-        public string IdUsuariosCapacitacion { get; set; }
-        public string IdImplementosCapacitacion { get; set; }
+        public string idusuarioscapacitacion { get; set; }
+        public string idimplementoscapacitacion { get; set; }
 
     }
 
@@ -66,8 +66,8 @@ namespace BackSecurity.Dto.Activity
         public int isdelete { get; set; }
         public int idtrabajador { get; set; }
         public int idimplementos { get; set; }
-        public string IdUsuariosCapacitacion { get; set; }
-        public string IdImplementosCapacitacion { get; set; }
+        public string idusuarioscapacitacion { get; set; }
+        public string idimplementoscapacitacion { get; set; }
         public List<Link> links { get; set; }
     }
 

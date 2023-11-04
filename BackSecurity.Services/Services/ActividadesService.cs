@@ -139,18 +139,30 @@ namespace BackSecurity.Services.Services
                 Console.WriteLine("creando capacitacion");
                 ActivityCreate activity = new();
                 activity.fechaprogramacion = activityInsert.fechaprogramacion;
-                activity.descripcion = activity.descripcion;
-                activity.tema = activity.tema;
-                activity.idprofesionalacargo = activity.idprofesionalacargo;
-                activity.horaprogramacion = activity.horaprogramacion;
+                activity.descripcion = activityInsert.descripcion;
+                activity.tema = activityInsert.tema;
+                activity.idprofesionalacargo = activityInsert.idprofesionalacargo;
+                activity.horaprogramacion = activityInsert.horaprogramacion;
                 activity.idtrabajador = 0;
+                activity.idcompany = activityInsert.idcompany;
                 activity.idimplementos = 0;
                 activity.id = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Count() + 1;
                 activity.isdelete = 0;
-                activity.IdUsuariosCapacitacion = activityInsert.idtrabajador.ToString();
-                activity.IdImplementosCapacitacion = activityInsert.idimplementos.ToString();
+                string trabajadores = "";
+                foreach (int trabajador in activityInsert.idtrabajador)
+                {
+                    trabajadores = (trabajadores == "") ? trabajadores + trabajador : trabajadores + ";" + trabajador;
+                }
+                string implementos = "";
+                foreach (int implemento in activityInsert.idimplementos)
+                {
+                    implementos = (implementos == "") ? implementos + implemento : implementos + ";" + implemento;
+                }
+                activity.idusuarioscapacitacion = trabajadores;
+                activity.idimplementoscapacitacion = implementos;
+                Console.WriteLine(JsonConvert.SerializeObject(activity));
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertActivity, HttpMethod.Post, JsonConvert.SerializeObject(activity));
-            
+
                 #region  crear capacitacion
                 Notificaciones notificaciones = new();
                 notificaciones.fechaprogramacion = DateTime.Now.Date.ToString();
@@ -162,11 +174,11 @@ namespace BackSecurity.Services.Services
                 // notificaciones.idtrabajador = activity.idtrabajador;
                 //_notificacionesService.Create(notificaciones);
                 #endregion
-
                 return (item != null);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message + ex.StackTrace);
                 return false;
             }
         }

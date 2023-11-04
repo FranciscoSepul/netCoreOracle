@@ -50,4 +50,4 @@ ADD IdUsuariosCapacitacion varchar(500);
 ALTER TABLE Capacitacion 
 ADD IdImplementosCapacitacion varchar(500);
 
- 
+ delete Implementos where id =1
