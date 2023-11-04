@@ -19,6 +19,21 @@ namespace BackSecurity.Dto.Activity
         public string descripcion { get; set; }
     }
 
+    public class ActivityInsert
+    {
+        public string descripcion { get; set; }
+        public string fechaprogramacion { get; set; }
+        public string horaprogramacion { get; set; }
+        public int id { get; set; }
+        public int idcompany { get; set; }
+        public int idprofesionalacargo { get; set; }
+        public int isdelete { get; set; }
+        public int tema { get; set; }
+        public List<int> idtrabajador { get; set; }
+        public List<int> idimplementos { get; set; }
+
+    }
+
     public class ActivityCreate
     {
         public string descripcion { get; set; }
@@ -32,7 +47,11 @@ namespace BackSecurity.Dto.Activity
         public int idtrabajador { get; set; }
         public int idimplementos { get; set; }
 
+        public string IdUsuariosCapacitacion { get; set; }
+        public string IdImplementosCapacitacion { get; set; }
+
     }
+
 
 
     public class Item
@@ -47,6 +66,8 @@ namespace BackSecurity.Dto.Activity
         public int isdelete { get; set; }
         public int idtrabajador { get; set; }
         public int idimplementos { get; set; }
+        public string IdUsuariosCapacitacion { get; set; }
+        public string IdImplementosCapacitacion { get; set; }
         public List<Link> links { get; set; }
     }
 

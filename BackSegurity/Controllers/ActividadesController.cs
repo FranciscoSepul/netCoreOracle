@@ -61,7 +61,7 @@ namespace BackSecurity.Controllers
 
         [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] ActivityCreate companyInsert)
+        public async Task<IActionResult> Create([FromBody] ActivityInsert companyInsert)
         {
             bool response = _ActividadesService.Create(companyInsert);
             return (response !=false)? Ok():BadRequest();

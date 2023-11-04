@@ -41,3 +41,13 @@ ADD IdTipoDeAsesoria int;
 
 INSERT INTO ASESORIA (idasesoria,fecha_asesoria,profesional,IdMotivoAsesoria,IdCompany,IdTipoDeAsesoria )VALUES
 	(1,'09/11/2023 00:00:00',1,1,1,1);
+
+ 
+
+ALTER TABLE Capacitacion 
+ADD IdUsuariosCapacitacion varchar(500);
+
+ALTER TABLE Capacitacion 
+ADD IdImplementosCapacitacion varchar(500);
+
+ 

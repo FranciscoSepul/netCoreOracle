@@ -72,9 +72,9 @@ namespace BackSecurity.Services.Services
                 }
                 return activitysList.OrderByDescending(x => x.id).ToList();
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
-                Console.WriteLine(ex.Message+ex.StackTrace);
+                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }
@@ -132,14 +132,25 @@ namespace BackSecurity.Services.Services
             return company;
         }
 
-        public bool Create(ActivityCreate activity)
+        public bool Create(ActivityInsert activityInsert)
         {
             try
             {
                 Console.WriteLine("creando capacitacion");
+                ActivityCreate activity = new();
+                activity.fechaprogramacion = activityInsert.fechaprogramacion;
+                activity.descripcion = activity.descripcion;
+                activity.tema = activity.tema;
+                activity.idprofesionalacargo = activity.idprofesionalacargo;
+                activity.horaprogramacion = activity.horaprogramacion;
+                activity.idtrabajador = 0;
+                activity.idimplementos = 0;
                 activity.id = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Count() + 1;
                 activity.isdelete = 0;
+                activity.IdUsuariosCapacitacion = activityInsert.idtrabajador.ToString();
+                activity.IdImplementosCapacitacion = activityInsert.idimplementos.ToString();
                 BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertActivity, HttpMethod.Post, JsonConvert.SerializeObject(activity));
+            
                 #region  crear capacitacion
                 Notificaciones notificaciones = new();
                 notificaciones.fechaprogramacion = DateTime.Now.Date.ToString();
@@ -148,8 +159,8 @@ namespace BackSecurity.Services.Services
                 notificaciones.idtiponotificacion = 2;
                 notificaciones.idnotificaciondirigida = 2;
                 notificaciones.idcompany = activity.idcompany;
-                notificaciones.idtrabajador = activity.idtrabajador;
-                _notificacionesService.Create(notificaciones);
+                // notificaciones.idtrabajador = activity.idtrabajador;
+                //_notificacionesService.Create(notificaciones);
                 #endregion
 
                 return (item != null);
