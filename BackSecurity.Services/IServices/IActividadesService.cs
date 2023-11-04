@@ -13,7 +13,7 @@ namespace BackSecurity.Services.IServices
         List<BackSecurity.Dto.Tema.Item> ListTema();
         List<BackSecurity.Dto.Implementos.Item> ListImplementos();
         bool Create(ActivityInsert activity);
-        Dto.Activity.Item  GetActivityById(int id);
+        Dto.Activity.ActivityInsert  GetActivityById(int id);
         /*
         bool Update(CompanyUpdate company);
         bool Disable(CompanyUpdate company);

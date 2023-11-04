@@ -111,12 +111,30 @@ namespace BackSecurity.Services.Services
             }
         }
 
-        public Dto.Activity.Item GetActivityById(int id)
+        public Dto.Activity.ActivityInsert GetActivityById(int id)
         {
             try
             {
                 Dto.Activity.Item activitys = _httpService.RequestJson<Dto.Activity.Item>(GetAllActivity + id.ToString(), HttpMethod.Get);
-                return activitys;
+                ActivityInsert activityInsert = new();
+                activityInsert.descripcion = activitys.descripcion;
+                activityInsert.fechaprogramacion = activitys.fechaprogramacion;
+                activityInsert.horaprogramacion = activitys.horaprogramacion;
+                activityInsert.id = activitys.id;
+                activityInsert.idcompany = activitys.idcompany;
+                activityInsert.idprofesionalacargo = activitys.idprofesionalacargo;
+                activityInsert.isdelete = activitys.isdelete;
+                activityInsert.tema = activitys.tema;
+                foreach (string job in activitys.idusuarioscapacitacion.Split(';'))
+                {
+                    activityInsert.idtrabajador.Add(int.Parse(job));
+                }
+                foreach (string implement in activitys.idimplementoscapacitacion.Split(';'))
+                {
+                    activityInsert.idimplementos.Add(int.Parse(implement));
+                }
+
+                return activityInsert;
             }
             catch (Exception)
             {
