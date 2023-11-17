@@ -38,6 +38,23 @@ namespace BackSecurity.Dto.Factura
         public List<Link> links { get; set; }
     }
 
+    public class FacturaList
+    {
+        public int id { get; set; }
+        public string fechaemision { get; set; }
+        public string fechacobro { get; set; }
+        public string fechapago { get; set; }
+        public string estadoFactura { get; set; }
+        public string BtnText { get; set; }
+        public string HexBtn { get; set; }
+        public int iddetallefactura { get; set; }
+        public int habilitadopago { get; set; }
+        public string NombreCompany { get; set; }
+        public int mesemision { get; set; }
+        public int anoemision { get; set; }
+        public int diaemision { get; set; }
+    }
+
     public class Link
     {
         public string rel { get; set; }

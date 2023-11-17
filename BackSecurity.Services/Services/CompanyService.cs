@@ -317,10 +317,29 @@ namespace BackSecurity.Services.Services
             return true;
         }
 
-        public List<BackSecurity.Dto.Factura.Item>  GetAllFacturas()
+        public List<BackSecurity.Dto.Factura.FacturaList> GetAllFacturas()
         {
-            List<BackSecurity.Dto.Factura.Item> factura = _httpService.RequestJson<FacturaRoot>(GetAllFactura, HttpMethod.Get).items;
-            return factura;
+            List<BackSecurity.Dto.Factura.Item> facturas = _httpService.RequestJson<FacturaRoot>(GetAllFactura, HttpMethod.Get).items;
+            List<FacturaList> facturasList = new();
+            foreach (BackSecurity.Dto.Factura.Item factura in facturas)
+            {
+                FacturaList facturaList = new();
+                facturaList.id = factura.id;
+                facturaList.fechaemision = factura.fechaemision;
+                facturaList.fechacobro = factura.fechacobro;
+                facturaList.fechapago = factura.fechapago;
+                facturaList.estadoFactura = (factura.estado == 0) ? "Por Facturar" : "Facturado";
+                facturaList.BtnText =(factura.estado == 0)?"Facturar":"Facturado";
+                facturaList.HexBtn =(factura.estado == 0)?"#1f3dff":"#484a54";
+                facturaList.iddetallefactura = factura.iddetallefactura;
+                facturaList.habilitadopago = factura.habilitadopago;
+                facturaList.NombreCompany =_httpService.RequestJson<CompanyInsert>(_GetCompanyById + factura.idcompany, HttpMethod.Get).nom_empresa;
+                facturaList.mesemision = factura.mesemision;
+                facturaList.anoemision = factura.anoemision;
+                facturaList.diaemision = factura.diaemision;
+                facturasList.Add(facturaList);
+            }
+            return facturasList;
         }
         public Boolean UpdateDetalleFactura(int id, Factura factura, BackSecurity.Dto.PreciosPorEmpresa.Item precios)
         {
