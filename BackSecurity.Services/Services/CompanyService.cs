@@ -284,7 +284,7 @@ namespace BackSecurity.Services.Services
                     company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
                     company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
                     if (company.IsDelete == 0)
-                    {
+                    {   
                         companies.Add(company);
                     }
 
