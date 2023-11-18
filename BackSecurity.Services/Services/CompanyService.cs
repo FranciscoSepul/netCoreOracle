@@ -284,7 +284,7 @@ namespace BackSecurity.Services.Services
                     company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
                     company.IsDelete = (stateCompany(item) != "Activo") ? 1 : 0;
                     if (company.IsDelete == 0)
-                    {   
+                    {
                         companies.Add(company);
                     }
 
@@ -317,6 +317,13 @@ namespace BackSecurity.Services.Services
             return true;
         }
 
+        public bool FacturByCompany(int id)
+        {
+            BackSecurity.Dto.Factura.Item factura = _httpService.RequestJson<BackSecurity.Dto.Factura.Item>(GetAllFactura + id, HttpMethod.Get);
+            factura.estado = 1;
+            BackSecurity.Dto.Factura.Item item = _httpService.RequestJson<BackSecurity.Dto.Factura.Item>(InsertCompany + id, HttpMethod.Put, JsonConvert.SerializeObject(factura));
+            return true;
+        }
         public List<BackSecurity.Dto.Factura.FacturaList> GetAllFacturas()
         {
             List<BackSecurity.Dto.Factura.Item> facturas = _httpService.RequestJson<FacturaRoot>(GetAllFactura, HttpMethod.Get).items;
@@ -329,14 +336,14 @@ namespace BackSecurity.Services.Services
                 facturaList.fechacobro = factura.fechacobro;
                 facturaList.fechapago = factura.fechapago;
                 facturaList.estadoFactura = (factura.estado == 0) ? "Por Facturar" : "Facturado";
-                facturaList.BtnText =(factura.estado == 0)?"Facturar":"Facturado";
-                facturaList.HexBtn =(factura.estado == 0)?"#1f3dff":"#484a54";
+                facturaList.BtnText = (factura.estado == 0) ? "Facturar" : "Facturado";
+                facturaList.HexBtn = (factura.estado == 0) ? "#1f3dff" : "#484a54";
                 InsertDetalleFactura insertDetalleFactura = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura + factura.iddetallefactura, HttpMethod.Get);
-                facturaList.iddetallefactura =  insertDetalleFactura.costobase + (insertDetalleFactura.totalporasesoria + insertDetalleFactura.totalporaccidente 
-                + insertDetalleFactura.totalporcharla + insertDetalleFactura.totalporasesoriaespecial + insertDetalleFactura.totalporpersonaextra + insertDetalleFactura.totalporvisita+
+                facturaList.iddetallefactura = insertDetalleFactura.costobase + (insertDetalleFactura.totalporasesoria + insertDetalleFactura.totalporaccidente
+                + insertDetalleFactura.totalporcharla + insertDetalleFactura.totalporasesoriaespecial + insertDetalleFactura.totalporpersonaextra + insertDetalleFactura.totalporvisita +
                 insertDetalleFactura.costoporpersonaextra);
                 facturaList.habilitadopago = factura.habilitadopago;
-                facturaList.NombreCompany =_httpService.RequestJson<CompanyInsert>(_GetCompanyById + factura.idcompany, HttpMethod.Get).nom_empresa;
+                facturaList.NombreCompany = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + factura.idcompany, HttpMethod.Get).nom_empresa;
                 facturaList.mesemision = factura.mesemision;
                 facturaList.anoemision = factura.anoemision;
                 facturaList.diaemision = factura.diaemision;

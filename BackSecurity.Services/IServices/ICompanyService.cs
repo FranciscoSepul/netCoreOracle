@@ -20,5 +20,6 @@ namespace BackSecurity.Services.IServices
         Factura GetCompanyFactura(string id,int desde);
         Operaciones GetCompanyOperaciones(string id, int desde);
         List<BackSecurity.Dto.Factura.FacturaList>  GetAllFacturas();
+        public bool FacturByCompany(int id);
     }
 }
