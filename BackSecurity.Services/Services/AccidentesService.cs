@@ -231,7 +231,7 @@ namespace BackSecurity.Services.Services
                     accidente.Id = item.id;
                     accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente)?.accidente;
                     Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
-                    accidente.Empresa = company.nom_empresa;
+                    accidente.Empresa = company?.nom_empresa;
                     Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
                     accidente.NombreProfesional = user?.nom_usuario;
                     accidente.Gravedad = GetByIdGravedad(item.idgravedad)?.gravedad;
