@@ -249,10 +249,7 @@ namespace BackSecurity.Services.Services
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message + ex.StackTrace);
-                Accidente acc = new();
-                acc.Empresa = ex.Message + ex.StackTrace;
-                accidentes.Add(acc);
-                return accidentes;
+                return null;
             }
         }
 
