@@ -1,5 +1,4 @@
-﻿
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using BackSecurity.Dto.User;
 using BackSecurity.Services.IServices;
@@ -36,6 +35,7 @@ namespace BackSecurity.Controllers
             Dto.Company.Company company = _companyService.GetCompanyById(id);
             return Ok(company);
         }
+        
         [HttpGet("GetCompanyByName")]
         [AllowAnonymous]
         public async Task<IActionResult> GetCompanyByName(string id)
@@ -51,6 +51,7 @@ namespace BackSecurity.Controllers
             Factura factura = _companyService.GetCompanyFactura(id, desde);
             return Ok(factura);
         }
+        
         [HttpGet("GetCompanyOperaciones")]
         [AllowAnonymous]
         public async Task<IActionResult> GetCompanyOperaciones(string id, int desde)
@@ -66,6 +67,7 @@ namespace BackSecurity.Controllers
             List<Dto.Company.Company> company = _companyService.CompanyList();
             return Ok(company);
         }
+        
         [HttpGet("GetAllCompanyNotDisable")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllCompanyNotDisable()
@@ -73,13 +75,13 @@ namespace BackSecurity.Controllers
             List<Dto.Company.Company> company = _companyService.CompanyListNotDisable();
             return Ok(company);
         }
+        
         [HttpGet("GetAllFacturas")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllFacturas()
         {
             return Ok(_companyService.GetAllFacturas());
         }
-
         
         [HttpPost("Create")]
         [AllowAnonymous]

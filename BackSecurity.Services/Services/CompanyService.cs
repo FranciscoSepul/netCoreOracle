@@ -98,7 +98,7 @@ namespace BackSecurity.Services.Services
                 }
                 return companies.OrderBy(x => x.IsDelete).ToList();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -331,7 +331,10 @@ namespace BackSecurity.Services.Services
                 facturaList.estadoFactura = (factura.estado == 0) ? "Por Facturar" : "Facturado";
                 facturaList.BtnText =(factura.estado == 0)?"Facturar":"Facturado";
                 facturaList.HexBtn =(factura.estado == 0)?"#1f3dff":"#484a54";
-                facturaList.iddetallefactura = factura.iddetallefactura;
+                InsertDetalleFactura insertDetalleFactura = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura + factura.iddetallefactura, HttpMethod.Get);
+                facturaList.iddetallefactura =  insertDetalleFactura.costobase + (insertDetalleFactura.totalporasesoria + insertDetalleFactura.totalporaccidente 
+                + insertDetalleFactura.totalporcharla + insertDetalleFactura.totalporasesoriaespecial + insertDetalleFactura.totalporpersonaextra + insertDetalleFactura.totalporvisita+
+                insertDetalleFactura.costoporpersonaextra);
                 facturaList.habilitadopago = factura.habilitadopago;
                 facturaList.NombreCompany =_httpService.RequestJson<CompanyInsert>(_GetCompanyById + factura.idcompany, HttpMethod.Get).nom_empresa;
                 facturaList.mesemision = factura.mesemision;
