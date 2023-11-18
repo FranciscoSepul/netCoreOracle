@@ -321,35 +321,45 @@ namespace BackSecurity.Services.Services
         {
             BackSecurity.Dto.Factura.Item factura = _httpService.RequestJson<BackSecurity.Dto.Factura.Item>(GetAllFactura + id, HttpMethod.Get);
             factura.estado = 1;
-            BackSecurity.Dto.Factura.Item item = _httpService.RequestJson<BackSecurity.Dto.Factura.Item>(InsertCompany + id, HttpMethod.Put, JsonConvert.SerializeObject(factura));
+            BackSecurity.Dto.Factura.Item item = _httpService.RequestJson<BackSecurity.Dto.Factura.Item>(GetAllFactura + id, HttpMethod.Put, JsonConvert.SerializeObject(factura));
             return true;
         }
         public List<BackSecurity.Dto.Factura.FacturaList> GetAllFacturas()
         {
-            List<BackSecurity.Dto.Factura.Item> facturas = _httpService.RequestJson<FacturaRoot>(GetAllFactura, HttpMethod.Get).items;
-            List<FacturaList> facturasList = new();
-            foreach (BackSecurity.Dto.Factura.Item factura in facturas)
+            try
             {
-                FacturaList facturaList = new();
-                facturaList.id = factura.id;
-                facturaList.fechaemision = factura.fechaemision;
-                facturaList.fechacobro = factura.fechacobro;
-                facturaList.fechapago = factura.fechapago;
-                facturaList.estadoFactura = (factura.estado == 0) ? "Por Facturar" : "Facturado";
-                facturaList.BtnText = (factura.estado == 0) ? "Facturar" : "Facturado";
-                facturaList.HexBtn = (factura.estado == 0) ? "#1f3dff" : "#484a54";
-                InsertDetalleFactura insertDetalleFactura = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura + factura.iddetallefactura, HttpMethod.Get);
-                facturaList.iddetallefactura = insertDetalleFactura.costobase + (insertDetalleFactura.totalporasesoria + insertDetalleFactura.totalporaccidente
-                + insertDetalleFactura.totalporcharla + insertDetalleFactura.totalporasesoriaespecial + insertDetalleFactura.totalporpersonaextra + insertDetalleFactura.totalporvisita +
-                insertDetalleFactura.costoporpersonaextra);
-                facturaList.habilitadopago = factura.habilitadopago;
-                facturaList.NombreCompany = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + factura.idcompany, HttpMethod.Get).nom_empresa;
-                facturaList.mesemision = factura.mesemision;
-                facturaList.anoemision = factura.anoemision;
-                facturaList.diaemision = factura.diaemision;
-                facturasList.Add(facturaList);
+
+                List<BackSecurity.Dto.Factura.Item> facturas = _httpService.RequestJson<FacturaRoot>(GetAllFactura, HttpMethod.Get).items;
+                List<FacturaList> facturasList = new();
+                foreach (BackSecurity.Dto.Factura.Item factura in facturas)
+                {
+                    FacturaList facturaList = new();
+                    facturaList.id = factura.id;
+                    facturaList.fechaemision = factura.fechaemision;
+                    facturaList.fechacobro = factura.fechacobro;
+                    facturaList.fechapago = factura.fechapago;
+                    facturaList.estadoFactura = (factura.estado == 0) ? "Por Facturar" : "Facturado";
+                    facturaList.BtnText = (factura.estado == 0) ? "Facturar" : "Facturado";
+                    facturaList.HexBtn = (factura.estado == 0) ? "#1f3dff" : "#484a54";
+                    InsertDetalleFactura insertDetalleFactura = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura + factura.iddetallefactura, HttpMethod.Get);
+                    facturaList.iddetallefactura = insertDetalleFactura.costobase + (insertDetalleFactura.totalporasesoria + insertDetalleFactura.totalporaccidente
+                    + insertDetalleFactura.totalporcharla + insertDetalleFactura.totalporasesoriaespecial + insertDetalleFactura.totalporpersonaextra + insertDetalleFactura.totalporvisita +
+                    insertDetalleFactura.costoporpersonaextra);
+                    facturaList.habilitadopago = factura.habilitadopago;
+                    Console.WriteLine(factura?.idcompany);
+                    facturaList.NombreCompany = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + factura?.idcompany, HttpMethod.Get)?.nom_empresa;
+                    facturaList.mesemision = factura.mesemision;
+                    facturaList.anoemision = factura.anoemision;
+                    facturaList.diaemision = factura.diaemision;
+                    facturasList.Add(facturaList);
+                }
+                return facturasList;
             }
-            return facturasList;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + ex.StackTrace);
+                return null;
+            }
         }
         public Boolean UpdateDetalleFactura(int id, Factura factura, BackSecurity.Dto.PreciosPorEmpresa.Item precios)
         {
