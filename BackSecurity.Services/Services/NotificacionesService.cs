@@ -73,7 +73,7 @@ namespace BackSecurity.Services.Services
                     notificacionesList.cuerpo = notificaciones.cuerpo;
                     notificacionesList.titulo = notificaciones.titulo;
                     notificacionesList.status = notificaciones.status;
-                    notificacionesList.company = companys.Where(x => x.id_empresa == notificaciones.idcompany).FirstOrDefault().nom_empresa;
+                    notificacionesList.company = companys.Where(x => x.id_empresa == notificaciones.idcompany).FirstOrDefault()?.nom_empresa;
                     notificacionesList.notificaciondirigida = notificacionDirigidas.Where(x=> x.id == notificaciones.idnotificaciondirigida).FirstOrDefault()?.nombre;
                     if (notificacionesList.notificaciondirigida == "Empresa")
                     {
