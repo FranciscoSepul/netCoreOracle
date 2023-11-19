@@ -58,14 +58,16 @@ namespace BackSecurity.Services.Services
             {
                 List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items;
                 List<ActivityList> activitysList = new();
+                List<Dto.User.Item> ProfesionalesACargo = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get).items;
+                List<Company> companys =_companyService.CompanyList();
                 foreach (Dto.Activity.Item activity in activitys)
                 {
                     ActivityList activityList = new();
                     activityList.id = activity.id;
-                    activityList.profesionalacargo = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get).items.Where(x => x.id_usuario == activity.idprofesionalacargo).FirstOrDefault().nom_usuario;
+                    activityList.profesionalacargo = ProfesionalesACargo.Where(x => x.id_usuario == activity.idprofesionalacargo).FirstOrDefault().nom_usuario;
                     activityList.haxColor = (stateCompany(activity) != "Activo") ? "#FF0000" : "#00A653";
                     activityList.tema = _httpService.RequestJson<OneTemaRoot>(GetTemas + activity.tema, HttpMethod.Get).capacitacion;
-                    activityList.company = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + activity.idcompany, HttpMethod.Get).nom_empresa;
+                    activityList.company =companys.Where(x => x.id_empresa == activity.idcompany).FirstOrDefault().nom_empresa;
                     activityList.fechaprogramacionyHora = ($"{DateTime.Parse(activity.fechaprogramacion).ToString("dd/MM/yyyy")} {activity.horaprogramacion}");
                     activityList.eliminado = stateCompany(activity);
                     activitysList.Add(activityList);

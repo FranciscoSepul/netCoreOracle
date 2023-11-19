@@ -34,6 +34,7 @@ namespace BackSecurity.Services.Services
     {
         private readonly IConfiguration _config;
         private readonly IHttpService _httpService;
+        private readonly ICompanyService _companyService;
         private readonly IDireccionService _direccionService;
         public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notification";
         public string _GetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notification/";
@@ -42,11 +43,12 @@ namespace BackSecurity.Services.Services
         public string _GetTrabajadoresById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/trabajadores/";
         public string _GetNotificacionDirigidaById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notificationdirigida/";
         public string GetUsersById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
-        public NotificacionesService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
+        public NotificacionesService(IConfiguration configuration,ICompanyService companyService, IHttpService httpService, IDireccionService direccionService)
         {
             _config = configuration;
             _httpService = httpService;
             _direccionService = direccionService;
+            _companyService = companyService;
         }
 
         public List<NotificacionesList> List()
@@ -55,16 +57,18 @@ namespace BackSecurity.Services.Services
             {
                 List<Notificaciones> item = _httpService.RequestJson<NotificacionesRoot>(GetAll, HttpMethod.Get).items;
                 List<NotificacionesList> notificacionesLists = new();
+                List<Company> companys =_companyService.CompanyList();
+                List<TipoNotificacionRoot> notificacionDirigidaRoots = _httpService.RequestJson<ListIpoNotificacionRoot>(_GetByIdNotification, HttpMethod.Get).items;
                 foreach (Notificaciones notificaciones in item)
                 {
                     NotificacionesList notificacionesList = new();
                     notificacionesList.id = notificaciones.id;
                     notificacionesList.fechaprogramacion = notificaciones.fechaprogramacion;
-                    notificacionesList.tiponotificacion = _httpService.RequestJson<TipoNotificacionRoot>(_GetByIdNotification + notificaciones.idtiponotificacion, HttpMethod.Get)?.nombre;
+                    notificacionesList.tiponotificacion =notificacionDirigidaRoots.Where(x => x.id == notificaciones.idtiponotificacion).FirstOrDefault()?.nombre; 
                     notificacionesList.cuerpo = notificaciones.cuerpo;
                     notificacionesList.titulo = notificaciones.titulo;
                     notificacionesList.status = notificaciones.status;
-                    notificacionesList.company = _httpService.RequestJson<Company>(_GetCompanyById + notificaciones.idcompany, HttpMethod.Get)?.nom_empresa;
+                    notificacionesList.company =companys.Where(x => x.id_empresa == notificaciones.idcompany).FirstOrDefault().nom_empresa ;
                     notificacionesList.notificaciondirigida = _httpService.RequestJson<NotificaciondirigidaFirs>(_GetNotificacionDirigidaById + notificaciones.idnotificaciondirigida, HttpMethod.Get)?.nombre;
                     if (notificacionesList.notificaciondirigida == "Empresa")
                     {
