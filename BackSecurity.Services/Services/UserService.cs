@@ -145,6 +145,7 @@ namespace BackSecurity.Services.Services
             {
                 Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
                 List<Company> companys =_company.CompanyList();
+                List<BackSecurity.Dto.Funcion.Item> functions= _httpService.RequestJson<RootFunction>(GetListType, HttpMethod.Get).items;
                 List<Users> users = new();
                 foreach (BackSecurity.Dto.User.Item item in userItem.items)
                 {
@@ -156,7 +157,7 @@ namespace BackSecurity.Services.Services
                     user.fono_usuario = item.fono_usuario;
                     user.nacionalidad = item.nacionalidad;
                     user.clave = item.clave;
-                    user.tipocuenta = (item.idtipocuenta > 0) ? GetFunctionById(item.idtipocuenta).nom_fun : "";
+                    user.tipocuenta = (item.idtipocuenta > 0) ? functions.Where(x=> x.id_fun ==item.idtipocuenta).FirstOrDefault().nom_fun : "";
                     user.empresa = (item.idempresa > 0) ? companys.Where(x => x.id_empresa == item.idempresa).FirstOrDefault().nom_empresa : "";
                     user.fechacreacion = item.fechacreacion;
                     user.isdelete = item.isdelete;
