@@ -137,6 +137,7 @@ namespace BackSecurity.Services.Services
                 Console.WriteLine("en notifi ");
                 notificaciones.id = _httpService.RequestJson<NotificacionesRoot>(GetAll, HttpMethod.Get).items.Count + 1;
                 Notificaciones item = _httpService.RequestJson<Notificaciones>(_GetById, HttpMethod.Post, JsonConvert.SerializeObject(notificaciones));
+                List<TrabajadoresRoot> trabajadoresRoots = _httpService.RequestJson<TrabajadoresListRoot>(_GetTrabajadoresById, HttpMethod.Get).items.Where(x=> x.idempresa==idcompany).ToList();
 
                 if (notificaciones.idnotificaciondirigida != 3)
                 {
@@ -144,7 +145,7 @@ namespace BackSecurity.Services.Services
                     {
                         foreach (int job in trabajadores)
                         {
-                            TrabajadoresRoot trabajadoresRoot = _httpService.RequestJson<TrabajadoresRoot>(_GetTrabajadoresById + item.idtrabajador, HttpMethod.Get);
+                            TrabajadoresRoot trabajadoresRoot = trabajadoresRoots.Where(x=> x.id== item.idtrabajador).FirstOrDefault();
                             if (item.idtiponotificacion == 1)
                             {
                                 smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
