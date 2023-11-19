@@ -27,6 +27,7 @@ using System.Net;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
+using Google.Apis.Util;
 
 namespace BackSecurity.Services.Services
 {
@@ -43,7 +44,7 @@ namespace BackSecurity.Services.Services
         public string _GetTrabajadoresById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/trabajadores/";
         public string _GetNotificacionDirigidaById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notificationdirigida/";
         public string GetUsersById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario/";
-        public NotificacionesService(IConfiguration configuration,ICompanyService companyService, IHttpService httpService, IDireccionService direccionService)
+        public NotificacionesService(IConfiguration configuration, ICompanyService companyService, IHttpService httpService, IDireccionService direccionService)
         {
             _config = configuration;
             _httpService = httpService;
@@ -57,30 +58,34 @@ namespace BackSecurity.Services.Services
             {
                 List<Notificaciones> item = _httpService.RequestJson<NotificacionesRoot>(GetAll, HttpMethod.Get).items;
                 List<NotificacionesList> notificacionesLists = new();
-                List<Company> companys =_companyService.CompanyList();
+                List<Company> companys = _companyService.CompanyList();
                 List<TipoNotificacionRoot> notificacionDirigidaRoots = _httpService.RequestJson<ListIpoNotificacionRoot>(_GetByIdNotification, HttpMethod.Get).items;
+                List<TrabajadoresRoot> trabajadoresRoots = _httpService.RequestJson<TrabajadoresListRoot>(_GetTrabajadoresById, HttpMethod.Get).items;
+                List<BackSecurity.Dto.User.Item> trabajadoresRoot = _httpService.RequestJson<BackSecurity.Dto.User.Root>(GetUsersById, HttpMethod.Get).items;
+                List<NotificaciondirigidaFirs> notificacionDirigidas = _httpService.RequestJson<BackSecurity.Dto.NotificacionDirigida.NotificacionDirigidaRoot>(_GetNotificacionDirigidaById , HttpMethod.Get).items;
+
                 foreach (Notificaciones notificaciones in item)
                 {
                     NotificacionesList notificacionesList = new();
                     notificacionesList.id = notificaciones.id;
                     notificacionesList.fechaprogramacion = notificaciones.fechaprogramacion;
-                    notificacionesList.tiponotificacion =notificacionDirigidaRoots.Where(x => x.id == notificaciones.idtiponotificacion).FirstOrDefault()?.nombre; 
+                    notificacionesList.tiponotificacion = notificacionDirigidaRoots.Where(x => x.id == notificaciones.idtiponotificacion).FirstOrDefault()?.nombre;
                     notificacionesList.cuerpo = notificaciones.cuerpo;
                     notificacionesList.titulo = notificaciones.titulo;
                     notificacionesList.status = notificaciones.status;
-                    notificacionesList.company =companys.Where(x => x.id_empresa == notificaciones.idcompany).FirstOrDefault().nom_empresa ;
-                    notificacionesList.notificaciondirigida = _httpService.RequestJson<NotificaciondirigidaFirs>(_GetNotificacionDirigidaById + notificaciones.idnotificaciondirigida, HttpMethod.Get)?.nombre;
+                    notificacionesList.company = companys.Where(x => x.id_empresa == notificaciones.idcompany).FirstOrDefault().nom_empresa;
+                    notificacionesList.notificaciondirigida = notificacionDirigidas.Where(x=> x.id == notificaciones.idnotificaciondirigida).FirstOrDefault()?.nombre;
                     if (notificacionesList.notificaciondirigida == "Empresa")
                     {
                         notificacionesList.trabajador = notificacionesList.company;
                     }
                     if (notificacionesList.notificaciondirigida == "Profesional")
                     {
-                        notificacionesList.trabajador = (notificaciones.idtrabajador > 0) ? _httpService.RequestJson<BackSecurity.Dto.User.Item>(GetUsersById + notificaciones.idtrabajador, HttpMethod.Get)?.run_usuario : "Todos";
+                        notificacionesList.trabajador = (notificaciones.idtrabajador > 0) ? trabajadoresRoot.Where(x => x.id_usuario == notificaciones.idtrabajador).FirstOrDefault()?.run_usuario : "Todos";
                     }
                     if (notificacionesList.notificaciondirigida == "Trabajador")
                     {
-                        notificacionesList.trabajador = (notificaciones.idtrabajador > 0) ? _httpService.RequestJson<TrabajadoresRoot>(_GetTrabajadoresById + notificaciones.idtrabajador, HttpMethod.Get)?.run : "Todos";
+                        notificacionesList.trabajador = (notificaciones.idtrabajador > 0) ? trabajadoresRoots.Where(x => x.id == notificaciones.idtrabajador).FirstOrDefault()?.run : "Todos";
                     }
 
                     notificacionesLists.Add(notificacionesList);
@@ -137,7 +142,7 @@ namespace BackSecurity.Services.Services
                 Console.WriteLine("en notifi ");
                 notificaciones.id = _httpService.RequestJson<NotificacionesRoot>(GetAll, HttpMethod.Get).items.Count + 1;
                 Notificaciones item = _httpService.RequestJson<Notificaciones>(_GetById, HttpMethod.Post, JsonConvert.SerializeObject(notificaciones));
-                List<TrabajadoresRoot> trabajadoresRoots = _httpService.RequestJson<TrabajadoresListRoot>(_GetTrabajadoresById, HttpMethod.Get).items.Where(x=> x.idempresa==idcompany).ToList();
+                List<TrabajadoresRoot> trabajadoresRoots = _httpService.RequestJson<TrabajadoresListRoot>(_GetTrabajadoresById, HttpMethod.Get).items.Where(x => x.idempresa == notificaciones.idcompany).ToList();
 
                 if (notificaciones.idnotificaciondirigida != 3)
                 {
@@ -145,7 +150,7 @@ namespace BackSecurity.Services.Services
                     {
                         foreach (int job in trabajadores)
                         {
-                            TrabajadoresRoot trabajadoresRoot = trabajadoresRoots.Where(x=> x.id== item.idtrabajador).FirstOrDefault();
+                            TrabajadoresRoot trabajadoresRoot = trabajadoresRoots.Where(x => x.id == item.idtrabajador).FirstOrDefault();
                             if (item.idtiponotificacion == 1)
                             {
                                 smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
@@ -164,7 +169,6 @@ namespace BackSecurity.Services.Services
                     }
                     if (item.idtrabajador == 0)
                     {
-                        List<TrabajadoresRoot> trabajadoresRoots = _httpService.RequestJson<TrabajadoresListRoot>(_GetTrabajadoresById, HttpMethod.Get).items.Where(x => x.idempresa == item.idcompany).ToList();
                         foreach (TrabajadoresRoot trabajadoresRoot in trabajadoresRoots)
                         {
                             if (item.idtiponotificacion == 1)
@@ -186,7 +190,7 @@ namespace BackSecurity.Services.Services
                     }
                     else
                     {
-                        TrabajadoresRoot trabajadoresRoot = _httpService.RequestJson<TrabajadoresRoot>(_GetTrabajadoresById + item.idtrabajador, HttpMethod.Get);
+                        TrabajadoresRoot trabajadoresRoot = trabajadoresRoots.Where(x => x.id == item.idtrabajador).FirstOrDefault();
                         if (item.idtiponotificacion == 1)
                         {
                             smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
