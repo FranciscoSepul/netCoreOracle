@@ -36,6 +36,7 @@ namespace BackSecurity.Services.Services
         private readonly ICompanyService _companyService;
         private readonly IUserService _userService;
         private readonly INotificacionesService _notificacionesService;
+        public string GetAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario?limit=10000";
         public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
         public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente?limit=10000";
         public string _GetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/accidente/";
@@ -81,7 +82,7 @@ namespace BackSecurity.Services.Services
             {
                 Console.WriteLine("en create ");
                 BackSecurity.Dto.Asesoria.Item itemInsert = new();
-                itemInsert.idasesoria = _httpService.RequestJson<BackSecurity.Dto.Asesoria.AsesoriaRoot>(ListaAsesoria, HttpMethod.Get).items.Count()+1;
+                itemInsert.idasesoria = _httpService.RequestJson<BackSecurity.Dto.Asesoria.AsesoriaRoot>(ListaAsesoria, HttpMethod.Get).items.Count() + 1;
                 itemInsert.idtipodeasesoria = insert.idtipodeasesoria;
                 itemInsert.profesional = insert.profesional.ToString();
                 itemInsert.idcompany = itemInsert.idcompany;
@@ -202,8 +203,6 @@ namespace BackSecurity.Services.Services
             accidente.Fechaalta = item?.fechaalta;
             accidente.Fono_emergencia = item.fono_emergencia;
             accidente.TipoDeAccidente = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(LugarDelAccidente + item.idLugarDeAccidente, HttpMethod.Get).nombre;
-            Console.WriteLine("Tipo de accidente " + accidente.TipoDeAccidente);
-            Console.WriteLine("Medio de prueba " + item.idMedioDePrueba);
             accidente.MedioDePrueba = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(MedioDePrueba + item.idMedioDePrueba, HttpMethod.Get).nombre;
             accidente.color = ColorIcon(item);
             return accidente;
@@ -221,20 +220,25 @@ namespace BackSecurity.Services.Services
 
         public List<Accidente> List()
         {
+
             List<Accidente> accidentes = new();
             try
             {
                 List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items;
+                List<Dto.TipoAccidente.Item> accidents = _httpService.RequestJson<TipoAccidenteList>(TipoAccidenteGetById, HttpMethod.Get).items;
+                List<Company> companys = _companyService.CompanyList();
+                List<BackSecurity.Dto.User.Item> userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get).items;
+                List<Dto.Gravedad.Item> gravedades = GetAllGravedad();
                 foreach (Dto.Accidente.Item item in accident)
                 {
                     Accidente accidente = new();
                     accidente.Id = item.id;
-                    accidente.Tipoaccidente = GetByIdTipoAccidente(item.idtipoaccidente)?.accidente;
-                    Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
+                    accidente.Tipoaccidente = accidents.Where(x => x.id == item.idtipoaccidente).FirstOrDefault()?.accidente;
+                    Dto.Company.Company company = companys.Where(x => x.id_empresa == item.idempresa).FirstOrDefault();
                     accidente.Empresa = company?.nom_empresa;
-                    Dto.User.Item user = _userService.GetWorkerById(item.idtrabajador);
+                    Dto.User.Item user = userItem.Where(x => x.id_usuario == item.idtrabajador).FirstOrDefault();
                     accidente.NombreProfesional = user?.nom_usuario;
-                    accidente.Gravedad = GetByIdGravedad(item.idgravedad)?.gravedad;
+                    accidente.Gravedad = gravedades.Where(x => x.id== item.idgravedad).FirstOrDefault()?.gravedad;
                     Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
                     if (job != null)
                     {
@@ -308,7 +312,7 @@ namespace BackSecurity.Services.Services
                 notificaciones.idnotificaciondirigida = 3;
                 notificaciones.idcompany = accidente.IdEmpresa;
                 notificaciones.idtrabajador = accidente.IdProfesional;
-                _notificacionesService.Create(notificaciones,null);
+                _notificacionesService.Create(notificaciones, null);
                 return (item != null);
             }
             catch (Exception ex)
@@ -338,7 +342,7 @@ namespace BackSecurity.Services.Services
 
         public List<Job> GetJobByIdSucursal(int id)
         {
-            List<Job> jobs = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa==id).ToList();
+            List<Job> jobs = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == id).ToList();
             return jobs;
         }
 
