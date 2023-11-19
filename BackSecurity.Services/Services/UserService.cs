@@ -19,6 +19,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using BackSecurity.Dto.Funcion;
 using BackSecurity.Dto.Trabajadores;
+using BackSecurity.Dto.Company;
 
 
 namespace BackSecurity.Services.Services
@@ -143,6 +144,7 @@ namespace BackSecurity.Services.Services
             try
             {
                 Root userItem = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get);
+                List<Company> companys =_company.CompanyList();
                 List<Users> users = new();
                 foreach (BackSecurity.Dto.User.Item item in userItem.items)
                 {
@@ -155,7 +157,7 @@ namespace BackSecurity.Services.Services
                     user.nacionalidad = item.nacionalidad;
                     user.clave = item.clave;
                     user.tipocuenta = (item.idtipocuenta > 0) ? GetFunctionById(item.idtipocuenta).nom_fun : "";
-                    user.empresa = (item.idempresa > 0) ? _company.GetCompanyById(item.idempresa).nom_empresa : "";
+                    user.empresa = (item.idempresa > 0) ? companys.Where(x => x.id_empresa == item.idempresa).FirstOrDefault().nom_empresa : "";
                     user.fechacreacion = item.fechacreacion;
                     user.isdelete = item.isdelete;
                     user.Eliminado = (item.isdelete != 0) ? "Desactivado" : "Activo";
