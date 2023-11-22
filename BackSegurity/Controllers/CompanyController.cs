@@ -52,6 +52,14 @@ namespace BackSecurity.Controllers
             return Ok(factura);
         }
 
+        [HttpGet("GetFacturaById")]
+        [AllowAnonymous]
+        public IActionResult GetCompanyFactura(int id)
+        {
+            BackSecurity.Dto.Factura.FacturaId factura = _companyService.GetFacturaById(id);
+            return Ok(factura);
+        }
+
         [HttpGet("GetCompanyOperaciones")]
         [AllowAnonymous]
         public IActionResult GetCompanyOperaciones(string id, int desde)

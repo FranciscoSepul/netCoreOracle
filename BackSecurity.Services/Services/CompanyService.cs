@@ -361,6 +361,43 @@ namespace BackSecurity.Services.Services
                 return null;
             }
         }
+
+        public BackSecurity.Dto.Factura.FacturaId GetFacturaById(int id)
+        {
+            try
+            {
+
+                BackSecurity.Dto.Factura.Item factura = _httpService.RequestJson<Dto.Factura.Item>(GetAllFactura + id, HttpMethod.Get);
+                FacturaId facturaList = new();
+                facturaList.id = factura.id;
+                facturaList.fechaemision = factura.fechaemision;
+                facturaList.fechacobro = factura.fechacobro;
+                facturaList.fechapago = factura.fechapago;
+                facturaList.estadoFactura = (factura.estado == 0) ? "Por Facturar" : "Facturado";
+                facturaList.BtnText = (factura.estado == 0) ? "Facturar" : "Facturado";
+                facturaList.HexBtn = (factura.estado == 0) ? "#1f3dff" : "#484a54";
+                InsertDetalleFactura insertDetalleFactura = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura + factura.iddetallefactura, HttpMethod.Get);
+                facturaList.iddetallefactura = insertDetalleFactura.costobase + (insertDetalleFactura.totalporasesoria + insertDetalleFactura.totalporaccidente
+                + insertDetalleFactura.totalporcharla + insertDetalleFactura.totalporasesoriaespecial + insertDetalleFactura.totalporpersonaextra + insertDetalleFactura.totalporvisita +
+                insertDetalleFactura.costoporpersonaextra);
+                facturaList.habilitadopago = factura.habilitadopago;
+                Console.WriteLine(factura?.idcompany);
+                facturaList.NombreCompany = factura?.idcompany;
+                facturaList.mesemision = factura.mesemision;
+                facturaList.anoemision = factura.anoemision;
+                facturaList.diaemision = factura.diaemision;
+
+                return facturaList;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + ex.StackTrace);
+                return null;
+            }
+        }
+
+
+
         public Boolean UpdateDetalleFactura(int id, Factura factura, BackSecurity.Dto.PreciosPorEmpresa.Item precios)
         {
 
