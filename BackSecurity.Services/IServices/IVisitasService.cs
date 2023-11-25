@@ -13,7 +13,7 @@ namespace BackSecurity.Services.IServices
         bool Create(CompanyCreate company);
         bool Update(CompanyUpdate company);
         bool Disable(CompanyUpdate company);
-        List<Dto.Company.Company> AsesoriaList ();
+        List<Dto.Visita.Item> AsesoriaList ();
         List<Dto.Company.Company> AsesoriaListNotDisable ();
         Company GetAsesoriaById (int id);
         Dto.Company.Item GetAsesoriaByName(string id);

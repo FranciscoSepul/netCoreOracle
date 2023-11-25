@@ -86,3 +86,18 @@ CREATE TABLE DetalleFactura
     AnoalizacionValores number,
     DiaalizacionValores number
 );
+
+CREATE TABLE visita
+    (
+        Id NUMBER PRIMARY KEY,
+        IdProfesionalACargo NUMBER,
+        IdCompany NUMBER,
+        Descripcion VARCHAR2 (250),
+        fechaProgramacion VARCHAR2(50) ,
+        horaProgramacion VARCHAR2(50),
+        isDelete NUMBER
+    );
+
+     INSERT INTO visita
+    VALUES
+        (1,1,1,'test','03-03-2023','13:00',0);

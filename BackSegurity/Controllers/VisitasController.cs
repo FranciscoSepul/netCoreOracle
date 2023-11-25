@@ -47,7 +47,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAllVisitas()
         {
-            List<Dto.Company.Company> company = _VisitasService.AsesoriaList();
+            List<Dto.Visita.Item> company = _VisitasService.AsesoriaList();
             return Ok(company);
         }
         [HttpPost("Create")]
