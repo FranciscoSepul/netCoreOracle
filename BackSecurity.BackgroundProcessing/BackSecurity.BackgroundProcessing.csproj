@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Configurations>Debug;Release;Staging;Production</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.7.24" />
+  </ItemGroup>
+
+
+</Project>
