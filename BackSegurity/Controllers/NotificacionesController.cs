@@ -34,11 +34,11 @@ namespace BackSecurity.Controllers
 
         //[HttpGet("GetNotificationById")]
         //[AllowAnonymous]
-       // public async Task<IActionResult> GetNotificationById(int id)
-        //{
+        ///public async Task<IActionResult> GetNotificationById(int id)
+       // {
         //    CompanyInsert company = _notificacionesService.GetById(id);
-        //    return Ok(company);
-        //}
+         //   return Ok(company);
+       // }
 
         [HttpGet("GetAllNotification")]
         [AllowAnonymous]
