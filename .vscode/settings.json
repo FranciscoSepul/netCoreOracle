@@ -1,4 +1,0 @@
-{
-    "appService.defaultWebAppToDeploy": "/subscriptions/6c7cc008-658c-4dd7-9969-7017b7d9abf3/resourceGroups/NoMasAccidentesApi_group/providers/Microsoft.Web/sites/ApiNoMas",
-    "appService.deploySubpath": "."
-}
