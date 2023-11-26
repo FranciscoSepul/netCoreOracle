@@ -550,7 +550,6 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-
                 Operaciones operaciones = new();
                 Console.WriteLine(desde);
                 List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[1]) == desde).ToList();
