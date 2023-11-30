@@ -16,7 +16,6 @@ namespace BackSecurity.Dto.Visita
         public string fechaprogramacion { get; set; }
         public string horaprogramacion { get; set; }
         public int isdelete { get; set; }
-        public List<Link> links { get; set; }
     }
 
     public class VisitaInsert

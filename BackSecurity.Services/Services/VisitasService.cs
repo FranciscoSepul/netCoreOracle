@@ -116,9 +116,10 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                int visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Count();
+                Console.WriteLine("en insert ");
+                int visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.OrderByDescending(x => x.id).FirstOrDefault().id;
                 Dto.Visita.Item visita = new();
-                visita.id = visitas++;
+                visita.id = visitas+1;
                 visita.idprofesionalacargo=company.idprofesionalacargo;
                 visita.idcompany=company.idcompany;
                 visita.isdelete=0;
@@ -126,7 +127,8 @@ namespace BackSecurity.Services.Services
                 visita.horaprogramacion=company.horaprogramacion;
                 visita.descripcion=company.descripcion;
                 visita.idtipovisita=company.idTipo;
-                Dto.Visita.Item item = _httpService.RequestJson<Dto.Visita.Item>(GetAllAsesoria, HttpMethod.Post, JsonConvert.SerializeObject(visita));
+                Console.WriteLine(JsonConvert.SerializeObject(visita));
+                Dto.Visita.Item item = _httpService.RequestJson<Dto.Visita.Item>(InsertAsesoria, HttpMethod.Post, JsonConvert.SerializeObject(visita));
                 return (item != null);
             }
             catch (Exception)

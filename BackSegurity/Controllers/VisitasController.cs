@@ -58,11 +58,12 @@ namespace BackSecurity.Controllers
             List<Dto.TipoVisita.Item> company = _VisitasService.GetAllVisitas();
             return Ok(company);
         }
-        
+
         [HttpPost("Create")]
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] VisitaInsert companyInsert)
         {
+            Console.Write("en insert");
             bool response = _VisitasService.Create(companyInsert);
             return (response !=false)? Ok():BadRequest();
         }
