@@ -14,6 +14,7 @@ namespace BackSecurity.Services.IServices
         bool Update(CompanyUpdate company);
         bool Disable(CompanyUpdate company);
         List<Dto.Visita.Item> AsesoriaList ();
+        List<Dto.TipoVisita.Item> GetAllVisitas();
         List<Dto.Company.Company> AsesoriaListNotDisable ();
         Company GetAsesoriaById (int id);
         Dto.Company.Item GetAsesoriaByName(string id);

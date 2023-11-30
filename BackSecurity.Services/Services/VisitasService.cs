@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using BackSecurity.Dto.Company;
 using BackSecurity.Dto.Direccion;
 using BackSecurity.Dto.Visita;
+using BackSecurity.Dto.TipoVisita;
 
 namespace BackSecurity.Services.Services
 {
@@ -30,6 +31,7 @@ namespace BackSecurity.Services.Services
         public string GetAllAsesoria = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/visita?limit=10000";
         public string _GetAsesoriaById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/visita/";
         public string InsertAsesoria = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/visita/";
+        public string TipoVisita = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipovisita";
 
         public VisitasService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
         {
@@ -218,6 +220,19 @@ namespace BackSecurity.Services.Services
                 return companies.OrderBy(x => x.IsDelete).ToList();
             }
             catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public List<Dto.TipoVisita.Item> GetAllVisitas()
+        {
+             try
+            {
+                List<BackSecurity.Dto.TipoVisita.Item> temas = _httpService.RequestJson<TipoVisitaRoot>(TipoVisita, HttpMethod.Get).items;
+                return temas.OrderBy(x => x.id).ToList();
+            }
+            catch (Exception)
             {
                 return null;
             }
