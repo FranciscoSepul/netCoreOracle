@@ -47,13 +47,13 @@ namespace BackSecurity.Services.Services
         {
             try
             {
-                 List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
                 List<Dto.User.Item> ProfesionalesACargo = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get).items;
                 List<BackSecurity.Dto.TipoVisita.Item> temas = _httpService.RequestJson<TipoVisitaRoot>(TipoVisita, HttpMethod.Get).items;
 
                 List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items;
                 List<Dto.Company.Company> companies = new();
-                List<Visitas> ListVisitas = new();               
+                List<Visitas> ListVisitas = new();
 
                 foreach (Dto.Visita.Item item in visitas)
                 {
@@ -71,7 +71,7 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message+ex.StackTrace);
+                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }
@@ -112,29 +112,21 @@ namespace BackSecurity.Services.Services
             return company;
         }
 
-        public bool Create(CompanyCreate company)
+        public bool Create(VisitaInsert company)
         {
             try
             {
-                DireccionInsert direccion = new();
-                //direccion.calle = company.direccion;
-                //direccion.id_region = company.region;
-                //direccion.id_comuna = company.comuna;
-                int IDDIRECCION = _direccionService.Create(direccion);
-
-                CompanyInsert companyInsert = new();
-                List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllAsesoria, HttpMethod.Get).items;
-                companyInsert.id_empresa = companys.Count() + 1;
-                companyInsert.iddireccion = IDDIRECCION;
-                //companyInsert.correo = company.correo;
-                companyInsert.fechacreacion = DateTime.Now.Date.ToString().Split(' ').FirstOrDefault().Replace('/', '-');
-                string[] rut = company.rut.Split('-');
-                companyInsert.rut = rut[0];
-                companyInsert.dvrut = (rut.Count() > 1) ? rut[1] : " ";
-                companyInsert.nom_empresa = company.nom_empresa;
-                companyInsert.isdelete = 0;
-                //companyInsert.fechafincontrato = company.fechaFinContrato.ToString().Split('T').FirstOrDefault();
-                BackSecurity.Dto.User.Item item = _httpService.RequestJson<BackSecurity.Dto.User.Item>(InsertAsesoria, HttpMethod.Post, JsonConvert.SerializeObject(companyInsert));
+                int visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Count();
+                Dto.Visita.Item visita = new();
+                visita.id = visitas++;
+                visita.idprofesionalacargo=company.idprofesionalacargo;
+                visita.idcompany=company.idcompany;
+                visita.isdelete=0;
+                visita.fechaprogramacion=company.fechaprogramacion.ToString();
+                visita.horaprogramacion=company.horaprogramacion;
+                visita.descripcion=company.descripcion;
+                visita.idtipovisita=company.idTipo;
+                Dto.Visita.Item item = _httpService.RequestJson<Dto.Visita.Item>(GetAllAsesoria, HttpMethod.Post, JsonConvert.SerializeObject(visita));
                 return (item != null);
             }
             catch (Exception)
@@ -234,7 +226,7 @@ namespace BackSecurity.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message+ex.StackTrace);
+                Console.WriteLine(ex.Message + ex.StackTrace);
                 return null;
             }
         }

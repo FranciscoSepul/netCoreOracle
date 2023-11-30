@@ -18,6 +18,16 @@ namespace BackSecurity.Dto.Visita
         public int isdelete { get; set; }
         public List<Link> links { get; set; }
     }
+
+    public class VisitaInsert
+    {
+        public string descripcion { get; set; }
+        public DateTime fechaprogramacion { get; set; }
+        public string horaprogramacion { get; set; }
+        public int idcompany { get; set; }
+        public int idprofesionalacargo { get; set; }
+        public int idTipo { get; set; }
+    }
     public class Visitas
     {
         public int id { get; set; }

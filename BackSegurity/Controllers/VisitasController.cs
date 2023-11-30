@@ -14,6 +14,7 @@ using BackSecurity.Controllers.Common;
 using BackSecurity.Dto.Authentication;
 using BackSecurity.Constants.Constants;
 using BackSecurity.Dto.Company;
+using BackSecurity.Dto.Visita;
 
 namespace BackSecurity.Controllers
 {
@@ -53,14 +54,14 @@ namespace BackSecurity.Controllers
         [HttpGet("GetAllTipoVisitas")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllTipoVisitas()
-        {
-            
+        {            
             List<Dto.TipoVisita.Item> company = _VisitasService.GetAllVisitas();
             return Ok(company);
         }
+        
         [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] CompanyCreate companyInsert)
+        public async Task<IActionResult> Create([FromBody] VisitaInsert companyInsert)
         {
             bool response = _VisitasService.Create(companyInsert);
             return (response !=false)? Ok():BadRequest();

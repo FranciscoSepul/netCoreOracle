@@ -11,7 +11,7 @@ namespace BackSecurity.Services.IServices
 {
     public interface IVisitasService
     {
-        bool Create(CompanyCreate company);
+        bool Create(VisitaInsert company);
         bool Update(CompanyUpdate company);
         bool Disable(CompanyUpdate company);
         List<Visitas> AsesoriaList ();
