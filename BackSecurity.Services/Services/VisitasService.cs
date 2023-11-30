@@ -20,6 +20,7 @@ using BackSecurity.Dto.Company;
 using BackSecurity.Dto.Direccion;
 using BackSecurity.Dto.Visita;
 using BackSecurity.Dto.TipoVisita;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace BackSecurity.Services.Services
 {
@@ -31,7 +32,9 @@ namespace BackSecurity.Services.Services
         public string GetAllAsesoria = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/visita?limit=10000";
         public string _GetAsesoriaById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/visita/";
         public string InsertAsesoria = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/visita/";
-        public string TipoVisita = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipovisita";
+        public string TipoVisita = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tipovisita/";
+        public string GetAllCompany = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa?limit=10000";
+        public string GetAllUsers = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/usuario?limit=10000";
 
         public VisitasService(IConfiguration configuration, IHttpService httpService, IDireccionService direccionService)
         {
@@ -40,38 +43,35 @@ namespace BackSecurity.Services.Services
             _direccionService = direccionService;
         }
 
-        public List<Dto.Visita.Item> AsesoriaList()
+        public List<Visitas> AsesoriaList()
         {
             try
             {
-                List<Dto.Visita.Item> companys = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items;
-                List<Dto.Company.Company> companies = new();
-                return companys;
-                //foreach (Dto.Company.Item item in companys)
-                //{
-                 //   Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.IDDIRECCION);
-                  //  Dto.Company.Company company = new();
+                 List<Dto.Company.Item> companys = _httpService.RequestJson<CompanyRoot>(GetAllCompany, HttpMethod.Get).items;
+                List<Dto.User.Item> ProfesionalesACargo = _httpService.RequestJson<Root>(GetAllUsers, HttpMethod.Get).items;
+                List<BackSecurity.Dto.TipoVisita.Item> temas = _httpService.RequestJson<TipoVisitaRoot>(TipoVisita, HttpMethod.Get).items;
 
-                   // company.id_empresa = item.id_empresa;
-                    //company.nom_empresa = item.nom_empresa;
-                    //company.Rut = item.Rut;
-                    //company.DvRut = item.DvRut;
-                    //company.ImageBase64 = item.ImageBase64;
-                    //company.fechaFinContrato = item.fechaFinContrato;
-                    //company.Correo = item.Correo;
-                    //company.eliminado = stateAsesoria(item);
-                    //company.fechaCreacion = item.fechaCreacion;
-                    //company.haxColor = (stateAsesoria(item) != "Activo") ? "#FF0000" : "#00A653";
-                    //company.Region = direccion.id_region;
-                    //company.Comuna = direccion.id_comuna;
-                    //company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                    //company.IsDelete = (stateAsesoria(item) != "Activo") ? 1 : 0;
-                    //companies.Add(company);
-               // }
-                //return companies.OrderBy(x => x.IsDelete).ToList();
+                List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items;
+                List<Dto.Company.Company> companies = new();
+                List<Visitas> ListVisitas = new();               
+
+                foreach (Dto.Visita.Item item in visitas)
+                {
+                    Visitas visita = new();
+                    visita.id = item.id;
+                    visita.idprofesionalacargo = ProfesionalesACargo.Where(x => x.id_usuario == item.idprofesionalacargo).FirstOrDefault().nom_usuario;
+                    visita.idcompany = companys.Where(x => x.id_empresa == item.idcompany).FirstOrDefault().nom_empresa;
+                    visita.descripcion = item.descripcion;
+                    visita.fechaprogramacion = item.fechaprogramacion;
+                    visita.horaprogramacion = item.horaprogramacion;
+                    visita.TipoVisita = temas.Where(x => x.id == item.idtipovisita).FirstOrDefault().nombre;
+                    ListVisitas.Add(visita);
+                }
+                return ListVisitas.OrderByDescending(x => x.id).ToList();
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message+ex.StackTrace);
                 return null;
             }
         }
@@ -227,13 +227,14 @@ namespace BackSecurity.Services.Services
 
         public List<Dto.TipoVisita.Item> GetAllVisitas()
         {
-             try
+            try
             {
                 List<BackSecurity.Dto.TipoVisita.Item> temas = _httpService.RequestJson<TipoVisitaRoot>(TipoVisita, HttpMethod.Get).items;
                 return temas.OrderBy(x => x.id).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message+ex.StackTrace);
                 return null;
             }
         }

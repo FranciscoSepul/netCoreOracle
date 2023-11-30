@@ -47,14 +47,15 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAllVisitas()
         {
-            List<Dto.TipoVisita.Item> company = _VisitasService.GetAllVisitas();
+            List<Dto.Visita.Visitas> company = _VisitasService.AsesoriaList();
             return Ok(company);
         }
         [HttpGet("GetAllTipoVisitas")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllTipoVisitas()
         {
-            List<Dto.Visita.Item> company = _VisitasService.AsesoriaList();
+            
+            List<Dto.TipoVisita.Item> company = _VisitasService.GetAllVisitas();
             return Ok(company);
         }
         [HttpPost("Create")]

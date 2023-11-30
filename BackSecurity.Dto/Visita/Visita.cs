@@ -11,11 +11,23 @@ namespace BackSecurity.Dto.Visita
         public int id { get; set; }
         public int idprofesionalacargo { get; set; }
         public int idcompany { get; set; }
+        public int idtipovisita { get; set; }
         public string descripcion { get; set; }
         public string fechaprogramacion { get; set; }
         public string horaprogramacion { get; set; }
         public int isdelete { get; set; }
         public List<Link> links { get; set; }
+    }
+    public class Visitas
+    {
+        public int id { get; set; }
+        public string idprofesionalacargo { get; set; }
+        public string idcompany { get; set; }
+        public string descripcion { get; set; }
+        public string TipoVisita { get; set; }
+        public string fechaprogramacion { get; set; }
+        public string horaprogramacion { get; set; }
+        public int isdelete { get; set; }
     }
 
     public class Link
