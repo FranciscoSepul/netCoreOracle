@@ -37,7 +37,7 @@ namespace BackSecurity.Services.Services
         private readonly IHttpService _httpService;
         private readonly ICompanyService _companyService;
         private readonly IDireccionService _direccionService;
-        public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notification";
+        public string GetAll = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notification?limit=10000";
         public string _GetById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/notification/";
         public string _GetByIdNotification = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/tiponotification/";
         public string _GetCompanyById = "https://ge00e075da0ccb1-nomasaccidentes.adb.sa-santiago-1.oraclecloudapps.com/ords/admin/empresa/";
@@ -141,6 +141,140 @@ namespace BackSecurity.Services.Services
             try
             {
                 Console.WriteLine("en notifi ");
+                notificaciones.id = _httpService.RequestJson<NotificacionesRoot>(GetAll, HttpMethod.Get).items.OrderByDescending(x => x.id).FirstOrDefault().id + 1;
+                Console.WriteLine(JsonConvert.SerializeObject(notificaciones));
+                Notificaciones item = _httpService.RequestJson<Notificaciones>(_GetById, HttpMethod.Post, JsonConvert.SerializeObject(notificaciones));
+                List<TrabajadoresRoot> trabajadoresRoots = _httpService.RequestJson<TrabajadoresListRoot>(_GetTrabajadoresById, HttpMethod.Get).items.Where(x => x.idempresa == notificaciones.idcompany).ToList();
+                Console.WriteLine("aa " + item?.idtrabajador);
+                if (item != null)
+                {
+                    if (notificaciones.idnotificaciondirigida != 3)
+                    {
+                        if (trabajadores != null && trabajadores?.Count > 0)
+                        {
+                            foreach (int job in trabajadores)
+                            {
+                                TrabajadoresRoot trabajadoresRoot = trabajadoresRoots.Where(x => x.id == item.idtrabajador).FirstOrDefault();
+                                if (item.idtiponotificacion == 1)
+                                {
+                                    smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+                                    sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                                }
+                                if (item.idtiponotificacion == 2)
+                                {
+                                    smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+
+                                }
+                                if (item.idtiponotificacion == 3)
+                                {
+                                    sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                                }
+                            }
+                        }
+                        if (item.idtrabajador == 0)
+                        {
+                            foreach (TrabajadoresRoot trabajadoresRoot in trabajadoresRoots)
+                            {
+                                if (item.idtiponotificacion == 1)
+                                {
+                                    smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+                                    sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                                }
+                                if (item.idtiponotificacion == 2)
+                                {
+                                    smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+
+                                }
+                                if (item.idtiponotificacion == 3)
+                                {
+                                    sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            TrabajadoresRoot trabajadoresRoot = trabajadoresRoots.Where(x => x.id == item.idtrabajador).FirstOrDefault();
+                            if (item.idtiponotificacion == 1)
+                            {
+                                smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+                                sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                            }
+                            if (item.idtiponotificacion == 2)
+                            {
+                                smtp($"Hola {trabajadoresRoot.nombre},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+
+                            }
+                            if (item.idtiponotificacion == 3)
+                            {
+                                sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nombre}, {item.titulo} {item.cuerpo}");
+                            }
+                        }
+                        return (item != null);
+                    }
+                    else
+                    {
+                        if (trabajadores != null && trabajadores?.Count > 0)
+                        {
+                            foreach (int job in trabajadores)
+                            {
+                                TrabajadoresRoot trabajad = _httpService.RequestJson<TrabajadoresRoot>(_GetTrabajadoresById + item.idtrabajador, HttpMethod.Get);
+                                if (item.idtiponotificacion == 1)
+                                {
+                                    smtp($"Hola {trabajad.nombre},", item.titulo, item.cuerpo, trabajad.correo);
+                                    sms(trabajad.fono_usuario.ToString(), $"Hola {trabajad.nombre}, {item.titulo} {item.cuerpo}");
+                                }
+                                if (item.idtiponotificacion == 2)
+                                {
+                                    smtp($"Hola {trabajad.nombre},", item.titulo, item.cuerpo, trabajad.correo);
+
+                                }
+                                if (item.idtiponotificacion == 3)
+                                {
+                                    sms(trabajad.fono_usuario.ToString(), $"Hola {trabajad.nombre}, {item.titulo} {item.cuerpo}");
+                                }
+                            }
+                        }
+                        Console.WriteLine("else");
+                        BackSecurity.Dto.User.Item trabajadoresRoot = _httpService.RequestJson<BackSecurity.Dto.User.Item>(GetUsersById + notificaciones.idtrabajador, HttpMethod.Get);
+
+                        if (item.idtiponotificacion == 1)
+                        {
+                            smtp($"Hola {trabajadoresRoot.nom_usuario},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+                            sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nom_usuario}, {item.titulo} {item.cuerpo.Substring(0, 100)}");
+                        }
+                        if (item.idtiponotificacion == 2)
+                        {
+                            smtp($"Hola {trabajadoresRoot.nom_usuario},", item.titulo, item.cuerpo, trabajadoresRoot.correo);
+
+                        }
+                        if (item.idtiponotificacion == 3)
+                        {
+                            sms(trabajadoresRoot.fono_usuario.ToString(), $"Hola {trabajadoresRoot.nom_usuario}, {item.titulo} {item.cuerpo.Substring(0, 100)}");
+                        }
+                        return (item != null);
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + ex.StackTrace);
+                return false;
+            }
+        }
+        public bool CreateNotif(NotificacionesCreate notificacionesCreate, List<int> trabajadores)
+        {
+            try
+            {
+                Notificaciones notificaciones = new();
+                notificaciones.cuerpo = notificacionesCreate.cuerpo;
+                notificaciones.fechaprogramacion = notificacionesCreate.fechaprogramacion;
+                notificaciones.idcompany = notificacionesCreate.idcompany;
+                notificaciones.idnotificaciondirigida = notificacionesCreate.idnotificaciondirigida;
+                notificaciones.idtiponotificacion = notificacionesCreate.idtiponotificacion;
+                notificaciones.idtrabajador = notificacionesCreate.idtrabajador;
+                notificaciones.titulo = notificacionesCreate.titulo;
                 notificaciones.id = _httpService.RequestJson<NotificacionesRoot>(GetAll, HttpMethod.Get).items.OrderByDescending(x => x.id).FirstOrDefault().id + 1;
                 Console.WriteLine(JsonConvert.SerializeObject(notificaciones));
                 Notificaciones item = _httpService.RequestJson<Notificaciones>(_GetById, HttpMethod.Post, JsonConvert.SerializeObject(notificaciones));

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackSecurity.Dto.Notificaciones
 {
-     public class Notificaciones
+    public class Notificaciones
     {
         public string cuerpo { get; set; }
         public string fechaprogramacion { get; set; }
@@ -20,7 +20,17 @@ namespace BackSecurity.Dto.Notificaciones
         public string titulo { get; set; }
     }
 
-     
+    public class NotificacionesCreate
+    {
+        public string cuerpo { get; set; }
+        public string fechaprogramacion { get; set; }
+        public int idcompany { get; set; }
+        public int idnotificaciondirigida { get; set; }
+        public int idtiponotificacion { get; set; }
+        public int idtrabajador { get; set; }
+        public string titulo { get; set; }
+    }
+
 
     public class NotificacionesList
     {

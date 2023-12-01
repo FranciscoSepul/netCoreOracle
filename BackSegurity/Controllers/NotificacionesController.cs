@@ -58,9 +58,10 @@ namespace BackSecurity.Controllers
 
         [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] Notificaciones notificaciones)
+        public async Task<IActionResult> Create([FromBody] NotificacionesCreate notificaciones)
         {
-            bool response = _notificacionesService.Create(notificaciones,null);
+            Console.WriteLine("en el create");
+            bool response = _notificacionesService.CreateNotif(notificaciones,null);
             return (response !=false)? Ok():BadRequest();
         }
         
