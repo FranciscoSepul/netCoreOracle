@@ -42,11 +42,10 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public IActionResult GetAllAccidents()
         {
-
             try
             {
                 List<Accidente> company = _AccidentesService.List();
-                return Ok(company);
+                return Ok(company.OrderByDescending(x=>x.Id).ToList());
             }
             catch (Exception ex)
             {
