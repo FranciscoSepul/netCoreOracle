@@ -151,8 +151,6 @@ namespace BackSecurity.Services.Services
 
 
             Dto.Company.Company company = _companyService.GetCompanyById(item.idempresa);
-            Console.WriteLine("company " + item.idempresa);
-            Console.WriteLine("accident by id " + company.IdPropiedadEmpresa);
             accidente.Empresa = company.nom_empresa;
             accidente.EmpresaDvRut = company.DvRut;
             accidente.EmpresaRut = company.Rut;
@@ -200,6 +198,7 @@ namespace BackSecurity.Services.Services
             }
 
             accidente.Fechaaccidente = item?.fechaaccidente;
+            accidente.HoraAccidente = item?.fechaaccidente.Split(' ').LastOrDefault();
             accidente.Fechaalta = item?.fechaalta;
             accidente.Fono_emergencia = item.fono_emergencia;
             accidente.TipoDeAccidente = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(LugarDelAccidente + item.idLugarDeAccidente, HttpMethod.Get).nombre;
