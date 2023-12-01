@@ -64,6 +64,7 @@ namespace BackSecurity.Controllers
         [AllowAnonymous]
         public IActionResult GetCompanyOperaciones(string id, int desde)
         {
+            Console.WriteLine("aca ");
             Operaciones factura = _companyService.GetCompanyOperaciones(id, desde);
             return Ok(factura);
         }
