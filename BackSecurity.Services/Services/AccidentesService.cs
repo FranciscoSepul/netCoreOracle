@@ -238,13 +238,15 @@ namespace BackSecurity.Services.Services
                     accidente.Empresa = company?.nom_empresa;
                     Dto.User.Item user = userItem.Where(x => x.id_usuario == item.idtrabajador).FirstOrDefault();
                     accidente.NombreProfesional = user?.nom_usuario;
-                    accidente.Gravedad = gravedades.Where(x => x.id== item.idgravedad).FirstOrDefault()?.gravedad;
+                    accidente.Gravedad = gravedades.Where(x => x.id == item.idgravedad).FirstOrDefault()?.gravedad;
                     Job job = _httpService.RequestJson<Job>(GetJobById + item.idtrabajador, HttpMethod.Get);
                     if (job != null)
                     {
                         accidente.RutTrabajador = job?.run;
                     }
-                    accidente.Fechaaccidente = item?.fechaaccidente;
+                    string[] date = item?.fechaaccidente.Split(' ');
+                    string[] dateformat = date[0].Split('/');
+                    accidente.Fechaaccidente = date[1] + date[0] + date[2] + " " + date[1];
                     accidente.color = ColorIcon(item);
                     accidentes.Add(accidente);
                 }
