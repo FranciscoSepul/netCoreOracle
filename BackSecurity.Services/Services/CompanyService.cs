@@ -511,11 +511,11 @@ namespace BackSecurity.Services.Services
                 DateTime Fdesde = new DateTime(DateTime.Now.Year, desde, 01, 00, 00, 0);
                 DateTime Fhasta = new DateTime(DateTime.Now.Year, desde + 1, 01, 00, 00, 0);
                 BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
-                List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[1]) == desde).ToList();
+                List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[0]) == desde).ToList();
                 factura.CostoTotalAccidente = (accident.Count > 0) ? accident.Count * preciosPorE.costoporaccidente : 0;
                 List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList(); ;
                 factura.CostoTotalCharla = (activitys.Count > 0) ? activitys.Count * preciosPorE.costoporcharla : 0;
-                List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[1]) == desde).ToList();
+                List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
                 factura.CostoTotalVisita = (visitas.Count>0)?visitas.Count*preciosPorE.costoporvisita:0;
                 factura.CostoTotalAsesoria = 0;
                 factura.CostoTotalAsesoriaEspecial = 0;
@@ -552,11 +552,11 @@ namespace BackSecurity.Services.Services
             {
                 Operaciones operaciones = new();
                 Console.WriteLine(desde);
-                List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[1]) == desde).ToList();
+                List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[0]) == desde).ToList();
                 operaciones.TotalAccidente = accident.Count;
                 List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList(); ;
                 operaciones.TotalCharla = activitys.Count;
-                List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[1]) == desde).ToList();               
+                List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();               
                 operaciones.TotalVisita = (visitas?.Count>0)?visitas.Count:0;
                 operaciones.TotalAsesoria = 0;
                 operaciones.TotalAsesoriaEspecial = 0;
