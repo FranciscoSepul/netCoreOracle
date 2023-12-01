@@ -369,7 +369,7 @@ namespace BackSecurity.Services.Services
                     facturaList.diaemision = factura.diaemision;
                     facturasList.Add(facturaList);
                 }
-                return facturasList;
+                return facturasList.OrderByDescending(x => x.id).ToList();
             }
             catch (Exception ex)
             {
