@@ -410,7 +410,6 @@ namespace BackSecurity.Services.Services
                 facturaList.totalporvisita = insertDetalleFactura.totalporvisita;
                 #endregion
                 #region company
-Console.WriteLine(id);
                 CompanyInsert item = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + factura?.idcompany, HttpMethod.Get);
                 Console.WriteLine(item.iddireccion);
                 Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.iddireccion);
