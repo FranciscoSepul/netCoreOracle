@@ -246,7 +246,7 @@ namespace BackSecurity.Services.Services
                     }
                     string[] date = item?.fechaaccidente.Split(' ');
                     string[] dateformat = date[0].Split('/');
-                    accidente.Fechaaccidente = date[1] + date[0] + date[2] + " " + date[1];
+                    accidente.Fechaaccidente = dateformat[1] + dateformat[0] + dateformat[2] + " " + date[1];
                     accidente.color = ColorIcon(item);
                     accidentes.Add(accidente);
                 }
