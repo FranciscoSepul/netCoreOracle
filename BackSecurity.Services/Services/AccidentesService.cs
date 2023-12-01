@@ -182,7 +182,8 @@ namespace BackSecurity.Services.Services
                 Dto.Direccion.Item direccionTrabajadores = _direccionService.GetDireccionById(job.iddireccion);
                 accidente.DireccionTrabajador = direccionTrabajadores?.calle;
                 accidente.ComunaTrabajador = _direccionService.GetComunaById(direccionTrabajadores.id_comuna).FirstOrDefault()?.nombre_comuna;
-                accidente.HoraAccidente = item.fechaaccidente.Split(' ').LastOrDefault();
+                string[] horasAccidente = item.fechaaccidente.Split(' ');
+                accidente.HoraAccidente = horasAccidente[1] +" "+horasAccidente[2];
                 accidente.Sexo = (job.sexo == 0) ? "Mujer" : "Hombre";
                 accidente.HoraIngresoAlTrabajo = job.HoraIngreso;
                 accidente.HoraSalidaTrabajo = job.HoraSalida;
