@@ -517,8 +517,9 @@ namespace BackSecurity.Services.Services
                 factura.CostoTotalCharla = (activitys.Count > 0) ? activitys.Count * preciosPorE.costoporcharla : 0;
                 List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
                 factura.CostoTotalVisita = (visitas.Count>0)?visitas.Count*preciosPorE.costoporvisita:0;
-                factura.CostoTotalAsesoria = 0;
-                factura.CostoTotalAsesoriaEspecial = 0;
+                List<Dto.Visita.Item> asesoria = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
+                factura.CostoTotalAsesoria = (asesoria.Count>0)?(asesoria.Where(x=> x.idtipovisita==1).ToList().Count()*preciosPorE.costoporasesoria):0;
+                factura.CostoTotalAsesoriaEspecial = (asesoria.Count>0)?(asesoria.Where(x=> x.idtipovisita==2).ToList().Count()*preciosPorE.costoporasesoriaespecial):0;
                 int cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
                 int? cantidadPorContratov = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get)?.CantidadDeEmpleadosPorContrato;
                 int? cantidadPorContrato = (cantidadPorContratov!=null)?cantidadPorContratov:0;
@@ -558,8 +559,9 @@ namespace BackSecurity.Services.Services
                 operaciones.TotalCharla = activitys.Count;
                 List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();               
                 operaciones.TotalVisita = (visitas?.Count>0)?visitas.Count:0;
-                operaciones.TotalAsesoria = 0;
-                operaciones.TotalAsesoriaEspecial = 0;
+                List<Dto.Visita.Item> asesoria = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
+                operaciones.TotalAsesoria = asesoria.Where(x=> x.idtipovisita==1).ToList().Count();
+                operaciones.TotalAsesoriaEspecial =  asesoria.Where(x=> x.idtipovisita==2).ToList().Count();
                 int? cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
                 int? cantidadPorContrato = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get).CantidadDeEmpleadosPorContrato;
                 operaciones.TotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) : 0;
