@@ -426,11 +426,11 @@ namespace BackSecurity.Services.Services
                 //facturaList.Direccion = $"{direccion.calle}  {direccion.numeracion}";
                 facturaList.numeroTelefonico = (int)((item.numeroTelefonico != null) ? item.numeroTelefonico : 0);
                 facturaList.ActividadEconomica = item.ActividadEconomica;
-                facturaList.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + item.IdPropiedadEmpresa, HttpMethod.Get).nombre;
-                facturaList.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + item.idTipoDeEmpresa, HttpMethod.Get).nombre;
-                facturaList.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 1).Count();
-                facturaList.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 0).Count();
-                facturaList.CantidadDeEmpleadosPorContrato = (int)((item.CantidadDeEmpleadosPorContrato != null) ? item.CantidadDeEmpleadosPorContrato : null);
+                //facturaList.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + item.IdPropiedadEmpresa, HttpMethod.Get).nombre;
+                //facturaList.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + item.idTipoDeEmpresa, HttpMethod.Get).nombre;
+                //facturaList.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 1).Count();
+                //facturaList.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 0).Count();
+                //facturaList.CantidadDeEmpleadosPorContrato = (int)((item.CantidadDeEmpleadosPorContrato != null) ? item.CantidadDeEmpleadosPorContrato : null);
 
                 BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa == id).FirstOrDefault();
                 if (preciosPorE != null)
