@@ -183,7 +183,7 @@ namespace BackSecurity.Services.Services
                 accidente.DireccionTrabajador = direccionTrabajadores?.calle;
                 accidente.ComunaTrabajador = _direccionService.GetComunaById(direccionTrabajadores.id_comuna).FirstOrDefault()?.nombre_comuna;
                 string[] horasAccidente = item.fechaaccidente.Split(' ');
-                accidente.HoraAccidente = horasAccidente[1] +" "+horasAccidente[2];
+                accidente.HoraAccidente = horasAccidente[1] + " " + horasAccidente[2];
                 accidente.Sexo = (job.sexo == 0) ? "Mujer" : "Hombre";
                 accidente.HoraIngresoAlTrabajo = job.HoraIngreso;
                 accidente.HoraSalidaTrabajo = job.HoraSalida;
@@ -197,8 +197,9 @@ namespace BackSecurity.Services.Services
                 accidente.Nacionalidad = job.nacionalidad;
                 accidente.Antiguedad = (DateTime.Now.Year - DateTime.Parse(job.FechaContrato).Year).ToString() + " Años";
             }
-
-            accidente.Fechaaccidente = item?.fechaaccidente;
+            string[] date = item?.fechaaccidente.Split(' ');
+            string[] dateformat = date[0].Split('/');
+            accidente.Fechaaccidente = dateformat[1] + "/" + dateformat[0] + "/" + dateformat[2];
             accidente.Fechaalta = item?.fechaalta;
             accidente.Fono_emergencia = item.fono_emergencia;
             accidente.TipoDeAccidente = _httpService.RequestJson<Dto.CategoriaOcupacional.Item>(LugarDelAccidente + item.idLugarDeAccidente, HttpMethod.Get).nombre;
@@ -245,7 +246,7 @@ namespace BackSecurity.Services.Services
                     }
                     string[] date = item?.fechaaccidente.Split(' ');
                     string[] dateformat = date[0].Split('/');
-                    accidente.Fechaaccidente = dateformat[1] +"/"+ dateformat[0] +"/"+ dateformat[2];
+                    accidente.Fechaaccidente = dateformat[1] + "/" + dateformat[0] + "/" + dateformat[2];
                     accidente.color = ColorIcon(item);
                     accidentes.Add(accidente);
                 }
