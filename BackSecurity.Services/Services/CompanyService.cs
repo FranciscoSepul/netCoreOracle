@@ -87,7 +87,7 @@ namespace BackSecurity.Services.Services
                     company.Region = direccion.id_region;
                     company.Comuna = direccion.id_comuna;
                     company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                    company.numeroTelefonico = (int)((item.numeroTelefonico!=null)? item.numeroTelefonico:0);
+                    company.numeroTelefonico = (int)((item.numeroTelefonico != null) ? item.numeroTelefonico : 0);
                     company.ActividadEconomica = item.ActividadEconomica;
                     company.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + item.IdPropiedadEmpresa, HttpMethod.Get).nombre;
                     company.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + item.idTipoDeEmpresa, HttpMethod.Get).nombre;
@@ -151,13 +151,13 @@ namespace BackSecurity.Services.Services
                 company.Region = direccion.id_region;
                 company.Comuna = direccion.id_comuna;
                 company.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                company.numeroTelefonico = (int)((item.numeroTelefonico!=null)?item.numeroTelefonico:0);
+                company.numeroTelefonico = (int)((item.numeroTelefonico != null) ? item.numeroTelefonico : 0);
                 company.ActividadEconomica = item.ActividadEconomica;
                 company.IdPropiedadEmpresa = item.IdPropiedadEmpresa.ToString();
                 company.idTipoDeEmpresa = item.idTipoDeEmpresa.ToString();
                 company.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 1).Count();
                 company.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 0).Count();
-                company.CantidadDeEmpleadosPorContrato = (int)((item.CantidadDeEmpleadosPorContrato!=null)?item.CantidadDeEmpleadosPorContrato:0);
+                company.CantidadDeEmpleadosPorContrato = (int)((item.CantidadDeEmpleadosPorContrato != null) ? item.CantidadDeEmpleadosPorContrato : 0);
 
                 BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa == id).FirstOrDefault();
                 if (preciosPorE != null)
@@ -424,13 +424,13 @@ namespace BackSecurity.Services.Services
                 facturaList.Region = direccion.id_region;
                 facturaList.Comuna = direccion.id_comuna;
                 facturaList.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                facturaList.numeroTelefonico = (int)((item.numeroTelefonico!=null)?item.numeroTelefonico:0);
+                facturaList.numeroTelefonico = (int)((item.numeroTelefonico != null) ? item.numeroTelefonico : 0);
                 facturaList.ActividadEconomica = item.ActividadEconomica;
                 facturaList.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + item.IdPropiedadEmpresa, HttpMethod.Get).nombre;
                 facturaList.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + item.idTipoDeEmpresa, HttpMethod.Get).nombre;
                 facturaList.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 1).Count();
                 facturaList.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 0).Count();
-                facturaList.CantidadDeEmpleadosPorContrato = (int)((item.CantidadDeEmpleadosPorContrato!=null)?item.CantidadDeEmpleadosPorContrato:null);
+                facturaList.CantidadDeEmpleadosPorContrato = (int)((item.CantidadDeEmpleadosPorContrato != null) ? item.CantidadDeEmpleadosPorContrato : null);
 
                 BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa == id).FirstOrDefault();
                 if (preciosPorE != null)
@@ -469,11 +469,11 @@ namespace BackSecurity.Services.Services
             insertDetalleFactura.costoporvisita = precios.costoporvisita;
             insertDetalleFactura.diaalizacionvalores = DateTime.Now.Day;
             insertDetalleFactura.mesalizacionvalores = DateTime.Now.Month;
-            insertDetalleFactura.totalporasesoria = (int)((factura.CostoTotal!=null)? factura.CostoTotal:0);
+            insertDetalleFactura.totalporasesoria = (int)((factura.CostoTotal != null) ? factura.CostoTotal : 0);
             insertDetalleFactura.totalporasesoriaespecial = factura.CostoTotalAsesoriaEspecial;
             insertDetalleFactura.totalporaccidente = factura.CostoTotalAccidente;
             insertDetalleFactura.totalporcharla = factura.CostoTotalCharla;
-            insertDetalleFactura.totalporpersonaextra = (int)((factura.CostoTotalPersonasExtra!=null)?factura.CostoTotalPersonasExtra:0);
+            insertDetalleFactura.totalporpersonaextra = (int)((factura.CostoTotalPersonasExtra != null) ? factura.CostoTotalPersonasExtra : 0);
             insertDetalleFactura.totalporvisita = factura.CostoTotalVisita;
             InsertDetalleFactura item = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura, HttpMethod.Put, JsonConvert.SerializeObject(insertDetalleFactura));
             return true;
@@ -492,11 +492,11 @@ namespace BackSecurity.Services.Services
             insertDetalleFactura.diaalizacionvalores = DateTime.Now.Day;
             insertDetalleFactura.id = _httpService.RequestJson<Dto.DetalleFactura.DetalleFacturaRoot>(GetAllDetalleFactura, HttpMethod.Get).items.Count + 1;
             insertDetalleFactura.mesalizacionvalores = DateTime.Now.Month;
-            insertDetalleFactura.totalporasesoria = (int)((factura.CostoTotal!=null)? factura.CostoTotal:0);
+            insertDetalleFactura.totalporasesoria = (int)((factura.CostoTotal != null) ? factura.CostoTotal : 0);
             insertDetalleFactura.totalporasesoriaespecial = factura.CostoTotalAsesoriaEspecial;
             insertDetalleFactura.totalporaccidente = factura.CostoTotalAccidente;
             insertDetalleFactura.totalporcharla = factura.CostoTotalCharla;
-            insertDetalleFactura.totalporpersonaextra = (int)((factura.CostoTotalPersonasExtra!=null)?factura.CostoTotalPersonasExtra:0);
+            insertDetalleFactura.totalporpersonaextra = (int)((factura.CostoTotalPersonasExtra != null) ? factura.CostoTotalPersonasExtra : 0);
             insertDetalleFactura.totalporvisita = factura.CostoTotalVisita;
             InsertDetalleFactura item = _httpService.RequestJson<InsertDetalleFactura>(GetAllDetalleFactura, HttpMethod.Post, JsonConvert.SerializeObject(insertDetalleFactura));
             return item.id;
@@ -509,20 +509,28 @@ namespace BackSecurity.Services.Services
                 Factura factura = new();
                 Console.WriteLine(desde);
                 DateTime Fdesde = new DateTime(DateTime.Now.Year, desde, 01, 00, 00, 0);
-                DateTime Fhasta = new DateTime(DateTime.Now.Year, desde + 1, 01, 00, 00, 0);
+                DateTime Fhasta = new();
+                if (desde==12)
+                {
+                    Fhasta = new DateTime(DateTime.Now.Year, 1, 01, 00, 00, 0);
+                }
+                else
+                {
+                    Fhasta = new DateTime(DateTime.Now.Year, desde + 1, 01, 00, 00, 0);
+                }
                 BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).FirstOrDefault();
                 List<Dto.Accidente.Item> accident = _httpService.RequestJson<AccidentRoot>(GetAll, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id && int.Parse(x?.fechaaccidente.Split('/')[0]) == desde).ToList();
                 factura.CostoTotalAccidente = (accident.Count > 0) ? accident.Count * preciosPorE.costoporaccidente : 0;
                 List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList(); ;
                 factura.CostoTotalCharla = (activitys.Count > 0) ? activitys.Count * preciosPorE.costoporcharla : 0;
-                List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
-                factura.CostoTotalVisita = (visitas.Count>0)?visitas.Count*preciosPorE.costoporvisita:0;
-                List<Dto.Visita.Item> asesoria = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
-                factura.CostoTotalAsesoria = (asesoria.Count>0)?(asesoria.Where(x=> x.idtipovisita==1).ToList().Count()*preciosPorE.costoporasesoria):0;
-                factura.CostoTotalAsesoriaEspecial = (asesoria.Count>0)?(asesoria.Where(x=> x.idtipovisita==2).ToList().Count()*preciosPorE.costoporasesoriaespecial):0;
+                List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
+                factura.CostoTotalVisita = (visitas.Count > 0) ? visitas.Count * preciosPorE.costoporvisita : 0;
+                List<Dto.Visita.Item> asesoria = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
+                factura.CostoTotalAsesoria = (asesoria.Count > 0) ? (asesoria.Where(x => x.idtipovisita == 1).ToList().Count() * preciosPorE.costoporasesoria) : 0;
+                factura.CostoTotalAsesoriaEspecial = (asesoria.Count > 0) ? (asesoria.Where(x => x.idtipovisita == 2).ToList().Count() * preciosPorE.costoporasesoriaespecial) : 0;
                 int cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
                 int? cantidadPorContratov = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get)?.CantidadDeEmpleadosPorContrato;
-                int? cantidadPorContrato = (cantidadPorContratov!=null)?cantidadPorContratov:0;
+                int? cantidadPorContrato = (cantidadPorContratov != null) ? cantidadPorContratov : 0;
                 factura.CostoTotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) * preciosPorE.costoporpersonaextra : 0;
                 factura.CostoTotal = preciosPorE.costobase + (factura.CostoTotalAccidente + factura.CostoTotalCharla + factura.CostoTotalVisita + factura.CostoTotalAsesoria + factura.CostoTotalAsesoriaEspecial +
                 factura.CostoTotalPersonasExtra);
@@ -557,11 +565,11 @@ namespace BackSecurity.Services.Services
                 operaciones.TotalAccidente = accident.Count;
                 List<Dto.Activity.Item> activitys = _httpService.RequestJson<ActivityRoot>(GetAllActivity, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('-')[1]) == desde).ToList(); ;
                 operaciones.TotalCharla = activitys.Count;
-                List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();               
-                operaciones.TotalVisita = (visitas?.Count>0)?visitas.Count:0;
-                List<Dto.Visita.Item> asesoria = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString()==id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
-                operaciones.TotalAsesoria = asesoria.Where(x=> x.idtipovisita==1).ToList().Count();
-                operaciones.TotalAsesoriaEspecial =  asesoria.Where(x=> x.idtipovisita==2).ToList().Count();
+                List<Dto.Visita.Item> visitas = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
+                operaciones.TotalVisita = (visitas?.Count > 0) ? visitas.Count : 0;
+                List<Dto.Visita.Item> asesoria = _httpService.RequestJson<VisitasRoot>(GetAllAsesoria, HttpMethod.Get).items.Where(x => x.idcompany.ToString() == id && int.Parse(x?.fechaprogramacion.Split('/')[0]) == desde).ToList();
+                operaciones.TotalAsesoria = asesoria.Where(x => x.idtipovisita == 1).ToList().Count();
+                operaciones.TotalAsesoriaEspecial = asesoria.Where(x => x.idtipovisita == 2).ToList().Count();
                 int? cantidadTrabajadores = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa.ToString() == id).Count();
                 int? cantidadPorContrato = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get).CantidadDeEmpleadosPorContrato;
                 operaciones.TotalPersonasExtra = (cantidadPorContrato < cantidadTrabajadores) ? (cantidadPorContrato - cantidadTrabajadores) : 0;
