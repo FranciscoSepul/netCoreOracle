@@ -411,26 +411,26 @@ namespace BackSecurity.Services.Services
                 #endregion
                 #region company
 
-                //CompanyInsert item = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get);
+                CompanyInsert item = _httpService.RequestJson<CompanyInsert>(_GetCompanyById + id, HttpMethod.Get);
                 //Dto.Direccion.Item direccion = _direccionService.GetDireccionById(item.iddireccion);
 
-                //facturaList.id_empresa = item.id_empresa;
-                //facturaList.nom_empresa = item.nom_empresa;
-               // facturaList.Rut = item.rut;
-                //facturaList.DvRut = item.dvrut;
-                //facturaList.ImageBase64 = item.imageBase64;
-                //facturaList.fechaFinContrato = item.fechafincontrato;
-                //facturaList.Correo = item.correo;
+                facturaList.id_empresa = item.id_empresa;
+                facturaList.nom_empresa = item.nom_empresa;
+                facturaList.Rut = item.rut;
+                facturaList.DvRut = item.dvrut;
+                facturaList.ImageBase64 = item.imageBase64;
+                facturaList.fechaFinContrato = item.fechafincontrato;
+                facturaList.Correo = item.correo;
                 //facturaList.Region = direccion.id_region;
                 //facturaList.Comuna = direccion.id_comuna;
                 //facturaList.Direccion = $"{direccion.calle}  {direccion.numeracion}";
-                //facturaList.numeroTelefonico = (int)((item.numeroTelefonico != null) ? item.numeroTelefonico : 0);
-                //facturaList.ActividadEconomica = item.ActividadEconomica;
-                ///facturaList.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + item.IdPropiedadEmpresa, HttpMethod.Get).nombre;
-                //facturaList.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + item.idTipoDeEmpresa, HttpMethod.Get).nombre;
-                //facturaList.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 1).Count();
-                //acturaList.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 0).Count();
-                //facturaList.CantidadDeEmpleadosPorContrato = (int)((item.CantidadDeEmpleadosPorContrato != null) ? item.CantidadDeEmpleadosPorContrato : null);
+                facturaList.numeroTelefonico = (int)((item.numeroTelefonico != null) ? item.numeroTelefonico : 0);
+                facturaList.ActividadEconomica = item.ActividadEconomica;
+                facturaList.IdPropiedadEmpresa = _httpService.RequestJson<Dto.PropiedadEmpresa.Item>(idPropiedadEmpresa + item.IdPropiedadEmpresa, HttpMethod.Get).nombre;
+                facturaList.idTipoDeEmpresa = _httpService.RequestJson<Dto.TipoEmpresa.Item>(idTipoDeEmpresa + item.idTipoDeEmpresa, HttpMethod.Get).nombre;
+                facturaList.trabajadoresHombres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 1).Count();
+                facturaList.trabajadoresMujeres = _httpService.RequestJson<EmpleadoRoot>(GetJobById, HttpMethod.Get).items.Where(x => x.idempresa == item.id_empresa && x.sexo == 0).Count();
+                facturaList.CantidadDeEmpleadosPorContrato = (int)((item.CantidadDeEmpleadosPorContrato != null) ? item.CantidadDeEmpleadosPorContrato : null);
 
                 BackSecurity.Dto.PreciosPorEmpresa.Item preciosPorE = _httpService.RequestJson<PreciosPorEmpresaRoot>(PreciosPorEmpresa, HttpMethod.Get).items.Where(x => x.idempresa == id).FirstOrDefault();
                 if (preciosPorE != null)
